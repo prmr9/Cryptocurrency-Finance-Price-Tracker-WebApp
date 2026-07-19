@@ -14,6 +14,18 @@ const renderNavbar = () => render(
 const getTradeLink = () => screen.getByRole('link', { name: /trade/i })
 
 describe('Navbar Trade button', () => {
+    it('renders and carries the correct href, target and rel attributes', () => {
+        renderNavbar()
+
+        const trade = getTradeLink()
+
+        expect(trade).toBeInTheDocument()
+        expect(trade.tagName).toBe('A')
+        expect(trade).toHaveAttribute('href', 'https://app.uniswap.org')
+        expect(trade).toHaveAttribute('target', '_blank')
+        expect(trade).toHaveAttribute('rel', 'noopener noreferrer')
+    })
+
     it('renders the Trade button pointing at the trading platform', () => {
         renderNavbar()
 
