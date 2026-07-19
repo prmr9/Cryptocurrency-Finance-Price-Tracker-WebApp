@@ -1,0 +1,28 @@
+[
+  {
+    "id": "a16ef55f0feed29d",
+    "pattern": "[architecture] Team codebase architecture overview",
+    "detail": "# Team architecture (structural)\n\n## aman90291/de-agent\n- language: unknown\n- top-level: n/a\n- files: 0\n- ",
+    "source_ticket": "",
+    "source_pr": "",
+    "source_repo": "",
+    "author": "devagent-onboarding",
+    "author_tier": "",
+    "path_globs": [],
+    "created": "2026-07-18T20:59:20.280983Z",
+    "tags": [
+      "onboarding",
+      "team-knowledge"
+    ],
+    "kind": "onboarding",
+    "weight": 1.8,
+    "times_applied": 0,
+    "times_confirmed": 1,
+    "safety_class": "neutral",
+    "safety_reason": "onboarding knowledge",
+    "enforced": false,
+    "enforce_confirm_tickets": [],
+    "guardrail_fp_count": 0,
+    "dismissals": 0
+  }
+]
