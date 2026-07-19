@@ -13,3 +13,6 @@
 {"ts": 1784428554.599244, "agent": "devagent-bot", "ticket": "KAN-1", "kind": "pr", "text": "Opened PR for KAN-1: https://github.com/prmr9/Cryptocurrency-Finance-Price-Tracker-WebApp/pull/1", "to": null}
 {"ts": 1784428555.1659908, "agent": "devagent-bot", "ticket": "KAN-1", "kind": "pr", "text": "KAN-1 PR open for review: https://github.com/prmr9/Cryptocurrency-Finance-Price-Tracker-WebApp/pull/1", "to": null}
 {"ts": 1784428696.886677, "agent": "devagent-bot", "ticket": "KAN-1", "kind": "plan", "text": "Reworking KAN-1 (sast): not shippable yet", "to": null}
+{"ts": 1784456273.2415879, "agent": "devagent-bot", "ticket": "KAN-1", "kind": "review_request", "text": "Requesting peer review of prmr9/Cryptocurrency-Finance-Price-Tracker-WebApp#1", "to": null}
+{"ts": 1784456316.016913, "agent": "devagent-bot", "ticket": "KAN-1", "kind": "pr", "text": "Opened PR for KAN-1: https://github.com/prmr9/Cryptocurrency-Finance-Price-Tracker-WebApp/pull/1", "to": null}
+{"ts": 1784456316.52929, "agent": "devagent-bot", "ticket": "KAN-1", "kind": "pr", "text": "KAN-1 PR open for review: https://github.com/prmr9/Cryptocurrency-Finance-Price-Tracker-WebApp/pull/1", "to": null}
