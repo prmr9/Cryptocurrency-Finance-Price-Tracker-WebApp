@@ -39,3 +39,5 @@
 {"ts": 1784484265.3856761, "agent": "devagent-bot", "ticket": "KAN-5", "kind": "started", "text": "Resuming KAN-5; KAN-4 resolved.", "to": null}
 {"ts": 1784486950.946068, "agent": "devagent-bot", "ticket": "KAN-5", "kind": "plan", "text": "Reworking KAN-5 (acceptance_criteria): not shippable yet", "to": null}
 {"ts": 1784492479.230788, "agent": "devagent-bot", "ticket": "KAN-5", "kind": "blocked", "text": "Blocked: Acceptance criteria depend on other tickets: KAN-4", "to": null}
+{"ts": 1784492562.5271811, "agent": "devagent-bot", "ticket": "KAN-5", "kind": "started", "text": "Resuming KAN-5; KAN-4 resolved.", "to": null}
+{"ts": 1784494638.388201, "agent": "devagent-bot", "ticket": "KAN-5", "kind": "blocked", "text": "Blocked: Acceptance criteria depend on other tickets: KAN-4", "to": null}
