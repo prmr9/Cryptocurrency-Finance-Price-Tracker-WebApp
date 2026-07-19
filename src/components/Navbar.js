@@ -1,9 +1,8 @@
 import React from 'react'
 import {FaCoins} from 'react-icons/fa'
 import {Link} from 'react-router-dom'
+import { TRADE_URL } from '../services/uniswap'
 import './Navbar.css'
-
-const TRADE_URL = 'https://app.uniswap.org'
 
 const Navbar = () => {
     return (
@@ -12,6 +11,7 @@ const Navbar = () => {
                 <FaCoins className='icon' />
                 <h1> Coin <span className='purple'>Search</span></h1>
             </Link>
+            <Link to='/accounts' className='navbar-accounts'>Accounts</Link>
             <a
                 className='trade-btn'
                 href={TRADE_URL}

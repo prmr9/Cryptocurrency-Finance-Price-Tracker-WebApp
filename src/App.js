@@ -4,6 +4,7 @@ import { Routes, Route } from 'react-router-dom'
 import Coins from './components/Coins'
 import Coin from './routes/Coin'
 import Navbar from './components/Navbar'
+import Accounts from './components/Accounts'
 
 
 function App() {
@@ -26,6 +27,7 @@ function App() {
       <Navbar />
       <Routes>
         <Route path='/' element={<Coins coins={coins} />} />
+        <Route path='/accounts' element={<Accounts />} />
         <Route path='/coin' element={<Coin />}>
           <Route path=':coinId' element={<Coin />} />
         </Route>

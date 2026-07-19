@@ -2,6 +2,7 @@ import React from 'react';
 import { render, screen, within } from '@testing-library/react';
 import { MemoryRouter } from 'react-router-dom';
 import Navbar from '../Navbar';
+import { TRADE_URL } from '../../services/uniswap';
 
 const renderNavbar = () =>
   render(
@@ -30,7 +31,8 @@ describe('Navbar title Link structure', () => {
     const trade = screen.getByRole('link', { name: /trade/i });
 
     expect(within(titleLink).queryByRole('link', { name: /trade/i })).toBeNull();
-    expect(trade).toHaveAttribute('href', 'https://app.uniswap.org');
-    expect(screen.getAllByRole('link')).toHaveLength(2);
+    expect(trade).toHaveAttribute('href', TRADE_URL);
+    // title link + Accounts link + Trade anchor
+    expect(screen.getAllByRole('link')).toHaveLength(3);
   });
 });

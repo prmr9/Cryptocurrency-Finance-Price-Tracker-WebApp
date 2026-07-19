@@ -11,13 +11,23 @@ const renderNavbar = () =>
   );
 
 describe('Navbar root element', () => {
-  test('renders the title heading alongside exactly two links', () => {
+  test('renders the title heading alongside exactly three links', () => {
     renderNavbar();
 
     expect(
       screen.getByRole('heading', { level: 1, name: /coin search/i })
     ).toBeInTheDocument();
-    expect(screen.getAllByRole('link')).toHaveLength(2);
+    // title link + Accounts link + Trade anchor
+    expect(screen.getAllByRole('link')).toHaveLength(3);
+  });
+
+  test('renders an Accounts link pointing at the /accounts route', () => {
+    renderNavbar();
+
+    expect(screen.getByRole('link', { name: /accounts/i })).toHaveAttribute(
+      'href',
+      '/accounts'
+    );
   });
 
   test('the Trade link opens the trading platform safely in a new tab', () => {
