@@ -32,3 +32,5 @@
 {"ts": 1784470664.726798, "agent": "devagent-bot", "ticket": "KAN-4", "kind": "merged", "text": "Merged KAN-4: https://github.com/prmr9/Cryptocurrency-Finance-Price-Tracker-WebApp/pull/2", "to": null}
 {"ts": 1784470702.482537, "agent": "devagent-bot", "ticket": "KAN-5", "kind": "approved", "text": "KAN-5 approved \u2014 implementing now.", "to": null}
 {"ts": 1784474580.429104, "agent": "devagent-bot", "ticket": "KAN-5", "kind": "blocked", "text": "Blocked: Acceptance criteria depend on other tickets: KAN-4", "to": null}
+{"ts": 1784474669.659894, "agent": "devagent-bot", "ticket": "KAN-5", "kind": "started", "text": "Resuming KAN-5; KAN-4 resolved.", "to": null}
+{"ts": 1784476772.969882, "agent": "devagent-bot", "ticket": "KAN-5", "kind": "blocked", "text": "Blocked: Acceptance criteria depend on other tickets: KAN-4", "to": null}
