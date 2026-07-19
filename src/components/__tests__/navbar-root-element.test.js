@@ -27,5 +27,6 @@ describe('Navbar root element', () => {
 
     expect(trade).toHaveAttribute('target', '_blank');
     expect(trade).toHaveAttribute('rel', expect.stringContaining('noopener'));
+    expect(trade).toHaveAttribute('rel', expect.stringContaining('noreferrer'));
   });
 });
