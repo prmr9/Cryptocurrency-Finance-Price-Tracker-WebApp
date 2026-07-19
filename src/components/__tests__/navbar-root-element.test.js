@@ -26,7 +26,6 @@ describe('Navbar root element', () => {
     const trade = screen.getByRole('link', { name: /trade/i });
 
     expect(trade).toHaveAttribute('target', '_blank');
-    expect(trade).toHaveAttribute('rel', expect.stringContaining('noopener'));
-    expect(trade).toHaveAttribute('rel', expect.stringContaining('noreferrer'));
+    expect(trade).toHaveAttribute('rel', 'noopener noreferrer');
   });
 });

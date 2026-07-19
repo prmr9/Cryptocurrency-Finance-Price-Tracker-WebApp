@@ -3,8 +3,6 @@ import { render, screen, within } from '@testing-library/react'
 import { MemoryRouter } from 'react-router-dom'
 import Navbar from './Navbar'
 
-const TRADE_URL = 'https://app.uniswap.org'
-
 const renderNavbar = () => render(
     <MemoryRouter>
         <Navbar />
@@ -26,42 +24,26 @@ describe('Navbar Trade button', () => {
         expect(trade).toHaveAttribute('rel', 'noopener noreferrer')
     })
 
-    it('renders the Trade button pointing at the trading platform', () => {
+    it('renders "Trade" as its visible label', () => {
+        renderNavbar()
+
+        expect(getTradeLink()).toHaveTextContent(/^Trade/)
+    })
+
+    it('announces that it opens in a new tab without overriding the accessible name', () => {
         renderNavbar()
 
         const trade = getTradeLink()
 
-        expect(trade).toBeInTheDocument()
-        expect(trade).toHaveAttribute('href', TRADE_URL)
+        expect(trade).not.toHaveAttribute('aria-label')
+        expect(within(trade).getByText(/opens in new tab/i)).toBeInTheDocument()
+        expect(trade).toHaveAccessibleName('Trade (opens in new tab)')
     })
 
-    it('opens the trading platform in a new tab', () => {
+    it('is a plain outbound anchor with no click handler', () => {
         renderNavbar()
 
-        expect(getTradeLink()).toHaveAttribute('target', '_blank')
-    })
-
-    it('sets rel containing both noopener and noreferrer', () => {
-        renderNavbar()
-
-        const rel = getTradeLink().getAttribute('rel')
-
-        expect(rel).toEqual(expect.stringContaining('noopener'))
-        expect(rel).toEqual(expect.stringContaining('noreferrer'))
-        expect(getTradeLink()).toHaveAttribute(
-            'rel',
-            expect.stringContaining('noopener')
-        )
-        expect(getTradeLink()).toHaveAttribute(
-            'rel',
-            expect.stringContaining('noreferrer')
-        )
-    })
-
-    it('announces that it opens in a new tab', () => {
-        renderNavbar()
-
-        expect(getTradeLink()).toHaveAccessibleName(/opens in new tab/i)
+        expect(getTradeLink()).not.toHaveAttribute('onclick')
     })
 
     it('is not nested inside the navbar title link to "/"', () => {
