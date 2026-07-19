@@ -33,6 +33,12 @@ describe('Navbar Trade button', () => {
             .toHaveAttribute('rel', 'noopener noreferrer')
     })
 
+    it('announces that it opens in a new tab', () => {
+        renderNavbar()
+        expect(screen.getByRole('link', { name: /trade/i }))
+            .toHaveAccessibleName(/opens in new tab/i)
+    })
+
     it('is not nested inside the navbar title link to "/"', () => {
         renderNavbar()
         const trade = screen.getByRole('link', { name: /trade/i })
