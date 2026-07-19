@@ -9,3 +9,7 @@
 {"ts": 1784425852.522998, "agent": "devagent-bot", "ticket": "KAN-1", "kind": "plan", "text": "Reworking KAN-1 (acceptance_criteria): not shippable yet", "to": null}
 {"ts": 1784426820.5190232, "agent": "devagent-bot", "ticket": "KAN-1", "kind": "blocked", "text": "Blocked: Acceptance criteria could not be completed automatically: Given src/components/Navbar.test.js When its assertions are inspected Then one a", "to": null}
 {"ts": 1784427732.751746, "agent": "devagent-bot", "ticket": "KAN-1", "kind": "blocked", "text": "Blocked: Acceptance criteria could not be completed automatically: Given src/components/Navbar.test.js When its assertions are inspected Then one a", "to": null}
+{"ts": 1784428522.4752269, "agent": "devagent-bot", "ticket": "KAN-1", "kind": "review_request", "text": "Requesting peer review of prmr9/Cryptocurrency-Finance-Price-Tracker-WebApp#1", "to": null}
+{"ts": 1784428554.599244, "agent": "devagent-bot", "ticket": "KAN-1", "kind": "pr", "text": "Opened PR for KAN-1: https://github.com/prmr9/Cryptocurrency-Finance-Price-Tracker-WebApp/pull/1", "to": null}
+{"ts": 1784428555.1659908, "agent": "devagent-bot", "ticket": "KAN-1", "kind": "pr", "text": "KAN-1 PR open for review: https://github.com/prmr9/Cryptocurrency-Finance-Price-Tracker-WebApp/pull/1", "to": null}
+{"ts": 1784428696.886677, "agent": "devagent-bot", "ticket": "KAN-1", "kind": "plan", "text": "Reworking KAN-1 (sast): not shippable yet", "to": null}
