@@ -3,11 +3,11 @@
     "agent": "devagent-bot",
     "account": "712020:ad3d4e51-4ea0-4043-8f1f-0e390e87f10b",
     "ticket": "KAN-2",
-    "repo": null,
+    "repo": "prmr9/Cryptocurrency-Finance-Price-Tracker-WebApp",
     "phase": "phase1_ingestion",
-    "status": "new",
+    "status": "pending_approval",
     "summary": "[Metrics] Instrument the change from KAN-1",
     "capacity": 20.0,
-    "updated_at": 1784456333.1232278
+    "updated_at": 1784457054.2104251
   }
 }
