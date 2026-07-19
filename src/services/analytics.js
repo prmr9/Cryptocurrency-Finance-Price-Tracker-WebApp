@@ -332,10 +332,43 @@ export const getRetentionContext = () => {
     }
 }
 
-// Default sink: a bounded, synchronous in-memory ring buffer. No network, no
+// Default sink: a bounded, synchronous in-memory ring buffer plus a hand-off to
+// whichever page-level collector the host document installed. No network, no
 // dependency. configureAnalytics swaps in a real vendor without touching a
 // single component.
 const eventBuffer = []
+
+const deliverSafely = (deliver) => {
+    try {
+        deliver()
+    } catch (err) {
+        // One broken page sink must not stop the others, and must never take
+        // down the view it is instrumenting.
+    }
+}
+
+// The ring buffer is a local copy, not a destination: without this the events
+// never leave the module. Payloads reaching here are already hashed and
+// shape-only (see track()), so no wallet address or account label escapes.
+const forwardToGlobalSinks = (event) => {
+    if (typeof window === 'undefined') {
+        return
+    }
+
+    const { analytics, track: globalTrack, dataLayer } = window
+
+    if (analytics && typeof analytics.track === 'function') {
+        deliverSafely(() => analytics.track(event.event, event.properties))
+    }
+
+    if (typeof globalTrack === 'function') {
+        deliverSafely(() => globalTrack(event.event, event.properties))
+    }
+
+    if (dataLayer && typeof dataLayer.push === 'function') {
+        deliverSafely(() => dataLayer.push({ event: event.event, ...event.properties }))
+    }
+}
 
 const defaultSink = (event) => {
     eventBuffer.push(event)
@@ -343,6 +376,8 @@ const defaultSink = (event) => {
     while (eventBuffer.length > RING_BUFFER_CAP) {
         eventBuffer.shift()
     }
+
+    forwardToGlobalSinks(event)
 }
 
 const defaultFlush = () => Promise.resolve()

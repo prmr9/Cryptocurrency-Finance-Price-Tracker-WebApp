@@ -316,6 +316,72 @@ describe('sink and flush seam', () => {
   });
 });
 
+describe('page-level sink forwarding', () => {
+  afterEach(() => {
+    delete window.analytics;
+    delete window.track;
+    delete window.dataLayer;
+  });
+
+  test('forwards the event name and hashed properties to window.analytics.track', () => {
+    const calls = [];
+    window.analytics = { track: (name, props) => calls.push([name, props]) };
+
+    track('account_added', { account_id: 'acct-raw-1', address_format: 'evm_hex_42' });
+
+    expect(calls).toHaveLength(1);
+    expect(calls[0][0]).toBe('account_added');
+    expect(calls[0][1].address_format).toBe('evm_hex_42');
+    expect(calls[0][1].account_id).toBe(hashAccountId('acct-raw-1'));
+    expect(calls[0][1].account_id).not.toBe('acct-raw-1');
+  });
+
+  test('forwards to a bare window.track sink', () => {
+    const calls = [];
+    window.track = (name, props) => calls.push([name, props]);
+
+    track('accounts_view_opened', { existing_account_count: 2 });
+
+    expect(calls).toEqual([['accounts_view_opened', { existing_account_count: 2 }]]);
+  });
+
+  test('pushes a dataLayer payload carrying the event name', () => {
+    window.dataLayer = [];
+
+    track('accounts_view_opened', { existing_account_count: 0 });
+
+    expect(window.dataLayer).toEqual([
+      { event: 'accounts_view_opened', existing_account_count: 0 }
+    ]);
+  });
+
+  test('a throwing page sink neither breaks track() nor the buffered copy', () => {
+    const calls = [];
+    window.analytics = {
+      track: () => {
+        throw new Error('vendor blew up');
+      }
+    };
+    window.track = (name) => calls.push(name);
+
+    expect(() => track('accounts_view_opened', {})).not.toThrow();
+    expect(calls).toEqual(['accounts_view_opened']);
+    expect(getTrackedEventsForTest()).toHaveLength(1);
+  });
+
+  test('an explicitly configured sink replaces the page-level hand-off', () => {
+    const calls = [];
+    const sink = jest.fn();
+    window.analytics = { track: (name) => calls.push(name) };
+
+    configureAnalytics({ sink });
+    track('accounts_view_opened', {});
+
+    expect(sink).toHaveBeenCalledTimes(1);
+    expect(calls).toHaveLength(0);
+  });
+});
+
 describe('test teardown seam', () => {
   test('resetAnalyticsForTest clears the flag, the buffer and the stored key', () => {
     noteInAppNavigation();

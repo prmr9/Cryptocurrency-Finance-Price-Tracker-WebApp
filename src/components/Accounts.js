@@ -70,7 +70,9 @@ const Accounts = () => {
     useEffect(() => {
         let alive = true
 
-        const session = touchSession()
+        // A sink that is stubbed out (or swapped for one that omits the session
+        // helpers) must not take the view down on mount.
+        const session = (typeof touchSession === 'function' ? touchSession() : null) || {}
 
         const openView = (rows, active) => {
             // Accounts already on disk predate instrumentation: marking them keeps
@@ -80,7 +82,7 @@ const Accounts = () => {
             track('accounts_view_opened', {
                 entry_source: resolveEntrySource(navigationType),
                 existing_account_count: rows.length,
-                is_first_visit: session.sessionCount <= 1
+                is_first_visit: (session.sessionCount || 0) <= 1
             })
 
             const retention = getRetentionContext()
