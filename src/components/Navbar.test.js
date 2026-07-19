@@ -1,8 +1,10 @@
 import React from 'react'
 import { render, screen, within } from '@testing-library/react'
+import userEvent from '@testing-library/user-event'
 import { MemoryRouter } from 'react-router-dom'
 import Navbar from './Navbar'
 import { TRADE_URL } from '../services/uniswap'
+import { getTrackedEventsForTest } from '../services/analytics'
 
 const renderNavbar = () => render(
     <MemoryRouter>
@@ -42,10 +44,28 @@ describe('Navbar Trade button', () => {
         expect(trade).toHaveAccessibleName('Trade (opens in new tab)')
     })
 
-    it('is a plain outbound anchor with no click handler', () => {
+    // KAN-5 deliberately replaces the previous "no click handler" assertion: the
+    // anchor now reports the click before the browser follows it. What still has
+    // to hold is that instrumentation is additive — the navigation itself is
+    // untouched, so the anchor keeps working with JS handlers that never fire.
+    it('reports the click without taking over the navigation', () => {
         renderNavbar()
 
-        expect(getTradeLink()).not.toHaveAttribute('onclick')
+        const trade = getTradeLink()
+
+        // no inline handler and no href rewriting: the browser still owns the nav
+        expect(trade).not.toHaveAttribute('onclick')
+        expect(trade).toHaveAttribute('href', TRADE_URL)
+
+        userEvent.click(trade)
+
+        const clicks = getTrackedEventsForTest().filter(
+            (event) => event.event === 'trade_link_clicked'
+        )
+
+        expect(clicks).toHaveLength(1)
+        expect(clicks[0].properties.source).toBe('navbar')
+        expect(clicks[0].properties.destination_url).toBe(TRADE_URL)
     })
 
     it('is not nested inside the navbar title link to "/"', () => {

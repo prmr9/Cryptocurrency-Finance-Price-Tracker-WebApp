@@ -1,4 +1,5 @@
-import React, { useState, useEffect } from 'react'
+import React, { useState, useEffect, useRef } from 'react'
+import { useNavigationType } from 'react-router-dom'
 import {
     listAccounts,
     getActiveAccountId,
@@ -7,12 +8,47 @@ import {
     setActiveAccount
 } from '../services/accountStore'
 import { CHAIN_SLUGS, buildTradeUrl } from '../services/uniswap'
+import {
+    track,
+    touchSession,
+    flushAnalytics,
+    resolveEntrySource,
+    classifyAddressFormat,
+    noteAccountFirstSeen,
+    notePreexistingAccounts,
+    getAccountAgeDays,
+    getRetentionContext
+} from '../services/analytics'
 import './Accounts.css'
 
 const CHAIN_OPTIONS = Object.keys(CHAIN_SLUGS).map((id) => ({
     id: Number(id),
     slug: CHAIN_SLUGS[id]
 }))
+
+// The store rejects with user-facing prose. Analytics needs a stable machine
+// code that survives copy edits, plus the field the error belongs to.
+const classifyStoreError = (message) => {
+    const text = typeof message === 'string' ? message : ''
+
+    if (/label is required/i.test(text)) {
+        return { code: 'label_required', field: 'label' }
+    }
+
+    if (/valid public wallet address/i.test(text)) {
+        return { code: 'address_invalid', field: 'address' }
+    }
+
+    if (/already been added/i.test(text)) {
+        return { code: 'address_duplicate', field: 'address' }
+    }
+
+    if (/could not save/i.test(text)) {
+        return { code: 'storage_unavailable', field: null }
+    }
+
+    return { code: 'unknown', field: null }
+}
 
 const Accounts = () => {
     const [accounts, setAccounts] = useState([])
@@ -24,19 +60,53 @@ const Accounts = () => {
     const [loading, setLoading] = useState(true)
     const [submitting, setSubmitting] = useState(false)
 
+    const navigationType = useNavigationType()
+
+    // Add-account attempts are counted per successful add, so a user who fixes a
+    // typo reports attempts_before_success: 1 rather than starting over at 0.
+    const attemptsRef = useRef(0)
+    const firstAttemptAtRef = useRef(null)
+
     useEffect(() => {
         let alive = true
+
+        const session = touchSession()
+
+        const openView = (rows, active) => {
+            // Accounts already on disk predate instrumentation: marking them keeps
+            // them from later reporting a fabricated age.
+            notePreexistingAccounts(rows.map((account) => account.id))
+
+            track('accounts_view_opened', {
+                entry_source: resolveEntrySource(navigationType),
+                existing_account_count: rows.length,
+                is_first_visit: session.sessionCount <= 1
+            })
+
+            const retention = getRetentionContext()
+
+            if (retention.isReturning) {
+                track('accounts_returned', {
+                    account_count: rows.length,
+                    active_account_id: active,
+                    days_since_first_account: retention.daysSinceFirstAccount,
+                    sessions_since_first_account: retention.sessionsSinceFirstAccount
+                })
+            }
+        }
 
         Promise.all([listAccounts(), getActiveAccountId()])
             .then(([rows, active]) => {
                 if (!alive) return
                 setAccounts(rows)
                 setActiveAccountIdState(active)
+                openView(rows, active)
             })
             .catch(() => {
                 if (!alive) return
                 setAccounts([])
                 setActiveAccountIdState(null)
+                openView([], null)
             })
             .then(() => {
                 if (alive) setLoading(false)
@@ -45,6 +115,8 @@ const Accounts = () => {
         return () => {
             alive = false
         }
+        // Mount-only: this is the view-opened event, not a re-render event.
+        // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [])
 
     const refresh = () =>
@@ -61,14 +133,66 @@ const Accounts = () => {
         setSubmitting(true)
         setError('')
 
+        attemptsRef.current += 1
+
+        const attemptNumber = attemptsRef.current
+        const previousActiveId = activeAccountId
+        const countBefore = accounts.length
+
+        if (firstAttemptAtRef.current === null) {
+            firstAttemptAtRef.current = Date.now()
+        }
+
+        // Emitted before validation resolves, so the denominator of the funnel is
+        // every submission rather than only the ones that succeed. The address
+        // itself never leaves the component — only its shape.
+        track('add_account_submitted', {
+            label_provided: label.trim().length > 0,
+            address_format: classifyAddressFormat(address),
+            existing_account_count: countBefore
+        })
+
         addAccount({ label, address, chainId })
-            .then(() => {
+            .then((account) => {
+                noteAccountFirstSeen(account.id)
                 setLabel('')
                 setAddress('')
+
+                track('account_added', {
+                    account_id: account.id,
+                    account_count_after: countBefore + 1,
+                    is_first_account: countBefore === 0,
+                    attempts_before_success: attemptNumber - 1,
+                    time_to_add_ms: Date.now() - firstAttemptAtRef.current
+                })
+
+                // The store promotes the first account automatically; anything else
+                // leaves the existing pointer alone.
+                if (previousActiveId === null) {
+                    track('account_activated', {
+                        account_id: account.id,
+                        account_count: countBefore + 1,
+                        was_auto_selected: true,
+                        previous_active_account_id: null
+                    })
+                }
+
+                attemptsRef.current = 0
+                firstAttemptAtRef.current = null
+
                 return refresh()
             })
             .catch((err) => {
                 setError(err.message)
+
+                const classified = classifyStoreError(err.message)
+
+                track('add_account_validation_failed', {
+                    error_code: classified.code,
+                    error_message: err.message,
+                    field: classified.field,
+                    attempt_number: attemptNumber
+                })
             })
             .then(() => {
                 setSubmitting(false)
@@ -77,16 +201,56 @@ const Accounts = () => {
 
     const handleRemove = (id) => {
         setError('')
+
+        const wasActive = activeAccountId === id
+        // Read before the delete commits: afterwards the first-seen entry is all
+        // that is left to date the account by.
+        const ageDays = getAccountAgeDays(id)
+
         removeAccount(id)
-            .then(refresh)
+            .then((result) => {
+                track('account_removed', {
+                    account_id: id,
+                    account_count_after: result.accounts.length,
+                    was_active: wasActive,
+                    account_age_days: ageDays
+                })
+
+                return refresh()
+            })
             .catch((err) => setError(err.message))
     }
 
     const handleSetActive = (id) => {
         setError('')
+
+        const previousActiveId = activeAccountId
+
         setActiveAccount(id)
-            .then(refresh)
+            .then((activeId) => {
+                track('account_activated', {
+                    account_id: activeId,
+                    account_count: accounts.length,
+                    was_auto_selected: false,
+                    previous_active_account_id: previousActiveId
+                })
+
+                return refresh()
+            })
             .catch((err) => setError(err.message))
+    }
+
+    const handleTradeClick = (account) => {
+        track('trade_link_clicked', {
+            source: 'account_row',
+            account_id: account.id,
+            destination_url: buildTradeUrl(account.chainId),
+            account_count: accounts.length
+        })
+
+        // This click can unload the document, so the sink is flushed rather than
+        // left to a later tick that may never run.
+        flushAnalytics()
     }
 
     return (
@@ -176,6 +340,7 @@ const Accounts = () => {
                                 href={buildTradeUrl(account.chainId)}
                                 target='_blank'
                                 rel='noopener noreferrer'
+                                onClick={() => handleTradeClick(account)}
                             >
                                 Trade
                                 <span className='sr-only'>
