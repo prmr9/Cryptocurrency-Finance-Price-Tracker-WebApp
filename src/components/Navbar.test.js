@@ -4,7 +4,11 @@ import userEvent from '@testing-library/user-event'
 import { MemoryRouter } from 'react-router-dom'
 import Navbar from './Navbar'
 import { TRADE_URL } from '../services/uniswap'
-import { getTrackedEventsForTest } from '../services/analytics'
+import {
+    getTrackedEventsForTest,
+    hasNavigatedInApp,
+    resolveEntrySource
+} from '../services/analytics'
 
 const renderNavbar = () => render(
     <MemoryRouter>
@@ -78,5 +82,32 @@ describe('Navbar Trade button', () => {
         expect(titleLink).toHaveAttribute('href', '/')
         expect(titleLink).not.toContainElement(trade)
         expect(within(titleLink).queryByRole('link', { name: /trade/i })).toBeNull()
+    })
+})
+
+describe('Navbar Accounts link', () => {
+    it('routes to /accounts', () => {
+        renderNavbar()
+
+        expect(screen.getByRole('link', { name: /accounts/i })).toHaveAttribute(
+            'href',
+            '/accounts'
+        )
+    })
+
+    // Clicking a router link is the only in-app navigation this app has, so it is
+    // what has to flip the flag resolveEntrySource keys off. Asserted through the
+    // observable consequence rather than a spy: before the click a POP is a cold
+    // direct hit, after it the same POP is Back within the app.
+    it('records the in-app navigation so a later POP reads as browser history', () => {
+        renderNavbar()
+
+        expect(hasNavigatedInApp()).toBe(false)
+        expect(resolveEntrySource('POP')).toBe('direct_url')
+
+        userEvent.click(screen.getByRole('link', { name: /accounts/i }))
+
+        expect(hasNavigatedInApp()).toBe(true)
+        expect(resolveEntrySource('POP')).toBe('browser_history')
     })
 })
