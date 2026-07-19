@@ -1,1 +1,20 @@
-[]
+[
+  {
+    "ticket": "KAN-2",
+    "agent": "devagent-bot",
+    "repo": "prmr9/Cryptocurrency-Finance-Price-Tracker-WebApp",
+    "files": [
+      "docs/analytics/KAN-2-events.md",
+      "src/analytics.js",
+      "src/analytics.test.js",
+      "src/components/Navbar.css",
+      "src/components/Navbar.js",
+      "src/components/Navbar.test.js",
+      "src/components/__tests__/navbar-analytics-delegation.test.js",
+      "src/setupTests.js",
+      "src/setupTests.test.js"
+    ],
+    "created": 1784457805.948765,
+    "expires": 1784465005.948765
+  }
+]
