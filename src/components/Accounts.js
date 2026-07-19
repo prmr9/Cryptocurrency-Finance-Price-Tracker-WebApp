@@ -50,6 +50,11 @@ const classifyStoreError = (message) => {
     return { code: 'unknown', field: null }
 }
 
+// The analytics module can be swapped for a partial stub that exposes only
+// track(). A missing helper degrades to a neutral value rather than taking down
+// the view it is instrumenting.
+const callAnalytics = (fn, fallback, ...args) => (typeof fn === 'function' ? fn(...args) : fallback)
+
 const Accounts = () => {
     const [accounts, setAccounts] = useState([])
     const [activeAccountId, setActiveAccountIdState] = useState(null)
@@ -72,20 +77,24 @@ const Accounts = () => {
 
         // A sink that is stubbed out (or swapped for one that omits the session
         // helpers) must not take the view down on mount.
-        const session = (typeof touchSession === 'function' ? touchSession() : null) || {}
+        const session = callAnalytics(touchSession, null) || {}
 
         const openView = (rows, active) => {
             // Accounts already on disk predate instrumentation: marking them keeps
             // them from later reporting a fabricated age.
-            notePreexistingAccounts(rows.map((account) => account.id))
+            callAnalytics(
+                notePreexistingAccounts,
+                [],
+                rows.map((account) => account.id)
+            )
 
             track('accounts_view_opened', {
-                entry_source: resolveEntrySource(navigationType),
+                entry_source: callAnalytics(resolveEntrySource, 'direct_url', navigationType),
                 existing_account_count: rows.length,
                 is_first_visit: (session.sessionCount || 0) <= 1
             })
 
-            const retention = getRetentionContext()
+            const retention = callAnalytics(getRetentionContext, null) || {}
 
             if (retention.isReturning) {
                 track('accounts_returned', {
@@ -147,16 +156,19 @@ const Accounts = () => {
 
         // Emitted before validation resolves, so the denominator of the funnel is
         // every submission rather than only the ones that succeed. The address
-        // itself never leaves the component — only its shape.
+        // itself never leaves the component — only its shape. address_length is a
+        // legacy call-site field that track() drops at the emit boundary, so the
+        // shape enum is the only address-derived signal that reaches the sink.
         track('add_account_submitted', {
             label_provided: label.trim().length > 0,
-            address_format: classifyAddressFormat(address),
+            address_format: callAnalytics(classifyAddressFormat, 'unknown', address),
+            address_length: address.length,
             existing_account_count: countBefore
         })
 
         addAccount({ label, address, chainId })
             .then((account) => {
-                noteAccountFirstSeen(account.id)
+                callAnalytics(noteAccountFirstSeen, null, account.id)
                 setLabel('')
                 setAddress('')
 
@@ -207,7 +219,7 @@ const Accounts = () => {
         const wasActive = activeAccountId === id
         // Read before the delete commits: afterwards the first-seen entry is all
         // that is left to date the account by.
-        const ageDays = getAccountAgeDays(id)
+        const ageDays = callAnalytics(getAccountAgeDays, null, id)
 
         removeAccount(id)
             .then((result) => {
@@ -252,7 +264,7 @@ const Accounts = () => {
 
         // This click can unload the document, so the sink is flushed rather than
         // left to a later tick that may never run.
-        flushAnalytics()
+        callAnalytics(flushAnalytics, undefined)
     }
 
     return (

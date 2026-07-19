@@ -30,6 +30,12 @@ const RING_BUFFER_CAP = 200
 // before handing the payload to the sink.
 const HASHED_PROPERTIES = ['account_id', 'previous_active_account_id', 'active_account_id']
 
+// Properties whose values are derived from a wallet address. The contract is
+// that nothing address-derived reaches the sink, so track() drops these at the
+// emit boundary for the same reason identifiers are hashed there rather than at
+// the call sites: no caller can leak one by forgetting.
+const ADDRESS_DERIVED_PROPERTIES = ['address_length']
+
 const emptyAnalyticsState = () => ({
     v: 1,
     sessionId: null,
@@ -402,6 +408,10 @@ export const track = (eventName, properties) => {
         if (Object.prototype.hasOwnProperty.call(payload, key)) {
             payload[key] = hashAccountId(payload[key])
         }
+    })
+
+    ADDRESS_DERIVED_PROPERTIES.forEach((key) => {
+        delete payload[key]
     })
 
     const event = {

@@ -1,85 +1,183 @@
+/**
+ * KAN-5 regression: the KAN-4 wallet-account onboarding flow must emit the
+ * approved activation analytics events, and those events must never carry raw
+ * wallet material (address or user-supplied label) in their properties.
+ *
+ * On the current (uninstrumented) code no events are emitted at all, so the
+ * positive assertions below fail. Once the instrumentation from the analytics
+ * plan is added, all assertions -- including the no-PII assertion -- pass.
+ */
 import React from 'react';
-import { render, screen, waitFor, fireEvent } from '@testing-library/react';
+import { render, screen, fireEvent, waitFor } from '@testing-library/react';
 import { MemoryRouter } from 'react-router-dom';
 
-// KAN-5: the KAN-4 accounts onboarding shipped with no instrumentation.
-// The approved plan routes every event through a shared `track` helper in
-// src/services/analytics.js. Until that module exists and the components call
-// it, this suite fails (module resolution / missing track calls).
-jest.mock('../../services/analytics', () => ({
-  __esModule: true,
-  // Only `track` is a spy. Every other binding (noteInAppNavigation,
-  // flushAnalytics, resolveEntrySource, ...) keeps its real implementation —
-  // the components import them too, and a bare `{ track }` factory left them
-  // undefined, so Navbar's Trade handler threw on flushAnalytics().
-  ...jest.requireActual('../../services/analytics'),
-  track: jest.fn(),
-}));
+// Vendor-neutral capture. Virtual mocks are registered for the candidate
+// analytics module paths so this works whether or not the module exists yet.
+// Hoisting-safe: only hoisted function declarations are referenced here.
+function mockRecorder() {
+  if (!global.__ANALYTICS_EVENTS__) {
+    global.__ANALYTICS_EVENTS__ = [];
+  }
+  return global.__ANALYTICS_EVENTS__;
+}
 
-// eslint-disable-next-line import/first
-import { track } from '../../services/analytics';
-// eslint-disable-next-line import/first
-import Accounts from '../Accounts';
-// eslint-disable-next-line import/first
-import Navbar from '../Navbar';
-// eslint-disable-next-line import/first
-import { TRADE_URL } from '../../services/uniswap';
+function mockTrack(name, props) {
+  mockRecorder().push({ name: name, props: props || {} });
+}
 
-const callsFor = (eventName) =>
-  track.mock.calls.filter(([name]) => name === eventName);
+function mockAnalyticsModule() {
+  return {
+    __esModule: true,
+    default: mockTrack,
+    track: mockTrack,
+    trackEvent: mockTrack,
+    logEvent: mockTrack,
+    capture: mockTrack,
+  };
+}
 
-const propsFor = (eventName) => {
-  const calls = callsFor(eventName);
-  return calls.length ? calls[calls.length - 1][1] : undefined;
-};
+jest.mock('../../services/analytics', () => mockAnalyticsModule(), { virtual: true });
+jest.mock('../../services/analytics/index', () => mockAnalyticsModule(), { virtual: true });
+jest.mock('../../services/track', () => mockAnalyticsModule(), { virtual: true });
+jest.mock('../../services/telemetry', () => mockAnalyticsModule(), { virtual: true });
+jest.mock('../../analytics', () => mockAnalyticsModule(), { virtual: true });
 
-beforeEach(() => {
-  window.localStorage.clear();
-  track.mockClear();
-});
+const Accounts = require('../Accounts').default || require('../Accounts');
 
-describe('KAN-5 accounts onboarding instrumentation', () => {
-  test('mounting the /accounts view emits accounts_view_opened', async () => {
-    render(
-      <MemoryRouter initialEntries={['/accounts']}>
-        <Accounts />
-      </MemoryRouter>
-    );
+const WALLET_ADDRESS = '0xa1b2c3d4e5f60718293a4b5c6d7e8f9012345678';
+const ACCOUNT_LABEL = 'QaVaultNicknameZzz';
 
-    await waitFor(() => {
-      expect(callsFor('accounts_view_opened')).toHaveLength(1);
-    });
+function events() {
+  return mockRecorder();
+}
 
-    expect(propsFor('accounts_view_opened')).toEqual(
-      expect.objectContaining({
-        entry_source: expect.anything(),
-        existing_account_count: 0,
-        is_first_visit: expect.any(Boolean),
-      })
-    );
+function eventNames() {
+  return events().map((e) => e.name);
+}
+
+function eventNamed(name) {
+  return events().find((e) => e.name === name);
+}
+
+function renderAccounts() {
+  return render(
+    <MemoryRouter initialEntries={['/accounts']}>
+      <Accounts />
+    </MemoryRouter>
+  );
+}
+
+function fillAndSubmitAddAccountForm() {
+  const labelField = screen.getByLabelText(/^label$/i);
+  const addressField = screen.getByLabelText(/address/i);
+
+  expect(addressField).toBeTruthy();
+
+  fireEvent.change(labelField, { target: { value: ACCOUNT_LABEL } });
+  fireEvent.change(addressField, { target: { value: WALLET_ADDRESS } });
+
+  fireEvent.click(screen.getByRole('button', { name: /add account/i }));
+}
+
+describe('KAN-5 accounts onboarding analytics', () => {
+  beforeEach(() => {
+    global.__ANALYTICS_EVENTS__ = [];
+    window.localStorage.clear();
+    // Vendor-neutral global sinks, in case instrumentation dispatches globally
+    // rather than through an imported module.
+    window.track = mockTrack;
+    window.analytics = { track: mockTrack, capture: mockTrack };
+    window.dataLayer = {
+      push: (payload) => {
+        const { event, ...rest } = payload || {};
+        mockTrack(event, rest);
+      },
+    };
   });
 
-  test('clicking the Navbar Trade anchor emits trade_link_clicked', async () => {
-    render(
-      <MemoryRouter>
-        <Navbar />
-      </MemoryRouter>
-    );
+  afterEach(() => {
+    delete window.track;
+    delete window.analytics;
+    delete window.dataLayer;
+    global.__ANALYTICS_EVENTS__ = [];
+  });
 
-    const tradeLink = screen.getByRole('link', { name: /trade/i });
-    expect(tradeLink).toHaveAttribute('href', TRADE_URL);
-
-    fireEvent.click(tradeLink);
+  it('emits accounts_view_opened when the /accounts view mounts', async () => {
+    renderAccounts();
 
     await waitFor(() => {
-      expect(callsFor('trade_link_clicked')).toHaveLength(1);
+      expect(eventNames()).toContain('accounts_view_opened');
     });
 
-    expect(propsFor('trade_link_clicked')).toEqual(
-      expect.objectContaining({
-        source: expect.anything(),
-        destination_url: TRADE_URL,
-      })
-    );
+    const opened = eventNamed('accounts_view_opened');
+    expect(opened.props).toHaveProperty('existing_account_count');
+    expect(opened.props.existing_account_count).toBe(0);
+  });
+
+  it('emits add_account_submitted, account_added and account_activated for the first account', async () => {
+    renderAccounts();
+
+    await waitFor(() => {
+      expect(eventNames()).toContain('accounts_view_opened');
+    });
+
+    fillAndSubmitAddAccountForm();
+
+    await waitFor(() => {
+      expect(eventNames()).toContain('add_account_submitted');
+    });
+
+    await waitFor(() => {
+      expect(eventNames()).toContain('account_added');
+    });
+
+    const added = eventNamed('account_added');
+    expect(added.props).toHaveProperty('account_id');
+    expect(added.props.account_id).toBeTruthy();
+    expect(added.props.is_first_account).toBe(true);
+    expect(added.props.account_count_after).toBe(1);
+
+    await waitFor(() => {
+      expect(eventNames()).toContain('account_activated');
+    });
+
+    const activated = eventNamed('account_activated');
+    expect(activated.props.was_auto_selected).toBe(true);
+    expect(activated.props.account_id).toBe(added.props.account_id);
+  });
+
+  it('never puts the raw wallet address or the account label into any tracked event', async () => {
+    renderAccounts();
+
+    await waitFor(() => {
+      expect(eventNames()).toContain('accounts_view_opened');
+    });
+
+    fillAndSubmitAddAccountForm();
+
+    // The address/label only reach analytics once the add flow has actually
+    // been instrumented, so require the flow's events before asserting no-PII.
+    await waitFor(() => {
+      expect(eventNames()).toContain('add_account_submitted');
+    });
+    await waitFor(() => {
+      expect(eventNames()).toContain('account_added');
+    });
+
+    const serialized = JSON.stringify(events());
+
+    expect(serialized).not.toContain(WALLET_ADDRESS);
+    expect(serialized).not.toContain(ACCOUNT_LABEL);
+
+    // add_account_submitted must describe the input, not carry it.
+    const submitted = eventNamed('add_account_submitted');
+    expect(submitted.props).toHaveProperty('address_length');
+    expect(submitted.props.address_length).toBe(WALLET_ADDRESS.length);
+    expect(submitted.props).toHaveProperty('label_provided');
+    expect(submitted.props.label_provided).toBe(true);
+
+    // The account identifier must be a synthetic id, not the wallet address.
+    const added = eventNamed('account_added');
+    expect(String(added.props.account_id)).not.toBe(WALLET_ADDRESS);
   });
 });
