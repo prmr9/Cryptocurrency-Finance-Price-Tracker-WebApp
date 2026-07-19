@@ -36,7 +36,16 @@ function mockAnalyticsModule() {
   };
 }
 
-jest.mock('../../services/analytics', () => mockAnalyticsModule(), { virtual: true });
+// The real analytics module is the source of the address-shape helper; only the
+// track-style sinks are swapped for the capture stub.
+jest.mock(
+  '../../services/analytics',
+  () => ({
+    ...mockAnalyticsModule(),
+    classifyAddressFormat: jest.requireActual('../../services/analytics').classifyAddressFormat,
+  }),
+  { virtual: true }
+);
 jest.mock('../../services/analytics/index', () => mockAnalyticsModule(), { virtual: true });
 jest.mock('../../services/track', () => mockAnalyticsModule(), { virtual: true });
 jest.mock('../../services/telemetry', () => mockAnalyticsModule(), { virtual: true });
@@ -171,8 +180,9 @@ describe('KAN-5 accounts onboarding analytics', () => {
 
     // add_account_submitted must describe the input, not carry it.
     const submitted = eventNamed('add_account_submitted');
-    expect(submitted.props).toHaveProperty('address_length');
-    expect(submitted.props.address_length).toBe(WALLET_ADDRESS.length);
+    expect(submitted.props).toHaveProperty('address_format');
+    expect(submitted.props.address_format).toBe('evm_hex_42');
+    expect(submitted.props).not.toHaveProperty('address_length');
     expect(submitted.props).toHaveProperty('label_provided');
     expect(submitted.props.label_provided).toBe(true);
 

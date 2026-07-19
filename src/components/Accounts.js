@@ -55,6 +55,37 @@ const classifyStoreError = (message) => {
 // the view it is instrumenting.
 const callAnalytics = (fn, fallback, ...args) => (typeof fn === 'function' ? fn(...args) : fallback)
 
+// address_format is the only address-derived signal the funnel event carries, so
+// it must still classify when the analytics module is a partial stub that omits
+// the shared helper. Mirrors classifyAddressFormat() in services/analytics.
+const classifyAddressShape = (address) => {
+    if (typeof address !== 'string') {
+        return 'empty'
+    }
+
+    const trimmed = address.trim()
+
+    if (trimmed.length === 0) {
+        return 'empty'
+    }
+
+    if (/^0x[0-9a-fA-F]{40}$/.test(trimmed)) {
+        return 'evm_hex_42'
+    }
+
+    if (/^[0-9a-fA-F]{40}$/.test(trimmed)) {
+        return 'evm_hex_40_no_prefix'
+    }
+
+    const body = /^0x/i.test(trimmed) ? trimmed.slice(2) : trimmed
+
+    if (!/^[0-9a-fA-F]*$/.test(body)) {
+        return 'non_hex'
+    }
+
+    return body.length < 40 ? 'too_short' : 'too_long'
+}
+
 const Accounts = () => {
     const [accounts, setAccounts] = useState([])
     const [activeAccountId, setActiveAccountIdState] = useState(null)
@@ -156,13 +187,11 @@ const Accounts = () => {
 
         // Emitted before validation resolves, so the denominator of the funnel is
         // every submission rather than only the ones that succeed. The address
-        // itself never leaves the component — only its shape. address_length is a
-        // legacy call-site field that track() drops at the emit boundary, so the
-        // shape enum is the only address-derived signal that reaches the sink.
+        // itself never leaves the component — only its shape, so the format enum
+        // is the only address-derived signal on the event.
         track('add_account_submitted', {
             label_provided: label.trim().length > 0,
-            address_format: callAnalytics(classifyAddressFormat, 'unknown', address),
-            address_length: address.length,
+            address_format: callAnalytics(classifyAddressFormat, classifyAddressShape(address), address),
             existing_account_count: countBefore
         })
 
