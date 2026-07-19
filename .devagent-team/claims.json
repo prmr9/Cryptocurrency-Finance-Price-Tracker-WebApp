@@ -1,15 +1,1 @@
-[
-  {
-    "ticket": "KAN-1",
-    "agent": "devagent-bot",
-    "repo": "prmr9/Cryptocurrency-Finance-Price-Tracker-WebApp",
-    "files": [
-      "src/components/Navbar.css",
-      "src/components/Navbar.js",
-      "src/components/Navbar.test.js",
-      "src/setupTests.js"
-    ],
-    "created": 1784423083.1706161,
-    "expires": 1784430283.1706161
-  }
-]
+[]
