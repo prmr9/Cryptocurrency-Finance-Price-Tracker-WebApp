@@ -2,6 +2,7 @@ import React from 'react'
 import { render, screen, within } from '@testing-library/react'
 import { MemoryRouter } from 'react-router-dom'
 import Navbar from './Navbar'
+import { TRADE_URL } from '../services/uniswap'
 
 const renderNavbar = () => render(
     <MemoryRouter>
@@ -19,7 +20,8 @@ describe('Navbar Trade button', () => {
 
         expect(trade).toBeInTheDocument()
         expect(trade.tagName).toBe('A')
-        expect(trade).toHaveAttribute('href', 'https://app.uniswap.org')
+        expect(trade).toHaveAttribute('href', TRADE_URL)
+        expect(TRADE_URL).toBe('https://app.uniswap.org/explore')
         expect(trade).toHaveAttribute('target', '_blank')
         expect(trade).toHaveAttribute('rel', 'noopener noreferrer')
     })

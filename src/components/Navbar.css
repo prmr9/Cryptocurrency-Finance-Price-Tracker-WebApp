@@ -20,6 +20,18 @@
     color: #6900ff;
 }
 
+.navbar-accounts {
+    color: #f4f4f4;
+    text-decoration: none;
+    margin-left: auto;
+    margin-right: 1rem;
+    white-space: nowrap;
+}
+
+.navbar-accounts:hover {
+    color: #6900ff;
+}
+
 .trade-btn {
     background: #6900ff;
     color: #f4f4f4;

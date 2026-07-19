@@ -1,0 +1,117 @@
+.accounts {
+    max-width: 900px;
+    margin: 0 auto;
+    padding: 1rem;
+    color: #f4f4f4;
+}
+
+.accounts h2 {
+    margin-bottom: 0.5rem;
+}
+
+.accounts-notice {
+    background: #18191b;
+    border-left: 4px solid #6900ff;
+    border-radius: 8px;
+    padding: 0.75rem 1rem;
+    margin-bottom: 1.5rem;
+    line-height: 1.5;
+    font-size: 0.9rem;
+}
+
+.accounts-form {
+    display: flex;
+    flex-direction: column;
+    gap: 0.35rem;
+    margin-bottom: 1rem;
+}
+
+.accounts-form label {
+    font-size: 0.85rem;
+}
+
+.accounts-form input,
+.accounts-form select {
+    padding: 0.5rem;
+    border: 1px solid #3a3b3d;
+    border-radius: 8px;
+    background: #18191b;
+    color: #f4f4f4;
+    margin-bottom: 0.5rem;
+}
+
+.accounts-submit {
+    align-self: flex-start;
+    background: #6900ff;
+    color: #f4f4f4;
+    border: none;
+    padding: 0.5rem 1rem;
+    border-radius: 8px;
+    cursor: pointer;
+}
+
+.accounts-submit:disabled {
+    opacity: 0.6;
+    cursor: not-allowed;
+}
+
+.accounts-error {
+    color: #ff6b6b;
+    margin-bottom: 1rem;
+}
+
+.accounts-empty {
+    color: #a1a1a1;
+}
+
+.accounts-list {
+    list-style: none;
+    padding: 0;
+}
+
+.accounts-row {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: 0.75rem;
+    padding: 0.75rem;
+    border-bottom: 1px solid #3a3b3d;
+}
+
+.accounts-row-active {
+    border-left: 4px solid #6900ff;
+}
+
+.accounts-label {
+    font-weight: 600;
+}
+
+.accounts-address {
+    font-family: monospace;
+    font-size: 0.85rem;
+    color: #a1a1a1;
+    overflow-wrap: anywhere;
+}
+
+.accounts-chain {
+    font-size: 0.8rem;
+    color: #a1a1a1;
+}
+
+.accounts-active-badge {
+    font-size: 0.8rem;
+    color: #6900ff;
+}
+
+.accounts-row button {
+    background: transparent;
+    color: #f4f4f4;
+    border: 1px solid #3a3b3d;
+    border-radius: 8px;
+    padding: 0.35rem 0.75rem;
+    cursor: pointer;
+}
+
+.accounts-row .trade-btn {
+    margin-left: auto;
+}
