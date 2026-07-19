@@ -7,3 +7,4 @@
 {"ts": 1784422784.8251379, "agent": "devagent-bot", "ticket": "KAN-1", "kind": "plan", "text": "Posted implementation plan for KAN-1; awaiting approval.", "to": null}
 {"ts": 1784423074.738328, "agent": "devagent-bot", "ticket": "KAN-1", "kind": "approved", "text": "KAN-1 approved \u2014 implementing now.", "to": null}
 {"ts": 1784425852.522998, "agent": "devagent-bot", "ticket": "KAN-1", "kind": "plan", "text": "Reworking KAN-1 (acceptance_criteria): not shippable yet", "to": null}
+{"ts": 1784426820.5190232, "agent": "devagent-bot", "ticket": "KAN-1", "kind": "blocked", "text": "Blocked: Acceptance criteria could not be completed automatically: Given src/components/Navbar.test.js When its assertions are inspected Then one a", "to": null}
