@@ -2,21 +2,21 @@
   "KAN-6": {
     "agent": "devagent-bot",
     "instance": "08e8eef498d9:devagent-bot",
-    "expires": 1784597449.8145669
+    "expires": 1784597512.9022
   },
   "KAN-8": {
     "agent": "devagent-bot",
     "instance": "08e8eef498d9:devagent-bot",
-    "expires": 1784596242.2277231
+    "expires": 1784597512.902424
   },
   "KAN-9": {
     "agent": "devagent-bot",
     "instance": "08e8eef498d9:devagent-bot",
-    "expires": 1784596242.227921
+    "expires": 1784597512.902591
   },
   "KAN-10": {
     "agent": "devagent-bot",
     "instance": "08e8eef498d9:devagent-bot",
-    "expires": 1784597448.831717
+    "expires": 1784597523.246315
   }
 }
