@@ -8,7 +8,9 @@
  */
 import React from 'react';
 import { render, screen, fireEvent, waitFor } from '@testing-library/react';
-import { MemoryRouter } from 'react-router-dom';
+import * as ReactRouterDom from 'react-router-dom';
+
+const { MemoryRouter } = ReactRouterDom;
 
 const STORAGE_KEY = 'coinsearch.accounts.v1';
 
@@ -27,8 +29,14 @@ function loadStore() {
 // copy of react whose hook dispatcher is not the one the already-imported
 // react-dom renderer installs during renderWithHooks, so the component's first
 // useState hits a null dispatcher and throws "Invalid hook call".
+//
+// react-router-dom is pinned for the same reason. KAN-5 reads the router's
+// navigation type inside Accounts, and a second copy of react-router-dom carries
+// its own NavigationContext object — one the MemoryRouter imported above never
+// populates — so the hook would read a null context and throw on mount.
 function loadAccountsView() {
   jest.doMock('react', () => React);
+  jest.doMock('react-router-dom', () => ReactRouterDom);
   // eslint-disable-next-line global-require
   const mod = require('../Accounts');
   return mod.default || mod.Accounts;

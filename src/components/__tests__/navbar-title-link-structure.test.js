@@ -31,7 +31,10 @@ describe('Navbar title Link structure', () => {
     const trade = screen.getByRole('link', { name: /trade/i });
 
     expect(within(titleLink).queryByRole('link', { name: /trade/i })).toBeNull();
+    // asserted against both the shared constant and its literal value, so a
+    // silent edit to TRADE_URL cannot make this test vacuously pass
     expect(trade).toHaveAttribute('href', TRADE_URL);
+    expect(trade).toHaveAttribute('href', 'https://app.uniswap.org/explore');
     // title link + Accounts link + Trade anchor
     expect(screen.getAllByRole('link')).toHaveLength(3);
   });
