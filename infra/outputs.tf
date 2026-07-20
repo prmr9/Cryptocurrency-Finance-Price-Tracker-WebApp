@@ -13,3 +13,19 @@ output "ssh_private_key_pem" {
   value       = tls_private_key.deploy.private_key_pem
   sensitive   = true
 }
+
+# --- Database outputs (endpoints + secret references, never passwords) ---
+output "db_endpoints" {
+  description = "Postgres host:port for each environment."
+  value       = { for env in var.environments : env => "${aws_db_instance.db[env].address}:${aws_db_instance.db[env].port}" }
+}
+
+output "db_secret_names" {
+  description = "Secrets Manager secret names holding full connection details. Retrieve with: aws secretsmanager get-secret-value --secret-id <name>"
+  value       = { for env in var.environments : env => aws_secretsmanager_secret.db[env].name }
+}
+
+output "db_secret_arns" {
+  description = "Secrets Manager ARNs (grant IAM read access to these for the backend/CI)."
+  value       = { for env in var.environments : env => aws_secretsmanager_secret.db[env].arn }
+}
