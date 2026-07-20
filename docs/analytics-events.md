@@ -137,3 +137,32 @@ The approved plan's eight events map onto the four growth loops as follows.
 
 Every approved event belongs to at least one loop: no event is collected without
 a question it answers, and no loop is left without an event.
+
+## KAN-6 funnel side-tables (vendor-neutral)
+
+KAN-6 adds a client-only, vendor-neutral layer for the six planned
+activation/retention/engagement funnel events, alongside the KAN-5 emitter in the
+same `src/services/analytics.js`. It owns two new versioned storage keys and never
+touches KAN-4's account key or the KAN-5 `cfpt.analytics.v1` key:
+
+| Key | Storage | Holds |
+| --- | --- | --- |
+| `coinsearch.analytics.v1` (`LOCAL_STORAGE_KEY`) | localStorage | anonymous `anon_<id>` client id, lifetime `firstExposureConsumed` flag, `firstValueReachedAt`, and the pruned `successDays` retention array |
+| `coinsearch.analytics.session.v1` (`SESSION_STORAGE_KEY`) | sessionStorage | the `sess_<id>` session id plus per-session dedup flags, so "once per session" survives a full page reload but resets on a genuinely new session |
+
+Privacy sanitizers keep raw values off the sink: `classifyReferrer(url, origin)`
+reduces a referrer to `same_origin | external | direct` (never a path or query),
+and `classifyFailure(err)` reduces an `Error` to
+`missing_field | invalid_address | duplicate_account | unknown` (never the raw
+message). Funnel gates — `recordExposure`, `recordFlowStartedOnce`,
+`recordSuccess` — return the per-event dedup and retention facts. Every export is
+guaranteed never to throw, even when storage is disabled or over quota.
+
+| Planned event | Gate / source | Loop |
+| --- | --- | --- |
+| `feature_entry_point_viewed` | `recordExposure(surface)` → `is_first_exposure`, `shouldFire` | activation |
+| `feature_flow_started` | `recordFlowStartedOnce()` → `shouldFire` | activation |
+| `feature_action_submitted` | view seam (`entry_method` via `resolveEntryMethod`) | activation |
+| `feature_first_value_reached` | `recordSuccess()` → `is_first_success` | activation |
+| `feature_reused` | `recordSuccess()` → `days_since_first_value`, `usage_count_7d` | retention |
+| `feature_action_failed` | `classifyFailure(err)` → `failure_reason` | engagement |

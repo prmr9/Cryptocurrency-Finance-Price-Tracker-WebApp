@@ -44,8 +44,19 @@ const writePersisted = (patch) =>
     JSON.stringify({ ...(readPersisted() || { v: 1 }), ...patch })
   );
 
+// The default sink is a module-level ring buffer, so without a reset it carries
+// events (and once full, its 200-item cap) from one test into the next. Reset
+// before and after every test, mirroring analytics-funnel-kan6.test.js.
+beforeEach(() => {
+  resetAnalyticsForTest();
+});
+
+afterEach(() => {
+  resetAnalyticsForTest();
+});
+
 describe('analytics storage key', () => {
-  test('is the only literal handed to localStorage in this module', () => {
+  test('hands localStorage only this module\'s own keys, never KAN-4\'s account key', () => {
     expect(source).toMatch(/^const ANALYTICS_KEY = 'cfpt\.analytics\.v1'$/m);
 
     const calls = source.match(
@@ -54,14 +65,20 @@ describe('analytics storage key', () => {
 
     expect(calls).not.toBeNull();
     expect(calls.length).toBeGreaterThan(0);
+    // KAN-5's session/retention key plus KAN-6's funnel side-table key are the
+    // only literals this module may hand to localStorage. The account key
+    // ('coinsearch.accounts.v1') must never appear.
     calls.forEach((call) => {
-      expect(call).toMatch(/\(\s*ANALYTICS_KEY\s*$/);
+      expect(call).toMatch(/\(\s*(?:ANALYTICS_KEY|LOCAL_STORAGE_KEY)\s*$/);
     });
+    expect(source).not.toContain('coinsearch.accounts');
   });
 
-  test('holds all session state in that key, never in per-tab storage', () => {
-    expect(source).not.toContain('window.sessionStorage');
-
+  test('KAN-5 activity-window session state lives in localStorage, not fabricated per-tab', () => {
+    // KAN-6 adds a separate, intentional sessionStorage side-table
+    // (SESSION_STORAGE_KEY) for its own per-session dedup; that is a deliberate
+    // architectural addition, so the KAN-5 session's localStorage home is what
+    // this test pins rather than a blanket ban on sessionStorage.
     touchSession();
 
     expect(readPersisted().sessionId).toEqual(expect.any(String));

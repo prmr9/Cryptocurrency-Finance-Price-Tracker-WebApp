@@ -17,6 +17,18 @@
 
 const ANALYTICS_KEY = 'cfpt.analytics.v1'
 
+// KAN-6 funnel side-tables. These are versioned keys distinct from ANALYTICS_KEY
+// above and from KAN-4's account key. The lifetime funnel/retention state lives
+// in localStorage; the per-session dedup flags and session id live in
+// sessionStorage so 'once per session' survives a full page reload instead of
+// resetting on a module variable.
+export const LOCAL_STORAGE_KEY = 'coinsearch.analytics.v1'
+export const SESSION_STORAGE_KEY = 'coinsearch.analytics.session.v1'
+
+// The retention window for usage_count_7d. Seven local calendar days, measured
+// with localDayIndex so it is DST-correct rather than a raw 7 * DAY_MS subtraction.
+const RETENTION_WINDOW_DAYS = 7
+
 // A session is a 30-minute inactivity window. State lives in the localStorage
 // key above rather than in per-tab storage, so several open tabs share one
 // session and closing a tab does not fabricate a new one.
@@ -391,43 +403,406 @@ const defaultFlush = () => Promise.resolve()
 let sink = defaultSink
 let flush = defaultFlush
 
-export const configureAnalytics = ({ sink: nextSink, flush: nextFlush } = {}) => {
+// Injectable clock (test/vendor seam). All KAN-6 timestamps read through clock()
+// so a test can pin 'now' across a DST boundary without touching real wall time.
+let nowFn = Date.now
+
+const clock = () => {
+    try {
+        const t = nowFn()
+        return typeof t === 'number' && !Number.isNaN(t) ? t : Date.now()
+    } catch (err) {
+        return Date.now()
+    }
+}
+
+export const configureAnalytics = ({ sink: nextSink, flush: nextFlush, now: nextNow } = {}) => {
     sink = typeof nextSink === 'function' ? nextSink : defaultSink
     flush = typeof nextFlush === 'function' ? nextFlush : defaultFlush
+    nowFn = typeof nextNow === 'function' ? nextNow : Date.now
 
-    return { sink, flush }
+    return { sink, flush, now: nowFn }
 }
 
 export const flushAnalytics = () => flush()
 
 export const track = (eventName, properties) => {
-    const session = touchSession()
-    const payload = { ...(properties || {}) }
+    // The entire body is enclosed so track() never throws on ANY path — a storage
+    // failure in touchSession, a hostile getter on a property, or a broken sink all
+    // degrade to a returned event rather than taking down the view being instrumented.
+    try {
+        const session = touchSession()
+        const payload = { ...(properties || {}) }
 
-    HASHED_PROPERTIES.forEach((key) => {
-        if (Object.prototype.hasOwnProperty.call(payload, key)) {
-            payload[key] = hashAccountId(payload[key])
+        HASHED_PROPERTIES.forEach((key) => {
+            if (Object.prototype.hasOwnProperty.call(payload, key)) {
+                payload[key] = hashAccountId(payload[key])
+            }
+        })
+
+        ADDRESS_DERIVED_PROPERTIES.forEach((key) => {
+            delete payload[key]
+        })
+
+        const event = {
+            event: eventName,
+            properties: payload,
+            ts: clock(),
+            session_id: session.sessionId
         }
-    })
 
-    ADDRESS_DERIVED_PROPERTIES.forEach((key) => {
-        delete payload[key]
-    })
+        try {
+            sink(event)
+        } catch (err) {
+            // A broken sink must never take the view down with it.
+        }
 
-    const event = {
-        event: eventName,
-        properties: payload,
-        ts: Date.now(),
-        session_id: session.sessionId
+        return event
+    } catch (err) {
+        // Anything unexpected still returns a well-formed, sink-free event.
+        return { event: eventName, properties: {}, ts: 0, session_id: null }
+    }
+}
+
+// ---------------------------------------------------------------------------
+// KAN-6 wallet-onboarding funnel: anonymous client id, per-session dedup, and
+// lifetime funnel/retention state. Every export below is guaranteed never to
+// throw, even when window.localStorage / window.sessionStorage is disabled,
+// over quota, or throws SecurityError.
+// ---------------------------------------------------------------------------
+
+// A local-calendar-day index (days since epoch in the viewer's local timezone).
+// Built from the calendar Y/M/D rather than a raw ms/DAY_MS division so day
+// diffs stay correct across DST transitions, when a local day is 23 or 25 hours.
+const localDayIndex = (ms) => {
+    const d = new Date(ms)
+    return Math.floor(Date.UTC(d.getFullYear(), d.getMonth(), d.getDate()) / DAY_MS)
+}
+
+const emptyLocalState = () => ({
+    v: 1,
+    clientId: null,
+    firstExposureConsumed: false,
+    firstValueReachedAt: null,
+    successDays: []
+})
+
+// Reads never throw: disabled storage, corrupt JSON, or foreign shapes all
+// degrade to a fresh state.
+export const readLocalState = () => {
+    let raw = null
+
+    try {
+        raw = window.localStorage.getItem(LOCAL_STORAGE_KEY)
+    } catch (err) {
+        return emptyLocalState()
+    }
+
+    if (!raw) {
+        return emptyLocalState()
+    }
+
+    let parsed = null
+
+    try {
+        parsed = JSON.parse(raw)
+    } catch (err) {
+        return emptyLocalState()
+    }
+
+    if (parsed === null || typeof parsed !== 'object' || Array.isArray(parsed)) {
+        return emptyLocalState()
+    }
+
+    return {
+        v: 1,
+        clientId: typeof parsed.clientId === 'string' ? parsed.clientId : null,
+        firstExposureConsumed: parsed.firstExposureConsumed === true,
+        firstValueReachedAt:
+            typeof parsed.firstValueReachedAt === 'number' ? parsed.firstValueReachedAt : null,
+        successDays: Array.isArray(parsed.successDays)
+            ? parsed.successDays.filter((ts) => typeof ts === 'number')
+            : []
+    }
+}
+
+// The race-safe write seam. It re-reads the freshest persisted state via
+// readLocalState immediately before setItem, with NO await between the read and
+// the write, so a concurrent tab's changes are not clobbered by a stale
+// in-memory snapshot. successDays is seeded from the fresh copy, so a mutator
+// APPENDS to the persisted array rather than replacing it. Never throws.
+export const writeLocalState = (mutator) => {
+    const fresh = readLocalState()
+    const next = { ...fresh, successDays: fresh.successDays.slice() }
+
+    if (typeof mutator === 'function') {
+        try {
+            mutator(next)
+        } catch (err) {
+            // A broken mutator must not throw out of a telemetry write.
+        }
     }
 
     try {
-        sink(event)
+        window.localStorage.setItem(LOCAL_STORAGE_KEY, JSON.stringify(next))
     } catch (err) {
-        // A broken sink must never take the view down with it.
+        // Quota or private mode: the state simply is not persisted this call.
     }
 
-    return event
+    return next
+}
+
+const emptySessionState = () => ({
+    v: 1,
+    sessionId: null,
+    exposedSurfaces: {},
+    flowStarted: false
+})
+
+// Session state lives in sessionStorage under SESSION_STORAGE_KEY (never a
+// module-level variable and never localStorage), so 'once per session' dedup and
+// the session id survive a full page reload but reset on a genuinely new session.
+const readSessionState = () => {
+    let raw = null
+
+    try {
+        raw = window.sessionStorage.getItem(SESSION_STORAGE_KEY)
+    } catch (err) {
+        return emptySessionState()
+    }
+
+    if (!raw) {
+        return emptySessionState()
+    }
+
+    let parsed = null
+
+    try {
+        parsed = JSON.parse(raw)
+    } catch (err) {
+        return emptySessionState()
+    }
+
+    if (parsed === null || typeof parsed !== 'object' || Array.isArray(parsed)) {
+        return emptySessionState()
+    }
+
+    const surfaces =
+        parsed.exposedSurfaces !== null &&
+        typeof parsed.exposedSurfaces === 'object' &&
+        !Array.isArray(parsed.exposedSurfaces)
+            ? parsed.exposedSurfaces
+            : {}
+
+    return {
+        v: 1,
+        sessionId: typeof parsed.sessionId === 'string' ? parsed.sessionId : null,
+        exposedSurfaces: { ...surfaces },
+        flowStarted: parsed.flowStarted === true
+    }
+}
+
+const writeSessionState = (state) => {
+    try {
+        window.sessionStorage.setItem(SESSION_STORAGE_KEY, JSON.stringify(state))
+        return true
+    } catch (err) {
+        return false
+    }
+}
+
+let idSeq = 0
+
+const mintId = (prefix) => `${prefix}_${clock().toString(36)}_${(idSeq++).toString(36)}`
+
+// Anonymous, localStorage-persisted client id. There is no auth in this app, so
+// user_id is this stable 'anon_<id>'. Never throws.
+export const getClientId = () => {
+    const state = readLocalState()
+
+    if (typeof state.clientId === 'string' && state.clientId) {
+        return state.clientId
+    }
+
+    const id = mintId('anon')
+    writeLocalState((s) => {
+        s.clientId = id
+    })
+
+    return id
+}
+
+// The session id, read from and written to sessionStorage under
+// SESSION_STORAGE_KEY. Never throws.
+export const getOrCreateSessionId = () => {
+    const state = readSessionState()
+
+    if (typeof state.sessionId === 'string' && state.sessionId) {
+        return state.sessionId
+    }
+
+    state.sessionId = mintId('sess')
+    writeSessionState(state)
+
+    return state.sessionId
+}
+
+// Returns exactly one of 'nav_link' | 'browser_history' | 'reload' | 'direct_url'
+// from the in-app-navigation flag plus performance navigation timing. Never throws.
+export const resolveEntryMethod = () => {
+    try {
+        if (hasNavigatedWithinApp) {
+            return 'nav_link'
+        }
+
+        let timingType = null
+
+        try {
+            const entries = window.performance.getEntriesByType('navigation')
+            const entry = entries && entries[0]
+            timingType = entry && typeof entry.type === 'string' ? entry.type : null
+        } catch (err) {
+            timingType = null
+        }
+
+        if (timingType === 'back_forward') {
+            return 'browser_history'
+        }
+
+        if (timingType === 'reload') {
+            return 'reload'
+        }
+
+        return 'direct_url'
+    } catch (err) {
+        return 'direct_url'
+    }
+}
+
+// Reduces a referrer URL to a coarse enum. Returns exactly one of 'same_origin' |
+// 'external' | 'direct' and NEVER any substring of the referrer's path or query,
+// so no route, wallet address, or account label can leak through referrer. Never throws.
+export const classifyReferrer = (referrerUrl, currentOrigin) => {
+    if (typeof referrerUrl !== 'string' || referrerUrl.trim() === '') {
+        return 'direct'
+    }
+
+    let origin = null
+
+    try {
+        origin = new URL(referrerUrl).origin
+    } catch (err) {
+        return 'direct'
+    }
+
+    if (typeof currentOrigin === 'string' && currentOrigin !== '' && origin === currentOrigin) {
+        return 'same_origin'
+    }
+
+    return 'external'
+}
+
+// Reduces an Error to a stable validation category. Returns exactly one of
+// 'missing_field' | 'invalid_address' | 'duplicate_account' | 'unknown' and NEVER
+// the raw err.message, so a message that happens to embed user input cannot leak.
+// Never throws.
+export const classifyFailure = (err) => {
+    let message = ''
+
+    try {
+        if (err && typeof err.message === 'string') {
+            message = err.message
+        } else if (typeof err === 'string') {
+            message = err
+        }
+    } catch (readErr) {
+        message = ''
+    }
+
+    if (/already been added|duplicate/i.test(message)) {
+        return 'duplicate_account'
+    }
+
+    if (/valid public wallet address|invalid address|not a valid|malformed/i.test(message)) {
+        return 'invalid_address'
+    }
+
+    if (/required|missing|empty|label/i.test(message)) {
+        return 'missing_field'
+    }
+
+    return 'unknown'
+}
+
+// feature_entry_point_viewed gate. is_first_exposure is a LIFETIME flag persisted
+// in localStorage, so it is true exactly once per client across sessions; shouldFire
+// is per-session-per-surface so the event fires at most once per surface per session.
+// Never throws.
+export const recordExposure = (surface) => {
+    const local = readLocalState()
+    const isFirstExposure = local.firstExposureConsumed !== true
+
+    if (isFirstExposure) {
+        writeLocalState((s) => {
+            s.firstExposureConsumed = true
+        })
+    }
+
+    const key = typeof surface === 'string' && surface ? surface : 'unknown'
+    const session = readSessionState()
+    const alreadyExposed = session.exposedSurfaces[key] === true
+
+    if (!alreadyExposed) {
+        session.exposedSurfaces[key] = true
+        writeSessionState(session)
+    }
+
+    return { isFirstExposure, shouldFire: !alreadyExposed }
+}
+
+// feature_flow_started gate: fires at most once per session. Never throws.
+export const recordFlowStartedOnce = () => {
+    const session = readSessionState()
+    const shouldFire = session.flowStarted !== true
+
+    if (shouldFire) {
+        session.flowStarted = true
+        writeSessionState(session)
+    }
+
+    return { shouldFire }
+}
+
+// feature_first_value_reached / feature_reused state. Appends this success to the
+// persisted successDays array (via writeLocalState, which re-reads first), prunes
+// entries older than RETENTION_WINDOW_DAYS local days, and records the lifetime
+// first-value timestamp on the first ever success. Never throws.
+export const recordSuccess = () => {
+    const now = clock()
+    const before = readLocalState()
+    const isFirstSuccess = typeof before.firstValueReachedAt !== 'number'
+    const cutoffIndex = localDayIndex(now) - RETENTION_WINDOW_DAYS
+
+    const next = writeLocalState((s) => {
+        // Append this success, then drop anything outside the 7-local-day window.
+        s.successDays.push(now)
+        s.successDays = s.successDays.filter((ts) => localDayIndex(ts) > cutoffIndex)
+
+        if (typeof s.firstValueReachedAt !== 'number') {
+            s.firstValueReachedAt = now
+        }
+    })
+
+    const firstValueAt =
+        typeof next.firstValueReachedAt === 'number' ? next.firstValueReachedAt : now
+    const daysSinceFirstValue = Math.max(0, localDayIndex(now) - localDayIndex(firstValueAt))
+
+    return {
+        isFirstSuccess,
+        daysSinceFirstValue,
+        usageCount7d: next.successDays.length,
+        isLaterDayReuse: !isFirstSuccess && daysSinceFirstValue > 0
+    }
 }
 
 export const getTrackedEventsForTest = () => eventBuffer.slice()
@@ -436,11 +811,24 @@ export const resetAnalyticsForTest = () => {
     hasNavigatedWithinApp = false
     sink = defaultSink
     flush = defaultFlush
+    nowFn = Date.now
     eventBuffer.length = 0
     fallbackRaw = null
 
     try {
         window.localStorage.removeItem(ANALYTICS_KEY)
+    } catch (err) {
+        // Nothing to clear if storage is unavailable.
+    }
+
+    try {
+        window.localStorage.removeItem(LOCAL_STORAGE_KEY)
+    } catch (err) {
+        // Nothing to clear if storage is unavailable.
+    }
+
+    try {
+        window.sessionStorage.removeItem(SESSION_STORAGE_KEY)
     } catch (err) {
         // Nothing to clear if storage is unavailable.
     }
