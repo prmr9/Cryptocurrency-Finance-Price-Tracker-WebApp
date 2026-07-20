@@ -4,7 +4,9 @@ import { Routes, Route } from 'react-router-dom'
 import Coins from './components/Coins'
 import Coin from './routes/Coin'
 import Navbar from './components/Navbar'
+import Footer from './components/Footer'
 import Accounts from './components/Accounts'
+import About from './routes/About'
 
 
 function App() {
@@ -28,11 +30,12 @@ function App() {
       <Routes>
         <Route path='/' element={<Coins coins={coins} />} />
         <Route path='/accounts' element={<Accounts />} />
+        <Route path='/about' element={<About />} />
         <Route path='/coin' element={<Coin />}>
           <Route path=':coinId' element={<Coin />} />
         </Route>
       </Routes>
-
+      <Footer />
     </>
   );
 }

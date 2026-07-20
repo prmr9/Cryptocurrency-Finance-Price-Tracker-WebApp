@@ -1,12 +1,31 @@
 .coin-container .content {
     max-width: 740px;
     margin: 1rem auto;
-    padding: .7rem 1rem;
+    padding: 1rem 1.25rem;
     display: flex;
     flex-direction: column;
-    background-color: #26272b;
-    box-shadow: 0px 0px 12px #18191b;
-    border-radius: 8px;
+    background-color: var(--color-surface);
+    border: 1px solid var(--color-border);
+    border-radius: var(--radius-card);
+}
+
+/* Explicit, legible colors for the DOMPurify-sanitized description so it
+   never renders dark-on-dark against the --color-bg background. */
+.about,
+.coin-description {
+    color: var(--color-text);
+    line-height: 1.65;
+}
+
+.about a,
+.coin-description a {
+    color: var(--color-accent);
+    text-decoration: underline;
+}
+
+.about a:hover,
+.coin-description a:hover {
+    color: var(--color-accent-2);
 }
 
 .rank {

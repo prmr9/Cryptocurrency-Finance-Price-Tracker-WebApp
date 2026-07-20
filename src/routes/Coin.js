@@ -98,7 +98,7 @@ const Coin = () => {
                 <div className='content'>
                     <div className='about'>
                         <h3>About</h3>
-                        <p dangerouslySetInnerHTML={{
+                        <p className='coin-description' dangerouslySetInnerHTML={{
                             __html: DOMPurify.sanitize(coin.description ? coin.description.en : ''),
                         }}>
                         
