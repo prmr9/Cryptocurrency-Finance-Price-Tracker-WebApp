@@ -1,18 +1,88 @@
 .container {
     max-width: 1140px;
     margin: auto;
+    padding: 0 1rem;
+}
+
+.hero {
+    text-align: center;
+    max-width: 760px;
+    margin: 3rem auto 2rem;
+    padding: 0 1rem;
+}
+
+.hero-title {
+    font-size: clamp(2rem, 5vw, 3.25rem);
+    font-weight: 800;
+    line-height: 1.1;
+    letter-spacing: -0.02em;
+    margin: 0 0 1rem;
+    text-align: center;
+}
+
+.hero-accent {
+    background: var(--gradient-accent);
+    -webkit-background-clip: text;
+    background-clip: text;
+    -webkit-text-fill-color: transparent;
+    color: transparent;
+}
+
+.hero-subtitle {
+    color: var(--color-text-muted);
+    font-size: 1.05rem;
+    line-height: 1.6;
+    margin: 0;
+}
+
+.coin-search {
+    max-width: 560px;
+    margin: 0 auto 1rem;
+    padding: 0 1rem;
+}
+
+.coin-search-input {
+    width: 100%;
+    padding: 0.85rem 1.25rem;
+    font-size: 1rem;
+    font-family: inherit;
+    color: var(--color-text);
+    background-color: var(--color-surface);
+    border: 1px solid var(--color-border);
+    border-radius: var(--radius-pill);
+    outline: none;
+    transition: border-color 0.2s ease;
+}
+
+.coin-search-input::placeholder {
+    color: var(--color-text-muted);
+}
+
+.coin-search-input:focus {
+    border-color: var(--color-accent);
+}
+
+.coin-empty {
+    text-align: center;
+    color: var(--color-text-muted);
+    margin: 2rem 1rem;
+    padding: 2rem 1rem;
+    background-color: var(--color-surface);
+    border: 1px solid var(--color-border);
+    border-radius: var(--radius-card);
 }
 
 .heading {
     display: flex;
     justify-content: space-between;
     align-items: center;
-    background-color: #26272b;
-    box-shadow: 0px 0px 12px #18191b;
-    border-radius: 8px;
-    margin: 2rem 1rem;
-    padding: .7rem 1rem;
-    font-weight: 700;
+    color: var(--color-text-muted);
+    margin: 1.5rem 1rem 0.5rem;
+    padding: .7rem 1.25rem;
+    font-weight: 600;
+    font-size: 0.85rem;
+    text-transform: uppercase;
+    letter-spacing: 0.04em;
 }
 
 .coin-name {
@@ -23,16 +93,17 @@
     display: flex;
     justify-content: space-between;
     align-items: center;
-    background-color: #26272b;
-    box-shadow: 0px 0px 12px #18191b;
-    border-radius: 8px;
-    margin: 2rem 1rem;
-    padding: .7rem 1rem;
+    background-color: var(--color-surface);
+    border: 1px solid var(--color-border);
+    border-radius: var(--radius-card);
+    margin: 0.75rem 1rem;
+    padding: 1rem 1.25rem;
+    transition: border-color 0.2s ease, transform 0.2s ease;
 }
 
 .coin-row:hover {
-    transform: scale(1.04);
-    transition: .3s ease-in-out;
+    transform: translateY(-2px);
+    border-color: var(--color-accent);
     cursor: pointer;
 }
 
