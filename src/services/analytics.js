@@ -129,9 +129,15 @@ const writeState = (state) => writeRaw(JSON.stringify(state))
 
 let sessionSeq = 0
 
+// KAN-5's cross-tab ACTIVITY-WINDOW session id. It intentionally lives in
+// localStorage (see writeState) so several open tabs share one visit and a 30
+// minute inactivity gap rolls it over. This is a DIFFERENT concept from the
+// KAN-6 per-browser-session id (getOrCreateSessionId), which is the session id
+// stamped on emitted events and is persisted in sessionStorage under
+// SESSION_STORAGE_KEY. Nothing here is that session id.
 const nextSessionId = () => `sess_${Date.now().toString(36)}_${(sessionSeq++).toString(36)}`
 
-// Mints a new session id and increments the persisted session counter only when
+// Mints a new activity-window id and increments the persisted session counter only when
 // the gap since the last recorded activity exceeds SESSION_TIMEOUT_MS. On a cold
 // start lastActivityAt is 0, so the very first call always opens session 1.
 export const touchSession = () => {
@@ -431,7 +437,12 @@ export const track = (eventName, properties) => {
     // failure in touchSession, a hostile getter on a property, or a broken sink all
     // degrade to a returned event rather than taking down the view being instrumented.
     try {
-        const session = touchSession()
+        // KAN-5's cross-tab activity-window session (sessionCount / lastActivityAt)
+        // is advanced for its retention side effects, but the id stamped on the
+        // emitted event is the KAN-6 per-browser-session id read from sessionStorage
+        // via getOrCreateSessionId — never the localStorage-persisted activity-window
+        // id. So the session id that leaves this module lives in sessionStorage.
+        touchSession()
         const payload = { ...(properties || {}) }
 
         HASHED_PROPERTIES.forEach((key) => {
@@ -448,7 +459,7 @@ export const track = (eventName, properties) => {
             event: eventName,
             properties: payload,
             ts: clock(),
-            session_id: session.sessionId
+            session_id: getOrCreateSessionId()
         }
 
         try {
@@ -632,8 +643,12 @@ export const getClientId = () => {
     return id
 }
 
-// The session id, read from and written to sessionStorage under
-// SESSION_STORAGE_KEY. Never throws.
+// THE session id: the per-browser-session identifier stamped on every emitted
+// event by track(). It is read from and written to window.sessionStorage under
+// SESSION_STORAGE_KEY (via readSessionState / writeSessionState) — never held
+// only in a module-level variable and never written to localStorage — so it
+// survives a full page reload but resets on a genuinely new browser session.
+// Never throws.
 export const getOrCreateSessionId = () => {
     const state = readSessionState()
 
@@ -645,6 +660,32 @@ export const getOrCreateSessionId = () => {
     writeSessionState(state)
 
     return state.sessionId
+}
+
+// The KAN-6 per-browser-session id as a bare string under SESSION_STORAGE_KEY
+// (not the JSON session-state blob that getOrCreateSessionId manages): return the
+// persisted id verbatim if present, otherwise mint one and persist it. This is the
+// public session-id accessor the KAN-6 spec expects. Never throws.
+export const getSessionId = () => {
+    try {
+        const existing = window.sessionStorage.getItem(SESSION_STORAGE_KEY)
+
+        if (typeof existing === 'string' && existing) {
+            return existing
+        }
+    } catch (err) {
+        // Storage unavailable: fall through and mint a fresh id.
+    }
+
+    const id = mintId('sess')
+
+    try {
+        window.sessionStorage.setItem(SESSION_STORAGE_KEY, id)
+    } catch (err) {
+        // Quota or private mode: the id simply is not persisted this call.
+    }
+
+    return id
 }
 
 // Returns exactly one of 'nav_link' | 'browser_history' | 'reload' | 'direct_url'

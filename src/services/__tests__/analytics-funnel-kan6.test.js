@@ -4,6 +4,7 @@ import {
   track,
   configureAnalytics,
   resetAnalyticsForTest,
+  getTrackedEventsForTest,
   LOCAL_STORAGE_KEY,
   SESSION_STORAGE_KEY,
   readLocalState,
@@ -59,6 +60,20 @@ test('the session id is read from and written to sessionStorage, not localStorag
 
   // Idempotent: a second call returns the same persisted id (survives reload).
   expect(getOrCreateSessionId()).toBe(id);
+});
+
+// AC2 (reinforcement): the session id that track() stamps on every emitted event
+// is the sessionStorage-backed id under SESSION_STORAGE_KEY, so the id that leaves
+// the module lives in sessionStorage rather than in a module var or localStorage.
+test('track stamps the sessionStorage-backed session id on emitted events', () => {
+  track('feature_flow_started', { user_id: 'anon_1' });
+
+  const [event] = getTrackedEventsForTest();
+  const persisted = window.sessionStorage.getItem(SESSION_STORAGE_KEY);
+
+  expect(persisted).not.toBeNull();
+  expect(event.session_id).toBe(JSON.parse(persisted).sessionId);
+  expect(event.session_id).toBe(getOrCreateSessionId());
 });
 
 // AC3
