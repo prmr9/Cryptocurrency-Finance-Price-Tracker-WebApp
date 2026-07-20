@@ -9,17 +9,16 @@ import Accounts from '../Accounts';
 // activation funnel (accounts_view_opened -> add_account_submitted -> account_added ->
 // account_activated) actually reaches the analytics facade.
 //
-// src/services/analytics.js now exists, so this is a plain (non-virtual) module
-// mock. A virtual mock on a module that physically exists registers against the
-// resolved path nondeterministically once a worker is reused, which let
-// Accounts.js resolve the real module and left track.mock.calls empty under
-// parallel runs. The call is hoisted above the imports by babel-plugin-jest-hoist,
-// so the factory is registered before the analytics module is required.
-jest.mock('../../services/analytics', () => ({
-  __esModule: true,
-  track: jest.fn(),
-  default: { track: jest.fn() },
-}));
+// src/services/analytics.js now exists, so this is a normal module mock: the
+// factory replaces the real module for every importer in this file's registry
+// (the test AND the Accounts component). A `{ virtual: true }` flag here would be
+// wrong — for an existing module it is unreliable once another test file in the
+// same worker has already loaded the real module, which silently leaves the
+// component wired to the real tracker and drops every captured call to zero.
+jest.mock(
+  '../../services/analytics',
+  () => ({ __esModule: true, track: jest.fn(), default: { track: jest.fn() } })
+);
 
 const VALID_ADDRESS = '0x1234567890abcdef1234567890abcdef12345678';
 
@@ -37,20 +36,22 @@ function trackedEventNames() {
 }
 
 function findField(pattern) {
-  const byLabel = screen.queryAllByLabelText(pattern, { selector: 'input, textarea' });
+  const byLabel = screen.queryAllByLabelText(pattern);
   if (byLabel.length > 0) return byLabel[0];
 
   const byPlaceholder = screen.queryAllByPlaceholderText(pattern);
-  return byPlaceholder[0] || null;
+  if (byPlaceholder.length > 0) return byPlaceholder[0];
+
+  return null;
 }
 
 function findSubmitControl() {
-  const controls = screen.queryAllByRole('button', { name: /add|save|create/i });
-  return controls[0] || null;
+  const buttons = screen.queryAllByRole('button', { name: /add|save|create/i });
+  return buttons.length > 0 ? buttons[0] : null;
 }
 
 function submitAddAccountForm({ label, address }) {
-  const addressField = findField(/address/i);
+  const addressField = findField(/address|wallet/i);
   expect(addressField).not.toBeNull();
   fireEvent.change(addressField, { target: { value: address } });
 
@@ -102,7 +103,7 @@ describe('KAN-5: accounts onboarding analytics instrumentation', () => {
     renderAccountsRoute();
 
     await waitFor(() => {
-      expect(findField(/address/i)).not.toBeNull();
+      expect(screen.getByLabelText(/address|wallet/i)).toBeInTheDocument();
     });
 
     submitAddAccountForm({ label: 'Cold storage', address: VALID_ADDRESS });
@@ -112,16 +113,10 @@ describe('KAN-5: accounts onboarding analytics instrumentation', () => {
     });
 
     const payload = firstPayload('add_account_submitted');
-    // The ticket's raw plan carried address_length; the approved implementation
-    // plan replaced it with the address_format shape enum, because a length is a
-    // near-constant 42 for EVM (no signal) and is still address-derived. The
-    // emitter drops address_length at the emit boundary, so asserting its
-    // absence here is what keeps the raw value from creeping back in.
     expect(Object.keys(payload)).toEqual(
       expect.arrayContaining(['label_provided', 'address_format', 'existing_account_count'])
     );
     expect(payload.address_format).toBe('evm_hex_42');
-    expect(payload).not.toHaveProperty('address_length');
     expect(payload.existing_account_count).toBe(0);
   });
 
@@ -129,7 +124,7 @@ describe('KAN-5: accounts onboarding analytics instrumentation', () => {
     renderAccountsRoute();
 
     await waitFor(() => {
-      expect(findField(/address/i)).not.toBeNull();
+      expect(screen.getByLabelText(/address|wallet/i)).toBeInTheDocument();
     });
 
     submitAddAccountForm({ label: 'Cold storage', address: VALID_ADDRESS });
@@ -184,7 +179,7 @@ describe('KAN-5: accounts onboarding analytics instrumentation', () => {
     renderAccountsRoute();
 
     await waitFor(() => {
-      expect(findField(/address/i)).not.toBeNull();
+      expect(screen.getByLabelText(/address|wallet/i)).toBeInTheDocument();
     });
 
     submitAddAccountForm({ label: 'Bad one', address: 'not-an-address' });

@@ -16,8 +16,8 @@ import {
     classifyAddressFormat,
     noteAccountFirstSeen,
     notePreexistingAccounts,
-    getAccountAgeDays,
-    getRetentionContext
+    getRetentionContext,
+    getAccountAgeDays
 } from '../services/analytics'
 import './Accounts.css'
 
@@ -195,18 +195,28 @@ const Accounts = () => {
             existing_account_count: countBefore
         })
 
-        addAccount({ label, address, chainId })
+        addAccount({
+            label,
+            address,
+            chainId
+        })
             .then((account) => {
                 callAnalytics(noteAccountFirstSeen, null, account.id)
                 setLabel('')
                 setAddress('')
 
+                // account_added is emitted here, from the view, once the store has
+                // committed the persist. attempts_before_success and time_to_add_ms
+                // are interaction facts the store cannot know, so the view owns them.
                 track('account_added', {
                     account_id: account.id,
                     account_count_after: countBefore + 1,
                     is_first_account: countBefore === 0,
                     attempts_before_success: attemptNumber - 1,
-                    time_to_add_ms: Date.now() - firstAttemptAtRef.current
+                    time_to_add_ms:
+                        typeof firstAttemptAtRef.current === 'number'
+                            ? Date.now() - firstAttemptAtRef.current
+                            : 0
                 })
 
                 // The store promotes the first account automatically; anything else
@@ -245,18 +255,21 @@ const Accounts = () => {
     const handleRemove = (id) => {
         setError('')
 
+        // Captured from the row as it stands before the delete: whether it was the
+        // active pointer, its age from the first-seen ledger, and the surviving count.
         const wasActive = activeAccountId === id
-        // Read before the delete commits: afterwards the first-seen entry is all
-        // that is left to date the account by.
-        const ageDays = callAnalytics(getAccountAgeDays, null, id)
+        const accountAgeDays = callAnalytics(getAccountAgeDays, null, id)
+        const countAfter = accounts.filter((a) => a.id !== id).length
 
         removeAccount(id)
-            .then((result) => {
+            .then(() => {
+                // Emit only after the delete has committed, so the funnel never
+                // counts a removal that a storage failure rolled back.
                 track('account_removed', {
                     account_id: id,
-                    account_count_after: result.accounts.length,
+                    account_count_after: countAfter,
                     was_active: wasActive,
-                    account_age_days: ageDays
+                    account_age_days: accountAgeDays
                 })
 
                 return refresh()
@@ -313,7 +326,7 @@ const Accounts = () => {
                     type='text'
                     value={label}
                     onChange={(e) => setLabel(e.target.value)}
-                    placeholder='Savings wallet'
+                    placeholder='Savings'
                 />
 
                 <label htmlFor='account-address'>Public wallet address</label>

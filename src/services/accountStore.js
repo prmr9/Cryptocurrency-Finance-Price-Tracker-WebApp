@@ -134,6 +134,7 @@ export const addAccount = ({ label, address, chainId } = {}) => {
 
 export const removeAccount = (id) => {
     const state = readState()
+
     const accounts = state.accounts.filter((a) => a.id !== id)
 
     // Removing the active account promotes the first survivor, or clears the

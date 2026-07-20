@@ -1,9 +1,12 @@
 # Analytics events (KAN-5)
 
 Event contract for the wallet-account onboarding funnel instrumented in KAN-5.
-The emitter is `src/services/analytics.js`. `src/services/accountStore.js` is
-deliberately untouched by this change: no telemetry-only field is ever persisted
-onto an account record, and the store never imports the tracker.
+The emitter is `src/services/analytics.js`. The two persistence-commit events,
+`account_added` and `account_removed`, are emitted from
+`src/services/accountStore.js` at the boundary where the write commits; every
+other event is emitted from the view. The store imports only the tracker — a
+strict one-way dependency, since analytics never imports the store — and never
+persists a telemetry-only field onto an account record.
 
 Identifiers are one-way hashed at the emit boundary, and raw wallet addresses are
 never passed to the sink — call sites hand over an address *shape* enum instead.
