@@ -1,1 +1,27 @@
-[]
+[
+  {
+    "ticket": "KAN-7",
+    "agent": "devagent-bot",
+    "repo": "prmr9/Cryptocurrency-Finance-Price-Tracker-WebApp",
+    "files": [
+      "public/index.html",
+      "public/manifest.json",
+      "src/App.js",
+      "src/components/CoinItem.js",
+      "src/components/Coins.css",
+      "src/components/Coins.js",
+      "src/components/Footer.css",
+      "src/components/Footer.js",
+      "src/components/Navbar.css",
+      "src/components/Navbar.js",
+      "src/components/__tests__/navbar-root-element.test.js",
+      "src/components/__tests__/navbar-title-link-structure.test.js",
+      "src/index.css",
+      "src/routes/About.css",
+      "src/routes/About.js",
+      "src/routes/Coin.css"
+    ],
+    "created": 1784578203.555875,
+    "expires": 1784585403.555875
+  }
+]
