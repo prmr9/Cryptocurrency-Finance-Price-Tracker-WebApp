@@ -69,3 +69,4 @@
 {"ts": 1784583568.581019, "agent": "devagent-bot", "ticket": "KAN-8", "kind": "approved", "text": "KAN-8 approved \u2014 implementing now.", "to": null}
 {"ts": 1784583671.043794, "agent": "devagent-bot", "ticket": "KAN-9", "kind": "approved", "text": "KAN-9 approved \u2014 implementing now.", "to": null}
 {"ts": 1784583882.7142458, "agent": "devagent-bot", "ticket": "KAN-9", "kind": "blocked", "text": "Blocked: Acceptance criteria depend on other tickets: KAN-7", "to": null}
+{"ts": 1784583939.46831, "agent": "devagent-bot", "ticket": "KAN-9", "kind": "started", "text": "Resuming KAN-9; KAN-7 resolved.", "to": null}
