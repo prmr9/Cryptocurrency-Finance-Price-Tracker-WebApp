@@ -45,3 +45,7 @@
 {"ts": 1784494837.203587, "agent": "devagent-bot", "ticket": "KAN-5", "kind": "blocked", "text": "Blocked: Acceptance criteria depend on other tickets: KAN-4", "to": null}
 {"ts": 1784494919.103487, "agent": "devagent-bot", "ticket": "KAN-5", "kind": "started", "text": "Resuming KAN-5; KAN-4 resolved.", "to": null}
 {"ts": 1784495104.8914618, "agent": "devagent-bot", "ticket": "KAN-5", "kind": "blocked", "text": "Blocked: Acceptance criteria depend on other tickets: KAN-4", "to": null}
+{"ts": 1784495187.892568, "agent": "devagent-bot", "ticket": "KAN-5", "kind": "started", "text": "Resuming KAN-5; KAN-4 resolved.", "to": null}
+{"ts": 1784508866.177005, "agent": "devagent-bot", "ticket": "KAN-5", "kind": "review_request", "text": "Requesting peer review of prmr9/Cryptocurrency-Finance-Price-Tracker-WebApp#3", "to": null}
+{"ts": 1784508900.328427, "agent": "devagent-bot", "ticket": "KAN-5", "kind": "pr", "text": "Opened PR for KAN-5: https://github.com/prmr9/Cryptocurrency-Finance-Price-Tracker-WebApp/pull/3", "to": null}
+{"ts": 1784508901.097087, "agent": "devagent-bot", "ticket": "KAN-5", "kind": "pr", "text": "KAN-5 PR open for review: https://github.com/prmr9/Cryptocurrency-Finance-Price-Tracker-WebApp/pull/3", "to": null}
