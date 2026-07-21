@@ -41,10 +41,20 @@ function createApp() {
   // the process (or a test run) alive on its own.
   const sweepTimer = setInterval(sweepDenylist, DENYLIST_SWEEP_INTERVAL_MS);
   if (typeof sweepTimer.unref === 'function') sweepTimer.unref();
-  // Expose so a host that wants deterministic shutdown can clear it.
   app.locals.sweepTimer = sweepTimer;
+  // Teardown seam so the timer is never leaked: closeApp(app) — or this local —
+  // clears the interval on graceful shutdown / at the end of a test. Idempotent.
+  app.locals.stopDenylistSweep = () => clearInterval(sweepTimer);
 
   return app;
 }
 
-module.exports = { createApp, DENYLIST_SWEEP_INTERVAL_MS };
+// Stop the background work started by createApp() (currently the denylist sweep
+// timer). Call on graceful shutdown or in test teardown so no interval leaks.
+function closeApp(app) {
+  if (app && app.locals && typeof app.locals.stopDenylistSweep === 'function') {
+    app.locals.stopDenylistSweep();
+  }
+}
+
+module.exports = { createApp, closeApp, DENYLIST_SWEEP_INTERVAL_MS };

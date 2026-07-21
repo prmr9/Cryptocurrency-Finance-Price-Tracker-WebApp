@@ -106,6 +106,18 @@ test('app.js mounts cookie-parser and the GET /health route and starts the sweep
   assert.match(src, /get\(\s*['"]\/health['"]/);
   assert.match(src, /setInterval\(\s*sweepDenylist/);
   assert.match(src, /\.unref\(\)/);
+  // The sweep timer must have a teardown path so it is never leaked.
+  assert.match(src, /clearInterval/);
+});
+
+test('closeApp() clears the denylist sweep timer (no leaked interval)', () => {
+  const { createApp, closeApp } = require('../src/app');
+  const app = createApp();
+  assert.equal(typeof closeApp, 'function');
+  assert.ok(app.locals.sweepTimer, 'sweep timer is created');
+  // Must not throw and must clear the interval; also idempotent.
+  closeApp(app);
+  closeApp(app);
 });
 
 test('index.js awaits getJwtSecret before listen() (fail-fast boot)', () => {
