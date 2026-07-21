@@ -1,5 +1,33 @@
 [
   {
+    "ticket": "KAN-10",
+    "agent": "devagent-bot",
+    "repo": "prmr9/Cryptocurrency-Finance-Price-Tracker-WebApp",
+    "files": [
+      "DEPLOYMENT.md",
+      "backend/src/config.js",
+      "backend/src/db.js",
+      "backend/src/secrets.js",
+      "backend/src/server.js",
+      "backend/test/secrets.test.js",
+      "deploy/build.sh",
+      "deploy/deploy.sh",
+      "deploy/gate.js",
+      "deploy/gate.test.js",
+      "deploy/health-check.sh",
+      "deploy/runbook.md",
+      "infra/github-setup.sh",
+      "infra/iam.tf",
+      "infra/main.tf",
+      "infra/outputs.tf",
+      "infra/secrets.tf",
+      "infra/user_data.sh",
+      "infra/variables.tf"
+    ],
+    "created": 1784595536.3081548,
+    "expires": 1784602736.3081548
+  },
+  {
     "ticket": "KAN-6",
     "agent": "devagent-bot",
     "repo": "prmr9/Cryptocurrency-Finance-Price-Tracker-WebApp",
