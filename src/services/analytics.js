@@ -338,6 +338,143 @@ export const getRetentionContext = () => {
     }
 }
 
+// ---------------------------------------------------------------------------
+// KAN-8 cross-session visit retention.
+//
+// The KAN-7 restyle has no login, so "returning user" can only be inferred from
+// a small localStorage record scoped to this module. It is DELIBERATELY separate
+// from ANALYTICS_KEY's session state: retention is advanced on every App mount,
+// independent of the crypto fetch outcome, so a user who lands on /about or
+// deep-links /coin/:id is still counted and days_since_last_visit cannot drift.
+//
+// Contract mirrors the rest of this module: every access is wrapped so a
+// private-mode QuotaExceededError or corrupt JSON degrades to a first-visit
+// default instead of throwing on the view it instruments.
+const VISIT_KEY = 'analytics_visit_v1'
+
+let visitFallbackRaw = null
+
+const readVisitRaw = () => {
+    try {
+        const stored = window.localStorage.getItem(VISIT_KEY)
+        return stored === null || stored === undefined ? visitFallbackRaw : stored
+    } catch (err) {
+        return visitFallbackRaw
+    }
+}
+
+const writeVisitRaw = (raw) => {
+    visitFallbackRaw = raw
+
+    try {
+        window.localStorage.setItem(VISIT_KEY, raw)
+    } catch (err) {
+        // Quota or private mode: the in-memory copy above is the whole fallback.
+    }
+}
+
+// The first-visit default, reused on any read/parse failure so callers never
+// have to branch on error.
+const firstVisitContext = () => ({
+    is_first_visit: true,
+    is_new_session: true,
+    days_since_last_visit: null,
+    visit_count: 1
+})
+
+// Returns the persisted record only when it is a well-formed v1 object.
+const readVisitRecord = () => {
+    const raw = readVisitRaw()
+
+    if (!raw) {
+        return null
+    }
+
+    let parsed = null
+
+    try {
+        parsed = JSON.parse(raw)
+    } catch (err) {
+        return null
+    }
+
+    if (parsed === null || typeof parsed !== 'object' || Array.isArray(parsed) || parsed.v !== 1) {
+        return null
+    }
+
+    return parsed
+}
+
+const currentVisitDay = () => Math.floor(Date.now() / DAY_MS)
+
+// READ-ONLY: computes the retention context for the current mount without
+// touching storage. visit_count is prospective — it includes the current visit,
+// so a genuinely new session reads as stored + 1. is_new_session compares the
+// stored last_session_id against the live session id from getSessionInfo().
+export const getVisitContext = () => {
+    try {
+        const record = readVisitRecord()
+        const { sessionId } = getSessionInfo()
+
+        if (record === null) {
+            return firstVisitContext()
+        }
+
+        const storedVisitCount = typeof record.visit_count === 'number' ? record.visit_count : 0
+        const lastVisitDay = typeof record.last_visit_day === 'number' ? record.last_visit_day : null
+        const lastSessionId = typeof record.last_session_id === 'string' ? record.last_session_id : null
+        const isNewSession = lastSessionId !== sessionId
+
+        return {
+            is_first_visit: false,
+            is_new_session: isNewSession,
+            days_since_last_visit: lastVisitDay === null ? null : Math.max(0, currentVisitDay() - lastVisitDay),
+            // A repeat mount inside the same session was already counted; only a
+            // new session advances the prospective count.
+            visit_count: isNewSession ? storedVisitCount + 1 : storedVisitCount
+        }
+    } catch (err) {
+        return firstVisitContext()
+    }
+}
+
+// Idempotent per session: if the stored last_session_id already equals the live
+// session id this no-ops (so a route change inside one session never double
+// counts). Otherwise it stamps today, adopts the current session id, increments
+// the count and persists. Never throws.
+export const recordVisit = () => {
+    try {
+        const record = readVisitRecord()
+        const { sessionId } = getSessionInfo()
+
+        if (record !== null && record.last_session_id === sessionId) {
+            return getVisitContext()
+        }
+
+        const prevCount = record !== null && typeof record.visit_count === 'number' ? record.visit_count : 0
+        const next = {
+            v: 1,
+            last_visit_day: currentVisitDay(),
+            last_session_id: sessionId,
+            visit_count: prevCount + 1
+        }
+
+        writeVisitRaw(JSON.stringify(next))
+
+        return {
+            is_first_visit: record === null,
+            is_new_session: true,
+            days_since_last_visit:
+                record !== null && typeof record.last_visit_day === 'number'
+                    ? Math.max(0, currentVisitDay() - record.last_visit_day)
+                    : null,
+            visit_count: next.visit_count
+        }
+    } catch (err) {
+        return firstVisitContext()
+    }
+}
+
 // Default sink: a bounded, synchronous in-memory ring buffer plus a hand-off to
 // whichever page-level collector the host document installed. No network, no
 // dependency. configureAnalytics swaps in a real vendor without touching a
@@ -438,9 +575,11 @@ export const resetAnalyticsForTest = () => {
     flush = defaultFlush
     eventBuffer.length = 0
     fallbackRaw = null
+    visitFallbackRaw = null
 
     try {
         window.localStorage.removeItem(ANALYTICS_KEY)
+        window.localStorage.removeItem(VISIT_KEY)
     } catch (err) {
         // Nothing to clear if storage is unavailable.
     }

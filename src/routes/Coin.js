@@ -1,25 +1,59 @@
 import axios from 'axios'
-import { useParams } from 'react-router-dom'
-import React, { useState, useEffect } from 'react'
+import { useParams, useNavigationType } from 'react-router-dom'
+import React, { useState, useEffect, useRef } from 'react'
 import DOMPurify from 'dompurify'
+import { track, resolveEntrySource } from '../services/analytics'
 
 import './Coin.css'
 
 const Coin = () => {
 
     const params = useParams()
+    const navigationType = useNavigationType()
     const [coin, setCoin] = useState({})
+
+    // Settled-load state for the KAN-8 coin_detail_viewed activation event. Starts
+    // as 'loading' and moves to 'loaded' or 'error' once the per-coin fetch ends.
+    const [detailLoad, setDetailLoad] = useState({ status: 'loading', loadMs: 0 })
+    const detailViewedTracked = useRef(false)
 
     const url = `https://api.coingecko.com/api/v3/coins/${params.coinId}`
 
 
     useEffect(() => {
+        const startedAt = Date.now()
+
         axios.get(url).then((res) => {
             setCoin(res.data)
+            setDetailLoad({ status: 'loaded', loadMs: Date.now() - startedAt })
         }).catch((error) => {
             console.log(error)
+            setDetailLoad({ status: 'error', loadMs: Date.now() - startedAt })
         })
+        // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [])
+
+    useEffect(() => {
+        if (detailViewedTracked.current) {
+            return
+        }
+
+        // Hold the activation event until the per-coin fetch settles.
+        if (detailLoad.status !== 'loaded' && detailLoad.status !== 'error') {
+            return
+        }
+
+        detailViewedTracked.current = true
+        track('coin_detail_viewed', {
+            coin_id: params.coinId,
+            coin_symbol: coin.symbol,
+            source: resolveEntrySource(navigationType),
+            load_ms: detailLoad.loadMs,
+            load_status: detailLoad.status,
+        })
+        // Fire-once on load-settle; symbol/params/navType are read, not tracked.
+        // eslint-disable-next-line react-hooks/exhaustive-deps
+    }, [detailLoad.status, detailLoad.loadMs])
 
     return (
         <div>
@@ -36,7 +70,7 @@ const Coin = () => {
                             {coin.image ? <img src={coin.image.small} alt='' /> : null}
                             <p>{coin.name}</p>
                             {coin.symbol ? <p>{coin.symbol.toUpperCase()}/USD</p> : null}
-                            
+
                         </div>
                         <div className='coin-price'>
                             {coin.market_data?.current_price ? <h1>${coin.market_data.current_price.usd.toLocaleString()}</h1> : null}
@@ -101,7 +135,7 @@ const Coin = () => {
                         <p className='coin-description' dangerouslySetInnerHTML={{
                             __html: DOMPurify.sanitize(coin.description ? coin.description.en : ''),
                         }}>
-                        
+
                         </p>
 
                     </div>

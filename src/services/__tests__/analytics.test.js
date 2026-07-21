@@ -44,9 +44,13 @@ const writePersisted = (patch) =>
     JSON.stringify({ ...(readPersisted() || { v: 1 }), ...patch })
   );
 
-describe('analytics storage key', () => {
-  test('is the only literal handed to localStorage in this module', () => {
+describe('analytics storage keys', () => {
+  test('only the two named key constants are handed to localStorage in this module', () => {
+    // The module owns exactly two keys: ANALYTICS_KEY (session state) and
+    // VISIT_KEY (KAN-8 cross-session retention). No raw string literal or foreign
+    // key may reach localStorage — every access goes through one of the two.
     expect(source).toMatch(/^const ANALYTICS_KEY = 'cfpt\.analytics\.v1'$/m);
+    expect(source).toMatch(/^const VISIT_KEY = 'analytics_visit_v1'$/m);
 
     const calls = source.match(
       /window\.localStorage\.(?:getItem|setItem|removeItem)\(\s*([^,)]+)/g
@@ -55,7 +59,7 @@ describe('analytics storage key', () => {
     expect(calls).not.toBeNull();
     expect(calls.length).toBeGreaterThan(0);
     calls.forEach((call) => {
-      expect(call).toMatch(/\(\s*ANALYTICS_KEY\s*$/);
+      expect(call).toMatch(/\(\s*(?:ANALYTICS_KEY|VISIT_KEY)\s*$/);
     });
   });
 

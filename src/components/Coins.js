@@ -6,32 +6,103 @@ import { track } from '../services/analytics'
 
 import './Coins.css'
 
+// Debounce window for the client-side search analytics: coin_searched fires only
+// after the query has settled (a pause in typing), never on every keystroke.
+const SEARCH_DEBOUNCE_MS = 350
+
+// Shared filter used both for rendering and for the debounced results_count, so
+// the emitted count can never drift from what the user actually sees.
+const filterCoins = (coins, rawQuery) => {
+    const search = rawQuery.trim().toLowerCase()
+
+    if (!search) {
+        return coins
+    }
+
+    return coins.filter((coin) =>
+        coin.name.toLowerCase().includes(search) ||
+        coin.symbol.toLowerCase().includes(search)
+    )
+}
+
 const Coins = (props) => {
     const [query, setQuery] = useState('')
 
-    // Activation event for the KAN-7 Prices route: fires exactly once per mount,
-    // the first time the top-50 cards render with data from the axios fetch.
-    // A ref guard keeps it from re-firing on search re-renders or later prop
-    // updates, matching the once-per-route-mount contract.
-    const coinsCount = props.coins ? props.coins.length : 0
+    // loadState is injected by App from the top-50 axios fetch. Default to a
+    // 'loading' sentinel so a direct render (e.g. a Coins unit test) never throws;
+    // the activation event simply waits for the status to settle.
+    const loadState = props.loadState || { status: 'loading', loadMs: 0, count: 0 }
+
+    // Activation event for the KAN-7 Prices route. Fires exactly once per mount,
+    // the first time the injected loadState SETTLES (loaded OR error) — never on
+    // 'loading', and never gated on a non-empty row count, so a failed/empty
+    // fetch still emits with a load_status signal. The ref guard keeps it from
+    // re-firing on search re-renders or later prop updates.
     const pricesViewedTracked = useRef(false)
 
     useEffect(() => {
-        if (pricesViewedTracked.current || coinsCount === 0) {
+        if (pricesViewedTracked.current) {
+            return
+        }
+
+        // Hold the activation event until the injected loadState has SETTLED
+        // (loaded OR error); gating on the status rather than the row count
+        // avoids a premature emit on the intermediate render where React 17
+        // flushes setCoins before setPricesLoad in the un-batched axios .then.
+        if (loadState.status !== 'loaded' && loadState.status !== 'error') {
             return
         }
 
         pricesViewedTracked.current = true
-        track('prices_viewed', { coins_loaded_count: coinsCount })
-    }, [coinsCount])
+        track('prices_viewed', {
+            coins_loaded_count: loadState.count,
+            load_ms: loadState.loadMs,
+            load_status: loadState.status,
+            theme: 'dark',
+        })
+        // eslint-disable-next-line react-hooks/exhaustive-deps
+    }, [loadState.status])
 
-    const search = query.trim().toLowerCase()
-    const filteredCoins = search
-        ? props.coins.filter((coin) =>
-              coin.name.toLowerCase().includes(search) ||
-              coin.symbol.toLowerCase().includes(search)
-          )
-        : props.coins
+    // Debounced client-side search instrumentation. Keyed on the settled query so
+    // it fires once per pause in typing, not per keystroke. The cleanup clears the
+    // pending timer on the next query change AND on unmount / route-change, so no
+    // emit can land after this component has left the tree.
+    useEffect(() => {
+        const trimmed = query.trim()
+
+        // Skip empty / cleared queries entirely: no event for an emptied box.
+        if (trimmed.length === 0) {
+            return undefined
+        }
+
+        const coins = props.coins || []
+        const timer = setTimeout(() => {
+            const resultsCount = filterCoins(coins, query).length
+
+            // PRIVACY: only the query LENGTH and the result shape reach the sink —
+            // never the raw query text the user typed.
+            track('coin_searched', {
+                query_length: trimmed.length,
+                results_count: resultsCount,
+                had_match: resultsCount > 0,
+            })
+
+            // The out-of-scope "coin outside the top-50" case: emit an additional
+            // engagement event so a zero-result search reads as "no match here",
+            // not a broken view. Still no raw query text.
+            if (resultsCount === 0) {
+                track('search_no_results', {
+                    query_length: trimmed.length,
+                    results_count: resultsCount,
+                })
+            }
+        }, SEARCH_DEBOUNCE_MS)
+
+        return () => clearTimeout(timer)
+        // eslint-disable-next-line react-hooks/exhaustive-deps
+    }, [query, props.coins])
+
+    const filteredCoins = filterCoins(props.coins || [], query)
 
     return (
         <div className='container'>
