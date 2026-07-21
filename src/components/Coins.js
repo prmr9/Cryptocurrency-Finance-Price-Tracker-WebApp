@@ -1,12 +1,29 @@
-import React, { useState } from 'react'
+import React, { useState, useEffect, useRef } from 'react'
 import CoinItem from './CoinItem'
 import Coin from '../routes/Coin'
 import { Link } from 'react-router-dom'
+import { track } from '../services/analytics'
 
 import './Coins.css'
 
 const Coins = (props) => {
     const [query, setQuery] = useState('')
+
+    // Activation event for the KAN-7 Prices route: fires exactly once per mount,
+    // the first time the top-50 cards render with data from the axios fetch.
+    // A ref guard keeps it from re-firing on search re-renders or later prop
+    // updates, matching the once-per-route-mount contract.
+    const coinsCount = props.coins ? props.coins.length : 0
+    const pricesViewedTracked = useRef(false)
+
+    useEffect(() => {
+        if (pricesViewedTracked.current || coinsCount === 0) {
+            return
+        }
+
+        pricesViewedTracked.current = true
+        track('prices_viewed', { coins_loaded_count: coinsCount })
+    }, [coinsCount])
 
     const search = query.trim().toLowerCase()
     const filteredCoins = search
