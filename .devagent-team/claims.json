@@ -16,22 +16,5 @@
     ],
     "created": 1784610545.624835,
     "expires": 1784617745.624835
-  },
-  {
-    "ticket": "KAN-8",
-    "agent": "devagent-bot",
-    "repo": "prmr9/Cryptocurrency-Finance-Price-Tracker-WebApp",
-    "files": [
-      "src/App.js",
-      "src/components/CoinItem.js",
-      "src/components/Coins.js",
-      "src/components/__tests__/coins-analytics-instrumentation.test.js",
-      "src/routes/Coin.js",
-      "src/routes/Coin.test.js",
-      "src/services/__tests__/analytics-visit-context.test.js",
-      "src/services/analytics.js"
-    ],
-    "created": 1784604915.12874,
-    "expires": 1784612115.12874
   }
 ]
