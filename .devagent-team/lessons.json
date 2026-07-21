@@ -29,7 +29,7 @@
   {
     "id": "081e6875fdff4669",
     "pattern": "npm/pnpm dependency change must ship its regenerated lockfile with registry-fresh integrity, in the same change",
-    "detail": "When you change ANY dependency in package.json/pnpm (bump a version for a security fix, add or remove one), you MUST regenerate the lockfile and commit it in the SAME change. Regenerate with registry-fresh integrity:  (or ). NEVER hand-edit a lockfile integrity hash and never rely on a plain  regen alone: --package-lock-only trusts the local cache, so a stale/invented sha512 that does not match the registry survives and makes CI hard-fail `npm ci` EINTEGRITY (\"integrity checksum failed ... wanted X but got Y\") forever. Shipping the manifest and a registry-correct lockfile together makes CI green on the first push instead of after repair round-trips. Also: a CI startup_failure with no logs is an INFRA/account block (an unverified GitHub email disables Actions) - flag the exact human step, don't loop.",
+    "detail": "Changing an npm/pnpm dependency (a version bump for a security fix, an add, or a remove) must SHIP CORRECTLY THE FIRST TIME. Two things fail silently and cost repeated red-CI round-trips if you skip them:\n1) VERIFY THE VERSION EXISTS. Only bump to a version the registry actually publishes \u2014 check `npm view <pkg> versions` (or the registry). An invented version (KAN-11: dompurify@^3.5.0 when the latest is 3.4.12) fails `npm install` with ETARGET/'no matching version found', and NO lockfile fix can resolve it \u2014 the manifest itself must be corrected. Never guess a version.\n2) REGENERATE THE LOCKFILE WITH REGISTRY-FRESH INTEGRITY, and commit it in the SAME change:\n   - npm:  npm install --package-lock-only --prefer-online --no-audit --no-fund\n   - pnpm: pnpm install --lockfile-only\nNEVER hand-edit a lockfile integrity (sha512) hash, and never rely on a plain 'npm install --package-lock-only' alone: --package-lock-only trusts the local cache, so a stale/invented sha512 that does not match the registry survives and makes CI hard-fail `npm ci` with EINTEGRITY ('integrity checksum failed ... wanted X but got Y') on every run. --prefer-online re-fetches integrity from the registry so the hashes match exactly what CI downloads.\nShipping a real-versioned manifest AND a registry-correct lockfile together makes CI green on the first push, in one go, instead of after repair round-trips.\nRelated infra note: a CI 'startup_failure' with NO logs is an ACCOUNT/infra block, not code \u2014 the usual cause is an UNVERIFIED GitHub account email (which disables Actions). Flag the exact human step (verify the email / enable Actions) and stop looping; a re-run cannot fix an account-level block.",
     "source_ticket": "KAN-11",
     "source_pr": "",
     "source_repo": "",
@@ -45,7 +45,11 @@
       "dependency",
       "security-bump",
       "ci",
-      "EINTEGRITY"
+      "EINTEGRITY",
+      "ETARGET",
+      "version-exists",
+      "prefer-online",
+      "ship-in-one-go"
     ],
     "kind": "principle",
     "weight": 1.0,
