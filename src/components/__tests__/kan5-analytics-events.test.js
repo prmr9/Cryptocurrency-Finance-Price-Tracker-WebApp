@@ -43,10 +43,13 @@ const APPROVED = [
   'trade_link_clicked',
   'accounts_returned',
   'account_removed',
+  'feature_entry_point_viewed',
 ];
 
-// The one event Navbar is responsible for emitting (its Trade anchor).
-const NAVBAR_EVENT = 'trade_link_clicked';
+// The events Navbar is responsible for emitting: its Trade anchor
+// (trade_link_clicked, KAN-5) and its mount-time entry-point view
+// (feature_entry_point_viewed, KAN-6).
+const NAVBAR_EVENTS = ['trade_link_clicked', 'feature_entry_point_viewed'];
 
 describe('KAN-5 analytics instrumentation', () => {
   const accountsSrc = read('components/Accounts.js');
@@ -67,15 +70,16 @@ describe('KAN-5 analytics instrumentation', () => {
   });
 
   test('Accounts.js emits every approved event except the navbar-owned one', () => {
-    const accountsExpected = APPROVED.filter((n) => n !== NAVBAR_EVENT);
+    const accountsExpected = APPROVED.filter((n) => !NAVBAR_EVENTS.includes(n));
     const accountsSet = new Set(accountsNames);
     const missing = accountsExpected.filter((n) => !accountsSet.has(n));
     expect(missing).toEqual([]);
   });
 
-  test('Navbar.js owns the trade_link_clicked emission and only that event', () => {
-    expect(navbarNames).toContain(NAVBAR_EVENT);
-    expect(navbarNames.every((n) => n === NAVBAR_EVENT)).toBe(true);
+  test('Navbar.js owns the trade_link_clicked and feature_entry_point_viewed emissions and only those events', () => {
+    expect(navbarNames).toContain('trade_link_clicked');
+    expect(navbarNames).toContain('feature_entry_point_viewed');
+    expect(navbarNames.every((n) => NAVBAR_EVENTS.includes(n))).toBe(true);
   });
 
   test('does not instrument the persistence layer (accountStore.js stays untouched by KAN-5)', () => {

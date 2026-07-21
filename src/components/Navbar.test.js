@@ -89,7 +89,7 @@ describe('Navbar Accounts link', () => {
     it('routes to /accounts', () => {
         renderNavbar()
 
-        expect(screen.getByRole('link', { name: /accounts/i })).toHaveAttribute(
+        expect(screen.getByRole('link', { name: /watchlist/i })).toHaveAttribute(
             'href',
             '/accounts'
         )
@@ -105,7 +105,7 @@ describe('Navbar Accounts link', () => {
         expect(hasNavigatedInApp()).toBe(false)
         expect(resolveEntrySource('POP')).toBe('direct_url')
 
-        userEvent.click(screen.getByRole('link', { name: /accounts/i }))
+        userEvent.click(screen.getByRole('link', { name: /watchlist/i }))
 
         expect(hasNavigatedInApp()).toBe(true)
         expect(resolveEntrySource('POP')).toBe('browser_history')

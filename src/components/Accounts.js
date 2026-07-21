@@ -103,6 +103,17 @@ const Accounts = () => {
     const attemptsRef = useRef(0)
     const firstAttemptAtRef = useRef(null)
 
+    // KAN-6 feature_action_submitted needs time_to_submit_ms: how long the user
+    // spent in the form before submitting. Stamped the first time either field
+    // changes, so it measures real interaction time rather than mount-to-submit.
+    const formStartedAtRef = useRef(null)
+
+    const noteFormStarted = () => {
+        if (formStartedAtRef.current === null) {
+            formStartedAtRef.current = Date.now()
+        }
+    }
+
     useEffect(() => {
         let alive = true
 
@@ -189,10 +200,16 @@ const Accounts = () => {
         // every submission rather than only the ones that succeed. The address
         // itself never leaves the component — only its shape, so the format enum
         // is the only address-derived signal on the event.
+        const timeToSubmitMs =
+            formStartedAtRef.current !== null
+                ? Math.max(0, Date.now() - formStartedAtRef.current)
+                : 0
+
         track('add_account_submitted', {
             label_provided: label.trim().length > 0,
             address_format: callAnalytics(classifyAddressFormat, classifyAddressShape(address), address),
-            existing_account_count: countBefore
+            existing_account_count: countBefore,
+            time_to_submit_ms: timeToSubmitMs
         })
 
         addAccount({
@@ -232,6 +249,7 @@ const Accounts = () => {
 
                 attemptsRef.current = 0
                 firstAttemptAtRef.current = null
+                formStartedAtRef.current = null
 
                 return refresh()
             })
@@ -325,7 +343,10 @@ const Accounts = () => {
                     id='account-label'
                     type='text'
                     value={label}
-                    onChange={(e) => setLabel(e.target.value)}
+                    onChange={(e) => {
+                        noteFormStarted()
+                        setLabel(e.target.value)
+                    }}
                     placeholder='Savings'
                 />
 
@@ -334,7 +355,10 @@ const Accounts = () => {
                     id='account-address'
                     type='text'
                     value={address}
-                    onChange={(e) => setAddress(e.target.value)}
+                    onChange={(e) => {
+                        noteFormStarted()
+                        setAddress(e.target.value)
+                    }}
                     placeholder='0x...'
                 />
 

@@ -11,7 +11,7 @@ const renderNavbar = () =>
   );
 
 describe('Navbar root element', () => {
-  test('renders the CryptoTracker title heading alongside the nav + CTA links', () => {
+  test('renders the title heading alongside exactly three links', () => {
     renderNavbar();
 
     expect(
@@ -21,21 +21,12 @@ describe('Navbar root element', () => {
     expect(screen.getAllByRole('link')).toHaveLength(5);
   });
 
-  test('renders a Watchlist link pointing at the /accounts route', () => {
+  test('renders an Accounts link pointing at the /accounts route', () => {
     renderNavbar();
 
     expect(screen.getByRole('link', { name: /watchlist/i })).toHaveAttribute(
       'href',
       '/accounts'
-    );
-  });
-
-  test('renders an About link pointing at the /about route', () => {
-    renderNavbar();
-
-    expect(screen.getByRole('link', { name: /about/i })).toHaveAttribute(
-      'href',
-      '/about'
     );
   });
 
