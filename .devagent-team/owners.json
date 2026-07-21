@@ -2,26 +2,31 @@
   "KAN-8": {
     "agent": "devagent-bot",
     "instance": "08e8eef498d9:devagent-bot",
-    "expires": 1784609716.8101351
+    "expires": 1784610319.589837
   },
   "KAN-9": {
     "agent": "devagent-bot",
     "instance": "08e8eef498d9:devagent-bot",
-    "expires": 1784607097.6526778
+    "expires": 1784610319.590016
   },
   "KAN-6": {
     "agent": "devagent-bot",
     "instance": "08e8eef498d9:devagent-bot",
-    "expires": 1784607097.6523461
-  },
-  "KAN-18": {
-    "agent": "devagent-bot",
-    "instance": "08e8eef498d9:devagent-bot",
-    "expires": 1784607097.652147
+    "expires": 1784610319.589639
   },
   "KAN-10": {
     "agent": "devagent-bot",
     "instance": "08e8eef498d9:devagent-bot",
     "expires": 1784607107.469887
+  },
+  "KAN-11": {
+    "agent": "devagent-bot",
+    "instance": "08e8eef498d9:devagent-bot",
+    "expires": 1784610328.439518
+  },
+  "KAN-18": {
+    "agent": "devagent-bot",
+    "instance": "08e8eef498d9:devagent-bot",
+    "expires": 1784607097.652147
   }
 }
