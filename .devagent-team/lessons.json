@@ -454,9 +454,9 @@
       "monorepo"
     ],
     "kind": "reflection",
-    "weight": 1.0,
+    "weight": 1.1,
     "times_applied": 0,
-    "times_confirmed": 0,
+    "times_confirmed": 1,
     "safety_class": "guardrail",
     "safety_reason": "Requires a verification step (merge base/dependency branches) and prohibits implementing on stale branches missing dependencies. Prevents silent bugs where code appears missing but is actually a branc",
     "enforced": false,
