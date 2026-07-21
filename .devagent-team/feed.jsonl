@@ -77,3 +77,4 @@
 {"ts": 1784593811.70499, "agent": "devagent-bot", "ticket": "KAN-6", "kind": "blocked", "text": "Blocked: Ticket KAN-6 exceeded cost cap: $5.0957 > $5.0000", "to": null}
 {"ts": 1784595355.596212, "agent": "devagent-bot", "ticket": "KAN-10", "kind": "blocked", "text": "Blocked: Ticket KAN-10 exceeded cost cap: $5.0613 > $5.0000", "to": null}
 {"ts": 1784595505.135915, "agent": "devagent-bot", "ticket": "KAN-13", "kind": "blocked", "text": "Parked KAN-13; blocked by KAN-11, KAN-12.", "to": null}
+{"ts": 1784597929.605194, "agent": "devagent-bot", "ticket": "KAN-10", "kind": "blocked", "text": "Blocked: Ticket KAN-10 exceeded cost cap: $11.8299 > $11.6500", "to": null}
