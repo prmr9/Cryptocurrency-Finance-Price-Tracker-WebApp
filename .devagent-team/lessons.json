@@ -614,6 +614,35 @@
     "dismissals": 0
   },
   {
+    "id": "b903323bd38a4e28",
+    "pattern": "Automated security gates are blocking, not optional. Security findings in PR diff must be fixed in the code, never deferred or suppressed without documented justification tied to the specific finding.",
+    "detail": "Watch for: Vulnerable dependency versions in package.json that SAST flags but developer ignores or defers; Test files with hardcoded secrets, API keys, or credentials submitted as 'test data'; SAST findings suppressed without code comment explaining CVE/CWE and technical justification; New code introducing security linting or type errors with assumption that gate will allow a 'follow-up fix'. Generalized from: Prevent at implementation time: [sast] blocking security finding(s) in the PR diff \u2014 fix in place (never suppress without justification). SC",
+    "source_ticket": "KAN-1",
+    "source_pr": "",
+    "source_repo": "",
+    "author": "",
+    "author_tier": "",
+    "path_globs": [],
+    "created": "2026-07-21T06:18:59.880740Z",
+    "tags": [
+      "principle",
+      "Vulnerable dependency versions in package.json that SAST flags but developer ignores or defers",
+      "Test files with hardcoded secrets, API keys, or credentials submitted as 'test data'",
+      "SAST findings suppressed without code comment explaining CVE/CWE and technical justification",
+      "New code introducing security linting or type errors with assumption that gate will allow a 'follow-up fix'"
+    ],
+    "kind": "principle",
+    "weight": 1.0,
+    "times_applied": 0,
+    "times_confirmed": 0,
+    "safety_class": "guardrail",
+    "safety_reason": "Lesson prohibits deferring/suppressing security findings and requires gates be blocking at implementation time. This adds mandatory verification and human oversight (documented justification), prevent",
+    "enforced": false,
+    "enforce_confirm_tickets": [],
+    "guardrail_fp_count": 0,
+    "dismissals": 0
+  },
+  {
     "id": "c3c5e46bfc87a795",
     "pattern": "Prevent at implementation time: [acceptance_criteria] Acceptance criteria could not be completed automatically: Given src/services/accountStore.js When it is diffed against its state prior to ; Given ",
     "detail": "Ticket KAN-5 was held back by this gate and needed 1 rework pass(es) before it was shippable. Handle this in the FIRST implementation: [acceptance_criteria] Acceptance criteria could not be completed automatically: Given src/services/accountStore.js When it is diffed against its state prior to ; Given docs/analytics-events.md When it is inspected Then it contains a section d",
@@ -655,9 +684,9 @@
       "gate"
     ],
     "kind": "rework",
-    "weight": 1.0,
+    "weight": 1.1,
     "times_applied": 0,
-    "times_confirmed": 0,
+    "times_confirmed": 1,
     "safety_class": "guardrail",
     "safety_reason": "Requires fixing SAST security findings in place rather than suppressing them, and prohibits scope creep (restructuring project/changing stack) \u2014 both are restrictions on risky action, not risk-taking.",
     "enforced": false,
