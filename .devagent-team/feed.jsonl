@@ -95,3 +95,7 @@
 {"ts": 1784609132.057523, "agent": "devagent-bot", "ticket": "KAN-11", "kind": "pr", "text": "KAN-11 PR open for review: https://github.com/prmr9/Cryptocurrency-Finance-Price-Tracker-WebApp/pull/8", "to": null}
 {"ts": 1784609180.926066, "agent": "devagent-bot", "ticket": "KAN-6", "kind": "started", "text": "Started KAN-6 on prmr9/Cryptocurrency-Finance-Price-Tracker-WebApp (branch feature/KAN-6).", "to": null}
 {"ts": 1784609181.290839, "agent": "devagent-bot", "ticket": "KAN-6", "kind": "approved", "text": "KAN-6 approved \u2014 implementing now.", "to": null}
+{"ts": 1784609198.502777, "agent": "devagent-bot", "ticket": "KAN-8", "kind": "started", "text": "Started KAN-8 on prmr9/Cryptocurrency-Finance-Price-Tracker-WebApp (branch feature/KAN-8).", "to": null}
+{"ts": 1784609198.861841, "agent": "devagent-bot", "ticket": "KAN-8", "kind": "approved", "text": "KAN-8 approved \u2014 implementing now.", "to": null}
+{"ts": 1784609301.653593, "agent": "devagent-bot", "ticket": "KAN-11", "kind": "plan", "text": "Reworking KAN-11 (sast): not shippable yet", "to": null}
+{"ts": 1784610434.483706, "agent": "devagent-bot", "ticket": "KAN-17", "kind": "blocked", "text": "Parked KAN-17; blocked by KAN-11, KAN-13, KAN-15, KAN-16.", "to": null}
