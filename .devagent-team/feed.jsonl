@@ -76,3 +76,4 @@
 {"ts": 1784592695.02846, "agent": "devagent-bot", "ticket": "KAN-10", "kind": "blocked", "text": "Blocked: LLM request failed (non-retryable): LLM output truncated at the max_tokens cap \u2014 raise DEVAGENT_LLM_MAX_TOKENS or shrink the change", "to": null}
 {"ts": 1784593811.70499, "agent": "devagent-bot", "ticket": "KAN-6", "kind": "blocked", "text": "Blocked: Ticket KAN-6 exceeded cost cap: $5.0957 > $5.0000", "to": null}
 {"ts": 1784595355.596212, "agent": "devagent-bot", "ticket": "KAN-10", "kind": "blocked", "text": "Blocked: Ticket KAN-10 exceeded cost cap: $5.0613 > $5.0000", "to": null}
+{"ts": 1784595505.135915, "agent": "devagent-bot", "ticket": "KAN-13", "kind": "blocked", "text": "Parked KAN-13; blocked by KAN-11, KAN-12.", "to": null}
