@@ -16,6 +16,7 @@
     "web-vitals": "^2.1.3"
   },
   "overrides": {
+    "@babel/traverse": "^7.23.2",
     "loader-utils": "2.0.4"
   },
   "scripts": {
