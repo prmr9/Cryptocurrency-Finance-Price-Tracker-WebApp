@@ -7,12 +7,17 @@
   "KAN-9": {
     "agent": "devagent-bot",
     "instance": "08e8eef498d9:devagent-bot",
-    "expires": 1784602593.4083068
+    "expires": 1784602606.276256
   },
   "KAN-6": {
     "agent": "devagent-bot",
     "instance": "08e8eef498d9:devagent-bot",
     "expires": 1784602570.516244
+  },
+  "KAN-18": {
+    "agent": "devagent-bot",
+    "instance": "08e8eef498d9:devagent-bot",
+    "expires": 1784602621.88552
   },
   "KAN-10": {
     "agent": "devagent-bot",
