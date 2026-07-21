@@ -117,3 +117,7 @@
 {"ts": 1784646484.75349, "agent": "devagent-bot", "ticket": "KAN-17", "kind": "blocked", "text": "Parked KAN-17; blocked by KAN-13, KAN-15, KAN-16.", "to": null}
 {"ts": 1784648075.0807528, "agent": "devagent-bot", "ticket": "KAN-12", "kind": "started", "text": "Started KAN-12 on prmr9/Cryptocurrency-Finance-Price-Tracker-WebApp (branch feature/KAN-12).", "to": null}
 {"ts": 1784650991.615249, "agent": "devagent-bot", "ticket": "KAN-12", "kind": "plan", "text": "Posted implementation plan for KAN-12; awaiting approval.", "to": null}
+{"ts": 1784651070.4839418, "agent": "devagent-bot", "ticket": "KAN-12", "kind": "approved", "text": "KAN-12 approved \u2014 implementing now.", "to": null}
+{"ts": 1784652106.7584152, "agent": "devagent-bot", "ticket": "KAN-12", "kind": "review_request", "text": "Requesting peer review of prmr9/Cryptocurrency-Finance-Price-Tracker-WebApp#11", "to": null}
+{"ts": 1784652107.430758, "agent": "devagent-bot", "ticket": "KAN-12", "kind": "pr", "text": "Opened PR for KAN-12: https://github.com/prmr9/Cryptocurrency-Finance-Price-Tracker-WebApp/pull/11", "to": null}
+{"ts": 1784652108.0710132, "agent": "devagent-bot", "ticket": "KAN-12", "kind": "pr", "text": "KAN-12 PR open for review: https://github.com/prmr9/Cryptocurrency-Finance-Price-Tracker-WebApp/pull/11", "to": null}
