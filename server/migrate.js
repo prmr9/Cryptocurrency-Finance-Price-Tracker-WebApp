@@ -42,6 +42,9 @@ async function migrate(direction = 'up') {
       },
     },
     dir: path.join(__dirname, 'migrations'),
+    // The migrations dir also holds a co-located *.test.js unit test; exclude
+    // it from the runner's scan so it is never treated as a migration.
+    ignorePattern: '.*\\.test\\.js',
     direction,
     migrationsTable: MIGRATIONS_TABLE,
     count: Infinity,

@@ -88,6 +88,7 @@ resource "aws_instance" "app" {
   instance_type          = var.instance_type
   key_name               = aws_key_pair.deploy.key_name
   vpc_security_group_ids = [aws_security_group.web.id]
+  iam_instance_profile   = aws_iam_instance_profile.app[each.key].name
   user_data              = file("${path.module}/user_data.sh")
 
   tags = {
