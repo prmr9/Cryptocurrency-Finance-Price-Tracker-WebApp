@@ -39,22 +39,42 @@
     "phase": "phase4_review",
     "pr_number": 3
   },
-  "KAN-6": {
-    "ticket": "KAN-6",
-    "agent": "devagent-bot",
-    "updated": 1784604899.459649,
-    "branch": "feature/KAN-6",
-    "base_branch": "feature/KAN-5",
-    "repo": "prmr9/Cryptocurrency-Finance-Price-Tracker-WebApp",
-    "phase": "phase2_proposal",
-    "pr_number": null
-  },
   "KAN-7": {
     "ticket": "KAN-7",
     "agent": "devagent-bot",
     "updated": 1784578101.04211,
     "branch": "feature/KAN-7",
     "base_branch": "main",
+    "repo": "prmr9/Cryptocurrency-Finance-Price-Tracker-WebApp",
+    "phase": "phase2_proposal",
+    "pr_number": null
+  },
+  "KAN-10": {
+    "ticket": "KAN-10",
+    "agent": "devagent-bot",
+    "updated": 1784599949.105778,
+    "branch": "feature/KAN-10",
+    "base_branch": "main",
+    "repo": "prmr9/Cryptocurrency-Finance-Price-Tracker-WebApp",
+    "phase": "phase2_proposal",
+    "pr_number": null
+  },
+  "KAN-11": {
+    "ticket": "KAN-11",
+    "agent": "devagent-bot",
+    "updated": 1784607026.724119,
+    "branch": "feature/KAN-11",
+    "base_branch": "main",
+    "repo": "prmr9/Cryptocurrency-Finance-Price-Tracker-WebApp",
+    "phase": "phase2_proposal",
+    "pr_number": null
+  },
+  "KAN-6": {
+    "ticket": "KAN-6",
+    "agent": "devagent-bot",
+    "updated": 1784604899.459649,
+    "branch": "feature/KAN-6",
+    "base_branch": "feature/KAN-5",
     "repo": "prmr9/Cryptocurrency-Finance-Price-Tracker-WebApp",
     "phase": "phase2_proposal",
     "pr_number": null
@@ -74,26 +94,6 @@
     "agent": "devagent-bot",
     "updated": 1784597987.8700259,
     "branch": "feature/KAN-9",
-    "base_branch": "main",
-    "repo": "prmr9/Cryptocurrency-Finance-Price-Tracker-WebApp",
-    "phase": "phase2_proposal",
-    "pr_number": null
-  },
-  "KAN-10": {
-    "ticket": "KAN-10",
-    "agent": "devagent-bot",
-    "updated": 1784599949.105778,
-    "branch": "feature/KAN-10",
-    "base_branch": "main",
-    "repo": "prmr9/Cryptocurrency-Finance-Price-Tracker-WebApp",
-    "phase": "phase2_proposal",
-    "pr_number": null
-  },
-  "KAN-11": {
-    "ticket": "KAN-11",
-    "agent": "devagent-bot",
-    "updated": 1784606706.886202,
-    "branch": "feature/KAN-11",
     "base_branch": "main",
     "repo": "prmr9/Cryptocurrency-Finance-Price-Tracker-WebApp",
     "phase": "phase2_proposal",
