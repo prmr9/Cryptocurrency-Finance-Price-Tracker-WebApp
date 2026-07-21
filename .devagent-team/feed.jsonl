@@ -82,3 +82,6 @@
 {"ts": 1784598007.206007, "agent": "devagent-bot", "ticket": "KAN-15", "kind": "blocked", "text": "Parked KAN-15; blocked by KAN-12, KAN-13, KAN-14.", "to": null}
 {"ts": 1784598009.671493, "agent": "devagent-bot", "ticket": "KAN-16", "kind": "blocked", "text": "Parked KAN-16; blocked by KAN-14, KAN-15.", "to": null}
 {"ts": 1784598014.6134121, "agent": "devagent-bot", "ticket": "KAN-17", "kind": "blocked", "text": "Parked KAN-17; blocked by KAN-10, KAN-11, KAN-13, KAN-15, KAN-16.", "to": null}
+{"ts": 1784602414.0926569, "agent": "devagent-bot", "ticket": "KAN-10", "kind": "review_request", "text": "Requesting peer review of prmr9/Cryptocurrency-Finance-Price-Tracker-WebApp#7", "to": null}
+{"ts": 1784602414.0932832, "agent": "devagent-bot", "ticket": "KAN-10", "kind": "pr", "text": "Opened PR for KAN-10: https://github.com/prmr9/Cryptocurrency-Finance-Price-Tracker-WebApp/pull/7", "to": null}
+{"ts": 1784602414.5413451, "agent": "devagent-bot", "ticket": "KAN-10", "kind": "pr", "text": "KAN-10 PR open for review: https://github.com/prmr9/Cryptocurrency-Finance-Price-Tracker-WebApp/pull/7", "to": null}
