@@ -27,6 +27,38 @@
     "dismissals": 0
   },
   {
+    "id": "081e6875fdff4669",
+    "pattern": "npm/pnpm dependency change must ship its regenerated lockfile with registry-fresh integrity, in the same change",
+    "detail": "When you change ANY dependency in package.json/pnpm (bump a version for a security fix, add or remove one), you MUST regenerate the lockfile and commit it in the SAME change. Regenerate with registry-fresh integrity:  (or ). NEVER hand-edit a lockfile integrity hash and never rely on a plain  regen alone: --package-lock-only trusts the local cache, so a stale/invented sha512 that does not match the registry survives and makes CI hard-fail `npm ci` EINTEGRITY (\"integrity checksum failed ... wanted X but got Y\") forever. Shipping the manifest and a registry-correct lockfile together makes CI green on the first push instead of after repair round-trips. Also: a CI startup_failure with no logs is an INFRA/account block (an unverified GitHub email disables Actions) - flag the exact human step, don't loop.",
+    "source_ticket": "KAN-11",
+    "source_pr": "",
+    "source_repo": "",
+    "author": "",
+    "author_tier": "",
+    "path_globs": [],
+    "created": "2026-07-21T13:56:32.894482Z",
+    "tags": [
+      "npm",
+      "pnpm",
+      "lockfile",
+      "package-lock",
+      "dependency",
+      "security-bump",
+      "ci",
+      "EINTEGRITY"
+    ],
+    "kind": "principle",
+    "weight": 1.0,
+    "times_applied": 0,
+    "times_confirmed": 0,
+    "safety_class": "guardrail",
+    "safety_reason": "Lesson PROHIBITS risky shortcuts (hand-editing hashes, stale cache reliance) and REQUIRES registry-fresh verification + atomic commits, with CI EINTEGRITY enforcement. Strengthens security checks and ",
+    "enforced": false,
+    "enforce_confirm_tickets": [],
+    "guardrail_fp_count": 0,
+    "dismissals": 0
+  },
+  {
     "id": "0ffa5d2df8cb787b",
     "pattern": "Suspend unvalidated auto-generated work items to inactive states rather than deleting them, preserving recovery and auditability.",
     "detail": "When automation generates invalid or self-referential work items, move them to a completed or archived state instead of deleting. This maintains a reversible audit trail and allows recovery via explicit commands like /reopen. Deletion is irreversible and loses context; suspension preserves both flexibility and system transparency.",
