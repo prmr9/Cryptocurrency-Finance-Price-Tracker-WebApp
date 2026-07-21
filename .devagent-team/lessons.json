@@ -774,7 +774,9 @@
     "safety_class": "guardrail",
     "safety_reason": "Requires explicit verification of state/context to prevent bugs from stale assumptions; adds a safety check that would otherwise be skipped during context switches",
     "enforced": false,
-    "enforce_confirm_tickets": [],
+    "enforce_confirm_tickets": [
+      "KAN-17"
+    ],
     "guardrail_fp_count": 0,
     "dismissals": 0
   },
