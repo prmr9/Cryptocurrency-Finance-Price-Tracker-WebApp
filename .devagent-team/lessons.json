@@ -27,6 +27,35 @@
     "dismissals": 0
   },
   {
+    "id": "0ffa5d2df8cb787b",
+    "pattern": "Suspend unvalidated auto-generated work items to inactive states rather than deleting them, preserving recovery and auditability.",
+    "detail": "When automation generates invalid or self-referential work items, move them to a completed or archived state instead of deleting. This maintains a reversible audit trail and allows recovery via explicit commands like /reopen. Deletion is irreversible and loses context; suspension preserves both flexibility and system transparency.",
+    "source_ticket": "KAN-9",
+    "source_pr": "",
+    "source_repo": "prmr9/Cryptocurrency-Finance-Price-Tracker-WebApp",
+    "author": "Prashant Kumar",
+    "author_tier": "jira",
+    "path_globs": [],
+    "created": "2026-07-21T07:49:35.073746Z",
+    "tags": [
+      "work-queue-management",
+      "error-recovery",
+      "automation-safety",
+      "reversible-operations",
+      "auditability"
+    ],
+    "kind": "review",
+    "weight": 1.0,
+    "times_applied": 0,
+    "times_confirmed": 0,
+    "safety_class": "guardrail",
+    "safety_reason": "Lesson PROHIBITS deletion (irreversible, risky action) and REQUIRES suspension/archiving instead, explicitly preserving audit trails, reversibility, and human oversight. This reduces blast radius and ",
+    "enforced": false,
+    "enforce_confirm_tickets": [],
+    "guardrail_fp_count": 0,
+    "dismissals": 0
+  },
+  {
     "id": "124af0fe0d663759",
     "pattern": "When a scanning/testing pipeline degrades gracefully (skipping unavailable tools instead of failing loudly), 'scan passed' silently narrows to 'the subset of tools that could run passed' \u2014 always repo",
     "detail": "Watch for: Multi-tool pipelines (SAST/DAST/linters) where individual tool absence is caught and swallowed rather than surfaced, so a partial run looks identical to a full one; Language/ecosystem-specific tools silently no-op'ing on repos that don't match their target (e.g. pip-audit on a repo with no Python manifest, a Java linter on a JS repo); CI or security gates that report a single aggregate 'pass/fail' without listing which checks actually executed, letting missing coverage masquerade as a clean bill of health; Environment-dependent tooling (missing binaries, unset credentials, network-gated services) where the absence changes what 'success' means but not the reported status. Generalized from: SAST scans on this repo run with semgrep and pip-audit unavailable \u2014 only the builtin and npm-audit runners actually execute.",
@@ -110,6 +139,37 @@
     "safety_reason": "Lesson requires assertions to fully and concretely verify acceptance criteria before considering the test complete, adding a verification requirement rather than weakening one.",
     "enforced": false,
     "enforce_confirm_tickets": [],
+    "guardrail_fp_count": 0,
+    "dismissals": 0
+  },
+  {
+    "id": "3009902d8afa469d",
+    "pattern": "Reopened work must re-enter the full standard workflow, not skip procedural gates",
+    "detail": "When a task or PR is reopened, it re-enters the normal process chain (plan \u2192 review \u2192 approve \u2192 implement) from the beginning. Reopening is a state transition that doesn't grant exemption from standard gates; it resets the process checkpoint.",
+    "source_ticket": "KAN-8",
+    "source_pr": "",
+    "source_repo": "prmr9/Cryptocurrency-Finance-Price-Tracker-WebApp",
+    "author": "Prashant Kumar",
+    "author_tier": "jira",
+    "path_globs": [],
+    "created": "2026-07-21T07:49:00.010292Z",
+    "tags": [
+      "process-integrity",
+      "workflow-gates",
+      "state-transitions",
+      "task-reopening"
+    ],
+    "kind": "review",
+    "weight": 1.0,
+    "times_applied": 0,
+    "times_confirmed": 0,
+    "safety_class": "guardrail",
+    "safety_reason": "PROHIBITS skipping procedural gates when work is reopened. REQUIRES full re-entry into standard workflow and human review/approval. ADDS verification checkpoints by resetting process state. Prevents s",
+    "enforced": false,
+    "enforce_confirm_tickets": [
+      "KAN-8",
+      "KAN-9"
+    ],
     "guardrail_fp_count": 0,
     "dismissals": 0
   },
