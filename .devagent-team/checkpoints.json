@@ -122,9 +122,9 @@
   "KAN-14": {
     "ticket": "KAN-14",
     "agent": "devagent-bot",
-    "updated": 1784656380.765611,
+    "updated": 1784660523.727658,
     "branch": "feature/KAN-14",
-    "base_branch": "main",
+    "base_branch": "feature/KAN-13",
     "repo": "prmr9/Cryptocurrency-Finance-Price-Tracker-WebApp",
     "phase": "phase2_proposal",
     "pr_number": null
