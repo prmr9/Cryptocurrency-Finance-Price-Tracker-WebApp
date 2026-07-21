@@ -45,7 +45,7 @@ const writePersisted = (patch) =>
   );
 
 describe('analytics storage key', () => {
-  test('is the only literal handed to localStorage in this module', () => {
+  test('hands localStorage only its own versioned keys, never a foreign one', () => {
     expect(source).toMatch(/^const ANALYTICS_KEY = 'cfpt\.analytics\.v1'$/m);
 
     const calls = source.match(
@@ -54,8 +54,12 @@ describe('analytics storage key', () => {
 
     expect(calls).not.toBeNull();
     expect(calls.length).toBeGreaterThan(0);
+    // ANALYTICS_KEY owns the session/onboarding state; VISIT_META_KEY
+    // (analytics_visit_meta_v1) was added in KAN-9 for the return-visit
+    // retention signal. Both are module-owned, versioned keys — no call site may
+    // reach for KAN-4's account key or any other foreign literal.
     calls.forEach((call) => {
-      expect(call).toMatch(/\(\s*ANALYTICS_KEY\s*$/);
+      expect(call).toMatch(/\(\s*(?:ANALYTICS_KEY|VISIT_META_KEY)\s*$/);
     });
   });
 

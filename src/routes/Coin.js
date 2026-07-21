@@ -1,13 +1,15 @@
 import axios from 'axios'
-import { useParams } from 'react-router-dom'
+import { useParams, useLocation } from 'react-router-dom'
 import React, { useState, useEffect } from 'react'
 import DOMPurify from 'dompurify'
+import { track } from '../services/analytics'
 
 import './Coin.css'
 
 const Coin = () => {
 
     const params = useParams()
+    const location = useLocation()
     const [coin, setCoin] = useState({})
 
     const url = `https://api.coingecko.com/api/v3/coins/${params.coinId}`
@@ -20,6 +22,25 @@ const Coin = () => {
             console.log(error)
         })
     }, [])
+
+    // coin_detail_viewed — the first-value 'aha'. Keyed on the loaded coin id so
+    // a coin -> coin router-v6 navigation (same component, new id) re-fires. The
+    // source comes from the navigation state set on the home card, defaulting to
+    // 'direct' for deep links / reloads.
+    useEffect(() => {
+        if (coin && coin.id) {
+            const source =
+                (location.state && location.state.source) ? location.state.source : 'direct'
+            track('coin_detail_viewed', {
+                coin_id: coin.id,
+                coin_symbol: coin.symbol ? coin.symbol.toUpperCase() : null,
+                source
+            })
+        }
+        // Re-fires only when the loaded coin id changes (coin -> coin nav); the
+        // source hint is read once at that moment.
+        // eslint-disable-next-line react-hooks/exhaustive-deps
+    }, [coin?.id])
 
     return (
         <div>

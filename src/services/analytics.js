@@ -10,10 +10,11 @@
 // components own the store and pass already-loaded data into track() calls;
 // importing the store here would build a persistence <-> telemetry cycle.
 //
-// STORAGE: this module owns exactly one key, ANALYTICS_KEY, and neither reads
-// nor writes KAN-4's account key. Every access is wrapped so a private-mode
-// QuotaExceededError degrades telemetry to memory instead of breaking the view
-// it is instrumenting.
+// STORAGE: this module owns exactly two versioned keys — ANALYTICS_KEY (session
+// / onboarding state) and VISIT_META_KEY (KAN-9 return-visit retention meta) —
+// and neither reads nor writes KAN-4's account key. Every access is wrapped so a
+// private-mode QuotaExceededError degrades telemetry to memory instead of
+// breaking the view it is instrumenting.
 
 const ANALYTICS_KEY = 'cfpt.analytics.v1'
 
@@ -315,6 +316,76 @@ export const getAccountAgeDays = (accountId) => {
     return Math.max(0, Math.floor((Date.now() - firstSeen) / DAY_MS))
 }
 
+// KAN-9 retention: one versioned localStorage key owning the return-visit meta,
+// kept separate from ANALYTICS_KEY and following accountStore.js's versioned-key
+// discipline.
+const VISIT_META_KEY = 'analytics_visit_meta_v1'
+
+// Records a return visit AT MOST ONCE per session for the prices_return_visit
+// event. It reads the prior {last_visit_at, visit_count, last_visit_session_id}
+// in its own try/catch; if this session already advanced the meta it returns
+// null ('once per new session'). Otherwise it derives retention stats FROM THE
+// PRIOR value, then writes the advanced meta in a SEPARATE try/catch (Safari
+// private-mode / quota can throw on setItem even when getItem succeeded). Never
+// throws — matches the track() contract.
+export const recordReturnVisit = () => {
+    const currentSessionId = touchSession().sessionId
+
+    let prior = null
+
+    try {
+        const raw = window.localStorage.getItem(VISIT_META_KEY)
+
+        if (raw) {
+            const parsed = JSON.parse(raw)
+
+            if (parsed !== null && typeof parsed === 'object' && !Array.isArray(parsed)) {
+                prior = parsed
+            }
+        }
+    } catch (err) {
+        prior = null
+    }
+
+    const priorVisitCount =
+        prior && typeof prior.visit_count === 'number' ? prior.visit_count : 0
+    const priorLastVisitAt =
+        prior && typeof prior.last_visit_at === 'number' ? prior.last_visit_at : null
+    const priorSessionId =
+        prior && typeof prior.last_visit_session_id === 'string'
+            ? prior.last_visit_session_id
+            : null
+
+    // Already counted under this session id — do not double-count.
+    if (priorSessionId !== null && priorSessionId === currentSessionId) {
+        return null
+    }
+
+    const isReturnVisit = priorVisitCount > 0
+    const daysSinceLastVisit =
+        priorLastVisitAt !== null ? Math.floor((Date.now() - priorLastVisitAt) / DAY_MS) : null
+    const nextVisitCount = priorVisitCount + 1
+
+    try {
+        window.localStorage.setItem(
+            VISIT_META_KEY,
+            JSON.stringify({
+                last_visit_at: Date.now(),
+                visit_count: nextVisitCount,
+                last_visit_session_id: currentSessionId
+            })
+        )
+    } catch (err) {
+        // Quota / private mode: retention degrades but the view stays up.
+    }
+
+    return {
+        is_return_visit: isReturnVisit,
+        days_since_last_visit: daysSinceLastVisit,
+        visit_count: nextVisitCount
+    }
+}
+
 export const getRetentionContext = () => {
     const state = readState()
 
@@ -441,6 +512,7 @@ export const resetAnalyticsForTest = () => {
 
     try {
         window.localStorage.removeItem(ANALYTICS_KEY)
+        window.localStorage.removeItem(VISIT_META_KEY)
     } catch (err) {
         // Nothing to clear if storage is unavailable.
     }
