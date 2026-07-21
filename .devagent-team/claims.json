@@ -14,8 +14,8 @@
       "server/src/db/secrets.js",
       "server/src/db/tls.js"
     ],
-    "created": 1784606008.028704,
-    "expires": 1784613208.028704
+    "created": 1784606214.297625,
+    "expires": 1784613414.297625
   },
   {
     "ticket": "KAN-8",
