@@ -28,6 +28,24 @@
     "expires": 1784605250.139044
   },
   {
+    "ticket": "KAN-11",
+    "agent": "devagent-bot",
+    "repo": "prmr9/Cryptocurrency-Finance-Price-Tracker-WebApp",
+    "files": [
+      "infra/iam.tf",
+      "infra/main.tf",
+      "infra/outputs.tf",
+      "server/certs/rds-global-bundle.pem",
+      "server/migrate.js",
+      "server/migrations/1721520000000_init-migration-tracking.js",
+      "server/src/db/pool.js",
+      "server/src/db/secrets.js",
+      "server/src/db/tls.js"
+    ],
+    "created": 1784604232.080226,
+    "expires": 1784611432.080226
+  },
+  {
     "ticket": "KAN-8",
     "agent": "devagent-bot",
     "repo": "prmr9/Cryptocurrency-Finance-Price-Tracker-WebApp",
