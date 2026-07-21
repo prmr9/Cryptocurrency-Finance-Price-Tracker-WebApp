@@ -114,3 +114,4 @@
 {"ts": 1784621130.641695, "agent": "devagent-bot", "ticket": "KAN-9", "kind": "pr", "text": "KAN-9 PR open for review: https://github.com/prmr9/Cryptocurrency-Finance-Price-Tracker-WebApp/pull/10", "to": null}
 {"ts": 1784646269.768862, "agent": "devagent-bot", "ticket": "KAN-13", "kind": "blocked", "text": "Parked KAN-13; blocked by KAN-12.", "to": null}
 {"ts": 1784646459.49249, "agent": "devagent-bot", "ticket": "KAN-11", "kind": "merged", "text": "Merged KAN-11: https://github.com/prmr9/Cryptocurrency-Finance-Price-Tracker-WebApp/pull/8", "to": null}
+{"ts": 1784646484.75349, "agent": "devagent-bot", "ticket": "KAN-17", "kind": "blocked", "text": "Parked KAN-17; blocked by KAN-13, KAN-15, KAN-16.", "to": null}
