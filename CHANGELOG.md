@@ -1,6 +1,7 @@
 # Changelog
 
 ## Unreleased
+- KAN-12: Model users (id, email unique, password_hash, created_at), user_profiles (user_id fk, display_name, avatar_url, updated_at), portfolios (id, user_id fk, name, holdings jsonb, created_at, updated_at) (DevAgent)
 - KAN-11: Define RDS PostgreSQL 16 connection (runtime Secrets Manager fetch via IAM role), Migration tool + repo-stored migration files (run per env via SSH tunnel) (DevAgent)
 - KAN-11: RDS PostgreSQL 16 connection (runtime Secrets Manager fetch via the EC2 IAM role) + repo-stored migration runner (node-pg-migrate) applied per env over an SSH tunnel. Adds a per-env least-privilege IAM role/instance profile (infra/iam.tf) scoped to secretsmanager:GetSecretValue on that env's DB secret, and a separate server/ package (secret-fetch -> pg Pool, pinned RDS CA bundle, migrations) kept out of the CRA static build. (DevAgent)
 - KAN-10: Walking skeleton: crypto-tracker/{env}/db (AWS Secrets Manager entry), Backend runtime config (DB_SECRET_NAME, AWS_REGION env vars), DevAgent SSH+rsync deploy procedure (approval-gated, health-verifie (DevAgent)
