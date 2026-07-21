@@ -87,5 +87,13 @@ terraform destroy
   bastion or GitHub's IP ranges.
 - No HTTPS yet. Add a domain + Let's Encrypt (certbot) or put an ALB/CloudFront
   in front. Ask and I'll wire it up.
+- **Backend service (`server/`).** KAN-13 adds an in-VPC HTTP service (`npm start`
+  → `node src/index.js`, listens on `PORT`, default `8080`) exposing `GET /health`
+  (probes the secret→DB chain) and the auth-session primitives. It needs a JWT
+  signing key at boot via `JWT_SECRET` (or `JWT_SECRET_NAME` for Secrets Manager)
+  — it refuses to start without one. Front it with the same TLS terminator as
+  above (nginx+certbot or an ALB) reverse-proxying to `:8080`; the session
+  cookie's `Secure` flag turns on automatically once `NODE_ENV=production` (or
+  `COOKIE_SECURE=true`) is set, so it only ships over that HTTPS front.
 - Later: swap GitHub Actions for Jenkins — the Terraform and nginx setup stay
   identical; only the CI job that runs `npm run build` + rsync changes.
