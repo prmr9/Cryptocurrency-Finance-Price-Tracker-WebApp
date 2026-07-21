@@ -137,3 +137,5 @@
 {"ts": 1784656587.940129, "agent": "devagent-bot", "ticket": "KAN-14", "kind": "blocked", "text": "Parked KAN-14; blocked by KAN-13.", "to": null}
 {"ts": 1784660523.721359, "agent": "devagent-bot", "ticket": "KAN-14", "kind": "started", "text": "Resuming KAN-14; KAN-13 resolved.", "to": null}
 {"ts": 1784660596.9433632, "agent": "devagent-bot", "ticket": "KAN-13", "kind": "merged", "text": "Merged KAN-13: https://github.com/prmr9/Cryptocurrency-Finance-Price-Tracker-WebApp/pull/12", "to": null}
+{"ts": 1784660614.887816, "agent": "devagent-bot", "ticket": "KAN-15", "kind": "blocked", "text": "Parked KAN-15; blocked by KAN-14.", "to": null}
+{"ts": 1784660620.144991, "agent": "devagent-bot", "ticket": "KAN-17", "kind": "blocked", "text": "Parked KAN-17; blocked by KAN-15, KAN-16.", "to": null}
