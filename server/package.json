@@ -1,0 +1,32 @@
+{
+  "name": "crypto-tracker-server",
+  "version": "0.1.0",
+  "private": true,
+  "description": "Backend DB access + repo-stored migrations for the crypto tracker (see DATABASE.md).",
+  "engines": {
+    "node": ">=18"
+  },
+  "scripts": {
+    "migrate": "node migrate.js",
+    "migrate:down": "node migrate.js down",
+    "test": "node --test test/*.test.js && jest",
+    "test:node": "node --test test/*.test.js",
+    "test:jest": "jest",
+    "test:integration": "node --test test/schema-integration.test.js"
+  },
+  "dependencies": {
+    "@aws-sdk/client-secrets-manager": "^3.552.0",
+    "node-pg-migrate": "^6.2.2",
+    "pg": "^8.11.5"
+  },
+  "devDependencies": {
+    "@testcontainers/postgresql": "^12.0.4",
+    "jest": "^30.4.2"
+  },
+  "jest": {
+    "testEnvironment": "node",
+    "testMatch": [
+      "<rootDir>/migrations/**/*.test.js"
+    ]
+  }
+}
