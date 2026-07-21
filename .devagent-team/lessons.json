@@ -722,6 +722,34 @@
     "dismissals": 0
   },
   {
+    "id": "d6368ed2a70adbba",
+    "pattern": "Explicitly re-establish context when resuming work after interruptions or status transitions",
+    "detail": "When returning to work that was paused or status-changed, clarify the current state and objectives to avoid proceeding with outdated assumptions. This prevents bugs and wasted effort from context loss during context switches.",
+    "source_ticket": "KAN-6",
+    "source_pr": "",
+    "source_repo": "prmr9/Cryptocurrency-Finance-Price-Tracker-WebApp",
+    "author": "Prashant Kumar",
+    "author_tier": "jira",
+    "path_globs": [],
+    "created": "2026-07-21T01:38:56.342869Z",
+    "tags": [
+      "work-context",
+      "state-management",
+      "process",
+      "handoff"
+    ],
+    "kind": "review",
+    "weight": 1.0,
+    "times_applied": 0,
+    "times_confirmed": 0,
+    "safety_class": "guardrail",
+    "safety_reason": "Requires explicit verification of state/context to prevent bugs from stale assumptions; adds a safety check that would otherwise be skipped during context switches",
+    "enforced": false,
+    "enforce_confirm_tickets": [],
+    "guardrail_fp_count": 0,
+    "dismissals": 0
+  },
+  {
     "id": "d70c7ca028f1863b",
     "pattern": "Visual and style changes in shared components cascade across dependents; scope is non-local and structural, not containable.",
     "detail": "Watch for: Redesigning core or widely-composed components to match new aesthetics \u2014 consumers often need alignment, spacing, or sizing adjustments; Design system or theme overhauls \u2014 changes to colors, typography, or spacing conventions ripple to all downstream components; Changing visual contracts (size, aspect ratio, appearance) of components with implicit layout dependencies in consuming code; Accessibility styling changes \u2014 modifications to focus states, contrast, or keyboard indicators often cascade to layout and spacing across the tree. Generalized from: Scope creep is structural in UI redesign work \u2014 style changes cascade across components",
