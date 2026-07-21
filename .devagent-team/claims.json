@@ -24,22 +24,8 @@
       "infra/user_data.sh",
       "infra/variables.tf"
     ],
-    "created": 1784595536.3081548,
-    "expires": 1784602736.3081548
-  },
-  {
-    "ticket": "KAN-6",
-    "agent": "devagent-bot",
-    "repo": "prmr9/Cryptocurrency-Finance-Price-Tracker-WebApp",
-    "files": [
-      "docs/analytics-events.md",
-      "src/components/Accounts.js",
-      "src/components/Navbar.js",
-      "src/services/__tests__/analytics.test.js",
-      "src/services/analytics.js"
-    ],
-    "created": 1784592714.019486,
-    "expires": 1784599914.019486
+    "created": 1784598050.139044,
+    "expires": 1784605250.139044
   },
   {
     "ticket": "KAN-8",
