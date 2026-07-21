@@ -695,6 +695,35 @@
     "dismissals": 0
   },
   {
+    "id": "d3ff3ebe75d5d57c",
+    "pattern": "When a resource constraint (budget, quota, limit) blocks work, halt immediately and gate resumption through the issue tracker",
+    "detail": "This comment illustrates a resource lifecycle: a work ticket enters a blocked state when its resource budget is exhausted. The pattern is to stop all related spend, document the constraint reason in the system, and require explicit resource reconciliation (reopening in Jira) before resumption. This generalizes to any finite-resource scenarios where work must be halted until allocation is renewed.",
+    "source_ticket": "KAN-6",
+    "source_pr": "",
+    "source_repo": "prmr9/Cryptocurrency-Finance-Price-Tracker-WebApp",
+    "author": "Prashant Kumar",
+    "author_tier": "jira",
+    "path_globs": [],
+    "created": "2026-07-21T02:53:50.448032Z",
+    "tags": [
+      "resource-constraints",
+      "lifecycle-state-transitions",
+      "work-halting-criteria",
+      "issue-tracking-as-gate",
+      "budget-management"
+    ],
+    "kind": "review",
+    "weight": 1.0,
+    "times_applied": 0,
+    "times_confirmed": 0,
+    "safety_class": "guardrail",
+    "safety_reason": "Lesson prohibits risky action (continuing work past resource exhaustion), requires halting + explicit documentation + verification gate (Jira reconciliation) before resumption. Adds checkpoints agains",
+    "enforced": false,
+    "enforce_confirm_tickets": [],
+    "guardrail_fp_count": 0,
+    "dismissals": 0
+  },
+  {
     "id": "d430479db69b6281",
     "pattern": "Metrics instrumentation requires /approve-metrics approval with timeout-triggered escalation",
     "detail": "Analytics changes in this repo trigger an approval workflow (/approve-metrics) that times out if not independently approved within a set window, escalating to human review. This is expected behavior; changes proceed after human review. Account for this approval overhead when planning metrics work.",
