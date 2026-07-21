@@ -21,3 +21,13 @@
 npm-debug.log*
 yarn-debug.log*
 yarn-error.log*
+
+# DevAgent internal control files & local infra/secret state — never commit
+.devagent-*
+.devagent-state/
+terraform.tfstate
+terraform.tfstate.*
+*.tfstate
+*.tfstate.backup
+credentials.env
+sources.env
