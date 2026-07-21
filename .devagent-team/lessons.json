@@ -198,9 +198,9 @@
       "security-bump"
     ],
     "kind": "reflection",
-    "weight": 2.5937424601000023,
+    "weight": 2.853116706110003,
     "times_applied": 0,
-    "times_confirmed": 10,
+    "times_confirmed": 11,
     "safety_class": "guardrail",
     "safety_reason": "This lesson PROHIBITS the risky action of bumping to non-existent dependency versions by REQUIRING verification against the registry before changing. It adds a mandatory verification checkpoint that p",
     "enforced": false,
@@ -508,9 +508,9 @@
       "ci"
     ],
     "kind": "reflection",
-    "weight": 2.1435888100000016,
+    "weight": 2.357947691000002,
     "times_applied": 0,
-    "times_confirmed": 8,
+    "times_confirmed": 9,
     "safety_class": "guardrail",
     "safety_reason": "Mandates integrity verification by fetching fresh hashes from registry and committing locked state together, prohibiting the risky practice of stale/hand-edited lockfiles that cause CI integrity failu",
     "enforced": false,
