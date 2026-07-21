@@ -662,31 +662,14 @@ export const getOrCreateSessionId = () => {
     return state.sessionId
 }
 
-// The KAN-6 per-browser-session id as a bare string under SESSION_STORAGE_KEY
-// (not the JSON session-state blob that getOrCreateSessionId manages): return the
-// persisted id verbatim if present, otherwise mint one and persist it. This is the
-// public session-id accessor the KAN-6 spec expects. Never throws.
-export const getSessionId = () => {
-    try {
-        const existing = window.sessionStorage.getItem(SESSION_STORAGE_KEY)
-
-        if (typeof existing === 'string' && existing) {
-            return existing
-        }
-    } catch (err) {
-        // Storage unavailable: fall through and mint a fresh id.
-    }
-
-    const id = mintId('sess')
-
-    try {
-        window.sessionStorage.setItem(SESSION_STORAGE_KEY, id)
-    } catch (err) {
-        // Quota or private mode: the id simply is not persisted this call.
-    }
-
-    return id
-}
+// The public KAN-6 session-id accessor. It is a thin alias for
+// getOrCreateSessionId, so there is exactly ONE session id and ONE on-disk format
+// under SESSION_STORAGE_KEY: the JSON session-state blob that readSessionState and
+// the per-session funnel gates already read. An earlier draft stored a bare string
+// under the same key — a second, unparseable format that reset the per-session
+// dedup when readSessionState tried to JSON.parse it — so the two are reconciled
+// here to the single source of truth. Never throws.
+export const getSessionId = () => getOrCreateSessionId()
 
 // Returns exactly one of 'nav_link' | 'browser_history' | 'reload' | 'direct_url'
 // from the in-app-navigation flag plus performance navigation timing. Never throws.
