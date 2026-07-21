@@ -11,22 +11,31 @@ const renderNavbar = () =>
   );
 
 describe('Navbar root element', () => {
-  test('renders the title heading alongside exactly three links', () => {
+  test('renders the CryptoTracker title heading alongside the nav + CTA links', () => {
     renderNavbar();
 
     expect(
-      screen.getByRole('heading', { level: 1, name: /coin search/i })
+      screen.getByRole('heading', { level: 1, name: /cryptotracker/i })
     ).toBeInTheDocument();
-    // title link + Accounts link + Trade anchor
-    expect(screen.getAllByRole('link')).toHaveLength(3);
+    // title link + Prices + Watchlist + About + Trade anchor
+    expect(screen.getAllByRole('link')).toHaveLength(5);
   });
 
-  test('renders an Accounts link pointing at the /accounts route', () => {
+  test('renders a Watchlist link pointing at the /accounts route', () => {
     renderNavbar();
 
-    expect(screen.getByRole('link', { name: /accounts/i })).toHaveAttribute(
+    expect(screen.getByRole('link', { name: /watchlist/i })).toHaveAttribute(
       'href',
       '/accounts'
+    );
+  });
+
+  test('renders an About link pointing at the /about route', () => {
+    renderNavbar();
+
+    expect(screen.getByRole('link', { name: /about/i })).toHaveAttribute(
+      'href',
+      '/about'
     );
   });
 

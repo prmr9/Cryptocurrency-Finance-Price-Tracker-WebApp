@@ -1,0 +1,13 @@
+name: deploy-nonprod
+
+on:
+  push:
+    branches: [develop]
+  workflow_dispatch:
+
+jobs:
+  deploy:
+    uses: ./.github/workflows/deploy.yml
+    with:
+      environment: nonprod
+    secrets: inherit

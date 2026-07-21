@@ -1,0 +1,46 @@
+# Reusable deploy workflow: builds the React app and rsyncs it to an EC2 host.
+# Secrets EC2_HOST and EC2_SSH_KEY are read from the GitHub Environment
+# named by `environment`, so nonprod and prod stay isolated.
+name: deploy
+
+on:
+  workflow_call:
+    inputs:
+      environment:
+        description: "GitHub Environment to deploy to (nonprod | prod)"
+        required: true
+        type: string
+
+jobs:
+  build-and-deploy:
+    runs-on: ubuntu-latest
+    environment: ${{ inputs.environment }}
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          cache: npm
+
+      - name: Install dependencies
+        run: npm ci
+
+      - name: Build
+        # CI=false so build warnings don't fail the production build
+        env:
+          CI: "false"
+        run: npm run build
+
+      - name: Deploy build to EC2 via rsync
+        env:
+          EC2_HOST: ${{ secrets.EC2_HOST }}
+          EC2_SSH_KEY: ${{ secrets.EC2_SSH_KEY }}
+        run: |
+          mkdir -p ~/.ssh
+          echo "$EC2_SSH_KEY" > ~/.ssh/deploy_key
+          chmod 600 ~/.ssh/deploy_key
+          ssh-keyscan -H "$EC2_HOST" >> ~/.ssh/known_hosts 2>/dev/null
+          rsync -avz --delete \
+            -e "ssh -i ~/.ssh/deploy_key -o StrictHostKeyChecking=yes" \
+            build/ "ubuntu@${EC2_HOST}:/var/www/app/"

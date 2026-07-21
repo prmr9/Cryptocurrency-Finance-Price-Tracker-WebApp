@@ -15,7 +15,7 @@ describe('Navbar title Link structure', () => {
   test('the title link points at the root route and holds the h1 title', () => {
     renderNavbar();
 
-    const titleLink = screen.getByRole('link', { name: /coin search/i });
+    const titleLink = screen.getByRole('link', { name: /cryptotracker/i });
 
     expect(titleLink).toHaveAttribute('href', '/');
     expect(
@@ -27,7 +27,7 @@ describe('Navbar title Link structure', () => {
   test('the Trade anchor is a sibling of the title link, not nested in it', () => {
     renderNavbar();
 
-    const titleLink = screen.getByRole('link', { name: /coin search/i });
+    const titleLink = screen.getByRole('link', { name: /cryptotracker/i });
     const trade = screen.getByRole('link', { name: /trade/i });
 
     expect(within(titleLink).queryByRole('link', { name: /trade/i })).toBeNull();
@@ -35,7 +35,7 @@ describe('Navbar title Link structure', () => {
     // silent edit to TRADE_URL cannot make this test vacuously pass
     expect(trade).toHaveAttribute('href', TRADE_URL);
     expect(trade).toHaveAttribute('href', 'https://app.uniswap.org/explore');
-    // title link + Accounts link + Trade anchor
-    expect(screen.getAllByRole('link')).toHaveLength(3);
+    // title link + Prices + Watchlist + About + Trade anchor
+    expect(screen.getAllByRole('link')).toHaveLength(5);
   });
 });

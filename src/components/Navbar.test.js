@@ -76,7 +76,7 @@ describe('Navbar Trade button', () => {
         renderNavbar()
 
         const trade = getTradeLink()
-        const titleLink = screen.getByRole('link', { name: /coin search/i })
+        const titleLink = screen.getByRole('link', { name: /cryptotracker/i })
 
         expect(titleLink).toBeInTheDocument()
         expect(titleLink).toHaveAttribute('href', '/')
