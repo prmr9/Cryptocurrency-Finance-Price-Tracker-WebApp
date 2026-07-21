@@ -29,3 +29,9 @@ output "db_secret_arns" {
   description = "Secrets Manager ARNs (grant IAM read access to these for the backend/CI)."
   value       = { for env in var.environments : env => aws_secretsmanager_secret.db[env].arn }
 }
+
+# --- IAM role attached to each env's EC2 instance (scoped to read that env's DB secret) ---
+output "app_iam_role_arns" {
+  description = "ARN of the per-environment EC2 instance role. Verify it grants only secretsmanager:GetSecretValue on that env's db secret."
+  value       = { for env in var.environments : env => aws_iam_role.app[env].arn }
+}

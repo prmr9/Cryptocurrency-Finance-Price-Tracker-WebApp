@@ -1,0 +1,2 @@
+# Server package deps — installed per-env, never committed (kept out of the CRA build too).
+/node_modules
