@@ -18,8 +18,10 @@ const POOL_PATH = require.resolve('../src/db/pool');
 const SESSION_PATH = require.resolve('../src/auth/session');
 const CONFIG_PATH = require.resolve('../src/auth/config');
 
-// A DB double: revoked_sessions as an in-memory Set of jti.
-function makeFakePool() {
+// A DB double: revoked_sessions as an in-memory Set of jti, and a users lookup.
+// `existingUsers === null` means every user exists (the common case for the
+// session tests); pass a Set to constrain which ids are considered present.
+function makeFakePool(existingUsers = null) {
   const revoked = new Set();
   return {
     revoked,
@@ -31,6 +33,10 @@ function makeFakePool() {
         }
         if (/FROM revoked_sessions/i.test(sql)) {
           return { rows: revoked.has(params[0]) ? [{ one: 1 }] : [] };
+        }
+        if (/FROM users/i.test(sql)) {
+          const exists = existingUsers === null || existingUsers.has(params[0]);
+          return { rows: exists ? [{ one: 1 }] : [] };
         }
         return { rows: [] };
       },
@@ -206,6 +212,36 @@ test('sweepDenylist evicts in-memory entries once past the token exp', async () 
     const evicted = session.sweepDenylist(farFuture);
     assert.equal(evicted, 1);
     assert.equal(session._denylistSize(), 0);
+  } finally {
+    cleanup();
+  }
+});
+
+test('issueSession issues a session ONLY when a matching user row exists', async () => {
+  // Only 'real-user' exists in the users table.
+  const { pool } = makeFakePool(new Set(['real-user']));
+  const { session, cleanup } = freshSession(pool);
+  try {
+    const res = makeRes();
+    const token = await session.issueSession(res, { userId: 'real-user' });
+    assert.equal(typeof token, 'string');
+    assert.equal(res.cookies.length, 1, 'a session cookie is set for an existing user');
+  } finally {
+    cleanup();
+  }
+});
+
+test('issueSession refuses (no cookie) when the user record does not exist', async () => {
+  // Empty set -> no user id exists.
+  const { pool } = makeFakePool(new Set());
+  const { session, cleanup } = freshSession(pool);
+  try {
+    const res = makeRes();
+    await assert.rejects(
+      session.issueSession(res, { userId: 'ghost-user' }),
+      /no matching user|user/i
+    );
+    assert.equal(res.cookies.length, 0, 'no session cookie for a non-existent user');
   } finally {
     cleanup();
   }

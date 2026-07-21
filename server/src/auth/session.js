@@ -59,11 +59,28 @@ function cookieOptions() {
  * Secure, so it persists the authenticated identity across page refreshes and
  * is unreadable to page scripts.
  *
+ * A session is issued ONLY when a user row with that id exists in the users
+ * table (C6): issuance is gated on the DB, so a token is never minted for an id
+ * that has no backing user record. Throws (and sets NO cookie) when the userId
+ * is missing or unknown.
+ *
  * @param {import('express').Response} res
  * @param {{ userId: string }} identity
  * @returns {Promise<string>} the signed JWT
  */
 async function issueSession(res, { userId }) {
+  if (!userId) {
+    throw new Error('issueSession requires a userId');
+  }
+
+  // Gate issuance on the user existing: never sign a session for an id with no
+  // backing row in the users table. Uses getPool() (pinned-CA TLS) — no new ssl.
+  const pool = await getPool();
+  const { rows } = await pool.query('SELECT 1 FROM users WHERE id = $1', [userId]);
+  if (rows.length === 0) {
+    throw new Error('cannot issue session: no matching user record exists');
+  }
+
   const secret = await getJwtSecret();
   const jti = crypto.randomUUID();
   const token = jwt.sign({ sub: userId }, secret, {
