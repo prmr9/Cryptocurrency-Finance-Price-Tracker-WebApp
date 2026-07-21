@@ -1,33 +1,5 @@
 [
   {
-    "ticket": "KAN-10",
-    "agent": "devagent-bot",
-    "repo": "prmr9/Cryptocurrency-Finance-Price-Tracker-WebApp",
-    "files": [
-      "DEPLOYMENT.md",
-      "backend/src/config.js",
-      "backend/src/db.js",
-      "backend/src/secrets.js",
-      "backend/src/server.js",
-      "backend/test/secrets.test.js",
-      "deploy/build.sh",
-      "deploy/deploy.sh",
-      "deploy/gate.js",
-      "deploy/gate.test.js",
-      "deploy/health-check.sh",
-      "deploy/runbook.md",
-      "infra/github-setup.sh",
-      "infra/iam.tf",
-      "infra/main.tf",
-      "infra/outputs.tf",
-      "infra/secrets.tf",
-      "infra/user_data.sh",
-      "infra/variables.tf"
-    ],
-    "created": 1784598050.139044,
-    "expires": 1784605250.139044
-  },
-  {
     "ticket": "KAN-11",
     "agent": "devagent-bot",
     "repo": "prmr9/Cryptocurrency-Finance-Price-Tracker-WebApp",
@@ -59,7 +31,7 @@
       "src/services/__tests__/analytics-visit-context.test.js",
       "src/services/analytics.js"
     ],
-    "created": 1784603651.269933,
-    "expires": 1784610851.269933
+    "created": 1784604915.12874,
+    "expires": 1784612115.12874
   }
 ]
