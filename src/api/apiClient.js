@@ -56,3 +56,15 @@ export async function apiFetch(path, options = {}) {
 
     return data
 }
+
+// C10 -- create an account and start a session.
+export const signup = (email, password) => apiFetch('/auth/signup', { method: 'POST', body: { email, password } })
+
+// C11 -- verify credentials and start a session.
+export const login = (email, password) => apiFetch('/auth/login', { method: 'POST', body: { email, password } })
+
+// C12 -- revoke the current session (C20 Logout control).
+export const logout = () => apiFetch('/auth/logout', { method: 'POST' })
+
+// C13 -- the current session's public profile.
+export const me = () => apiFetch('/auth/me')
