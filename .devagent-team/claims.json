@@ -11,7 +11,7 @@
       "infra/systemd/crypto-tracker-backend.service",
       "infra/user_data.sh"
     ],
-    "created": 1784734073.3565629,
-    "expires": 1784741273.3565629
+    "created": 1784740353.182123,
+    "expires": 1784747553.182123
   }
 ]
