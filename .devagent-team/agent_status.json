@@ -2,12 +2,12 @@
   "devagent-bot": {
     "agent": "devagent-bot",
     "account": "712020:ad3d4e51-4ea0-4043-8f1f-0e390e87f10b",
-    "ticket": "KAN-16",
+    "ticket": "KAN-31",
     "repo": "prmr9/Cryptocurrency-Finance-Price-Tracker-WebApp",
-    "phase": "phase1_ingestion",
+    "phase": "phase2_proposal",
     "status": "blocked",
-    "summary": "Build Signup page, Login page, Logout control, Portfolio page",
+    "summary": "[Incident] Backend (server/) not deployed to AWS \u2014 provision Node runtime + nginx reverse-proxy + gated backend release lane so /auth/* and /portfolios go live",
     "capacity": 18.0,
-    "updated_at": 1784739287.959095
+    "updated_at": 1784739301.376804
   }
 }
