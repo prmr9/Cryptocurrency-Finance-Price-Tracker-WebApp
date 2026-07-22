@@ -1467,9 +1467,9 @@
       "dequeue"
     ],
     "kind": "reflection",
-    "weight": 1.1,
+    "weight": 1.2100000000000002,
     "times_applied": 0,
-    "times_confirmed": 1,
+    "times_confirmed": 2,
     "safety_class": "guardrail",
     "safety_reason": "This lesson PROHIBITS the risky practice of incomplete state transitions (setting status locally without removing from polling source), and REQUIRES removing the ticket from its trigger source to prev",
     "enforced": false,
