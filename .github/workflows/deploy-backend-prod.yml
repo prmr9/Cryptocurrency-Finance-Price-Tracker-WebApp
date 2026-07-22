@@ -1,0 +1,49 @@
+# Deploys server/ (the Node backend) to prod, staged behind nonprod exactly
+# like the acceptance criteria require: the prod job `needs` the nonprod job
+# and runs in the same protected `prod` GitHub Environment used by
+# deploy-prod.yml, so it stays behind the existing UI infra-execution gate
+# (typed-confirm / required reviewers) — no autonomous prod changes.
+name: deploy-backend-prod
+
+on:
+  push:
+    branches: [main]
+    paths:
+      - "server/**"
+      - "infra/scripts/provision-backend.sh"
+      - "infra/systemd/crypto-tracker-backend.service"
+      - "deploy-backend-ec2.sh"
+      - ".github/workflows/deploy-backend-prod.yml"
+  workflow_dispatch:
+
+jobs:
+  verify-nonprod:
+    name: Deploy + verify backend on nonprod
+    runs-on: ubuntu-latest
+    environment: nonprod
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Deploy backend to nonprod
+        env:
+          EC2_HOST: ${{ secrets.EC2_HOST }}
+          EC2_SSH_KEY: ${{ secrets.EC2_SSH_KEY }}
+          ENVIRONMENT: nonprod
+          AWS_REGION: ${{ vars.AWS_REGION || 'us-east-1' }}
+        run: bash deploy-backend-ec2.sh
+
+  deploy-prod:
+    name: Deploy backend to prod (gated)
+    needs: verify-nonprod
+    runs-on: ubuntu-latest
+    environment: prod
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Deploy backend to prod
+        env:
+          EC2_HOST: ${{ secrets.EC2_HOST }}
+          EC2_SSH_KEY: ${{ secrets.EC2_SSH_KEY }}
+          ENVIRONMENT: prod
+          AWS_REGION: ${{ vars.AWS_REGION || 'us-east-1' }}
+        run: bash deploy-backend-ec2.sh

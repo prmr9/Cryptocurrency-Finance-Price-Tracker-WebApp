@@ -136,3 +136,34 @@ resource "aws_secretsmanager_secret_version" "db" {
     url = "postgresql://${var.db_username}:${random_password.db[each.key].result}@${aws_db_instance.db[each.key].address}:${aws_db_instance.db[each.key].port}/${var.db_name}"
   })
 }
+
+# --- JWT signing secret, one per environment (KAN-31 backend). Consumed by
+# server/src/auth/config.js via JWT_SECRET_NAME -> Secrets Manager -> the
+# "secret" field below; the app's IAM role is granted read access in iam.tf. ---
+resource "random_password" "jwt" {
+  for_each = toset(var.environments)
+
+  length  = 64
+  special = true
+}
+
+resource "aws_secretsmanager_secret" "jwt" {
+  for_each = toset(var.environments)
+
+  name        = "${var.project_name}/${each.key}/jwt"
+  description = "JWT signing secret for ${var.project_name} ${each.key}"
+
+  tags = {
+    Project     = var.project_name
+    Environment = each.key
+  }
+}
+
+resource "aws_secretsmanager_secret_version" "jwt" {
+  for_each = toset(var.environments)
+
+  secret_id = aws_secretsmanager_secret.jwt[each.key].id
+  secret_string = jsonencode({
+    secret = random_password.jwt[each.key].result
+  })
+}

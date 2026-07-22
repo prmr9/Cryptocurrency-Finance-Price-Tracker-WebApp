@@ -8,8 +8,8 @@
 # cannot fetch it, so the backend fails to open the connection and
 # surfaces the authorization error -- there is no embedded/fallback path.
 #
-# Least privilege: a single action (secretsmanager:GetSecretValue) on a
-# single resource (this env's secret ARN). Never "*", never a managed
+# Least privilege: a single action (secretsmanager:GetSecretValue) on
+# this env's db and jwt secret ARNs only. Never "*", never a managed
 # admin policy.
 # ==================================================================
 
@@ -48,6 +48,13 @@ data "aws_iam_policy_document" "app_secrets" {
     effect    = "Allow"
     actions   = ["secretsmanager:GetSecretValue"]
     resources = [aws_secretsmanager_secret.db[each.key].arn]
+  }
+
+  statement {
+    sid       = "ReadOwnJwtSecret"
+    effect    = "Allow"
+    actions   = ["secretsmanager:GetSecretValue"]
+    resources = [aws_secretsmanager_secret.jwt[each.key].arn]
   }
 }
 
