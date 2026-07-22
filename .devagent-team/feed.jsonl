@@ -146,3 +146,4 @@
 {"ts": 1784674763.315985, "agent": "devagent-bot", "ticket": "KAN-14", "kind": "blocked", "text": "Blocked: Same-error loop: the [implementation] step re-sent an identical prompt 2\u00d7 without folding in the failure reason \u2014 it cannot self-converge. Escalated for human review (tune with DEVAGENT_SAME_PROMPT_LOOP_LIMIT).", "to": null}
 {"ts": 1784680508.86332, "agent": "devagent-bot", "ticket": "KAN-14", "kind": "blocked", "text": "Blocked: LLM backend unavailable: claude CLI failed after 3 attempts: API Error: Unable to connect to API (ENOTFOUND)", "to": null}
 {"ts": 1784699656.443923, "agent": "devagent-bot", "ticket": "KAN-14", "kind": "plan", "text": "Reworking KAN-14 (require_green_before_pr): not shippable yet", "to": null}
+{"ts": 1784700195.9228978, "agent": "devagent-bot", "ticket": "KAN-14", "kind": "blocked", "text": "Blocked: Ticket KAN-14 exceeded cost cap: $25.2959 > $25.0000", "to": null}
