@@ -1,18 +1,1 @@
-[
-  {
-    "ticket": "KAN-14",
-    "agent": "devagent-bot",
-    "repo": "prmr9/Cryptocurrency-Finance-Price-Tracker-WebApp",
-    "files": [
-      "DEPLOYMENT.md",
-      "server/src/app.js",
-      "server/src/auth/password.js",
-      "server/src/auth/session.js",
-      "server/src/repos/userRepo.js",
-      "server/src/routes/auth.js",
-      "server/test/auth-endpoints.test.js"
-    ],
-    "created": 1784675650.096724,
-    "expires": 1784682850.096724
-  }
-]
+[]
