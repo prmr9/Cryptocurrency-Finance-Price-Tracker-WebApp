@@ -2368,9 +2368,9 @@
       "ground-truth"
     ],
     "kind": "reflection",
-    "weight": 1.0,
+    "weight": 1.1,
     "times_applied": 0,
-    "times_confirmed": 0,
+    "times_confirmed": 1,
     "safety_class": "guardrail",
     "safety_reason": "Explicitly requires verification checks (ls, git status, git log, gh pr view, etc.) before proposing remediation work. Prohibits acting on hallucinated or stale diagnoses. Adds human-oversight frictio",
     "enforced": false,
