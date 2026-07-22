@@ -2,12 +2,12 @@
   "devagent-bot": {
     "agent": "devagent-bot",
     "account": "712020:ad3d4e51-4ea0-4043-8f1f-0e390e87f10b",
-    "ticket": "KAN-16",
+    "ticket": "",
     "repo": null,
-    "phase": "phase1_ingestion",
-    "status": "pending_approval",
-    "summary": "Build Signup page, Login page, Logout control, Portfolio page",
+    "phase": "",
+    "status": "",
+    "summary": "",
     "capacity": 15.0,
-    "updated_at": 1784721254.948865
+    "updated_at": 1784721314.582176
   }
 }
