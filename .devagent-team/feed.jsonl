@@ -181,3 +181,4 @@
 {"ts": 1784715950.081742, "agent": "devagent-bot", "ticket": "KAN-15", "kind": "started", "text": "Resuming KAN-15; KAN-14 resolved.", "to": null}
 {"ts": 1784718385.116481, "agent": "devagent-bot", "ticket": "KAN-15", "kind": "plan", "text": "Posted implementation plan for KAN-15; awaiting approval.", "to": null}
 {"ts": 1784718666.801705, "agent": "devagent-bot", "ticket": "KAN-15", "kind": "approved", "text": "KAN-15 approved \u2014 implementing now.", "to": null}
+{"ts": 1784718827.118094, "agent": "devagent-bot", "ticket": "KAN-15", "kind": "blocked", "text": "Parked KAN-15; blocked by KAN-14.", "to": null}
