@@ -53,6 +53,18 @@ function cookieOptions() {
   };
 }
 
+// Options for res.clearCookie(): must mirror the attributes the cookie was
+// set with (httpOnly/sameSite/secure/path) minus maxAge, or some browsers
+// won't recognize it as the same cookie to clear.
+function cookieClearOptions() {
+  return {
+    httpOnly: true,
+    sameSite: 'lax',
+    secure: cookieSecure(),
+    path: '/',
+  };
+}
+
 /**
  * Sign a session token for `userId`, set it as the session cookie on `res`, and
  * return the raw token. The cookie is HttpOnly + SameSite=Lax + (env-gated)
@@ -212,6 +224,8 @@ module.exports = {
   sweepDenylist,
   isRevoked,
   COOKIE_NAME,
+  SESSION_COOKIE_NAME: COOKIE_NAME,
+  cookieClearOptions,
   SESSION_TTL_SECONDS,
   _denylistSize,
   _resetDenylist,

@@ -11,6 +11,10 @@
 //   * cookie-parser  -> populates req.cookies for requireSession;
 //   * GET /health    -> the secret->DB->HTTPS chain probe (C4);
 //   * /auth router   -> signup/login/logout/me (KAN-14, C10-C13);
+//   * /portfolios    -> GET/PUT portfolio holdings (KAN-15, C14-C15), behind
+//     requireSession;
+//   * /me            -> POST /me/import, localStorage backfill (KAN-15, C16),
+//     behind requireSession;
 //   * a periodic denylist sweep timer (C9) that evicts expired in-memory
 //     revocations. The timer is unref'd so it never keeps `node --test` (or any
 //     short-lived process) alive.
@@ -21,7 +25,9 @@ const cookieParser = require('cookie-parser');
 
 const { healthHandler } = require('./routes/health');
 const { router: authRouter } = require('./routes/auth');
-const { sweepDenylist } = require('./auth/session');
+const { router: portfoliosRouter } = require('./routes/portfolios');
+const { router: meRouter } = require('./routes/me');
+const { sweepDenylist, requireSession } = require('./auth/session');
 
 // How often to prune expired in-memory revocations.
 const DENYLIST_SWEEP_INTERVAL_MS = 60 * 1000;
@@ -37,6 +43,11 @@ function createApp() {
 
   // C10–C13 — auth endpoints (signup/login/logout/me) mounted under /auth.
   app.use('/auth', authRouter);
+
+  // C14–C16 — portfolio data endpoints, reusing the same requireSession
+  // middleware instance as /auth/me.
+  app.use('/portfolios', requireSession, portfoliosRouter);
+  app.use('/me', requireSession, meRouter);
 
   // C9 — keep the in-memory denylist bounded. unref() so this timer never keeps
   // the process (or a test run) alive on its own.
