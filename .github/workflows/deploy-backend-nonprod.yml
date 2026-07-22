@@ -1,0 +1,30 @@
+# Deploys server/ (the Node backend) to the nonprod EC2 host. Runs
+# automatically on push, mirroring deploy-nonprod.yml's trigger for the
+# frontend — no manual gate for nonprod.
+name: deploy-backend-nonprod
+
+on:
+  push:
+    branches: [develop]
+    paths:
+      - "server/**"
+      - "infra/scripts/provision-backend.sh"
+      - "infra/systemd/crypto-tracker-backend.service"
+      - "deploy-backend-ec2.sh"
+      - ".github/workflows/deploy-backend-nonprod.yml"
+  workflow_dispatch:
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+    environment: nonprod
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Deploy backend to nonprod
+        env:
+          EC2_HOST: ${{ secrets.EC2_HOST }}
+          EC2_SSH_KEY: ${{ secrets.EC2_SSH_KEY }}
+          ENVIRONMENT: nonprod
+          AWS_REGION: ${{ vars.AWS_REGION || 'us-east-1' }}
+        run: bash deploy-backend-ec2.sh

@@ -1,0 +1,23 @@
+[Unit]
+Description=crypto-tracker backend (server/) — Node auth/portfolio API
+After=network-online.target
+Wants=network-online.target
+StartLimitIntervalSec=300
+StartLimitBurst=10
+
+[Service]
+Type=simple
+User=ubuntu
+Group=ubuntu
+WorkingDirectory=/opt/crypto-tracker-backend/current
+ExecStart=/usr/bin/env node /opt/crypto-tracker-backend/current/src/index.js
+Environment=NODE_ENV=production
+Environment=PORT=8080
+Environment=AWS_REGION=__AWS_REGION__
+Environment=DB_SECRET_NAME=__DB_SECRET_NAME__
+Environment=JWT_SECRET_NAME=__JWT_SECRET_NAME__
+Restart=on-failure
+RestartSec=5
+
+[Install]
+WantedBy=multi-user.target

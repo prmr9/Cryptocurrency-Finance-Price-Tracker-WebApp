@@ -89,7 +89,21 @@ resource "aws_instance" "app" {
   key_name               = aws_key_pair.deploy.key_name
   vpc_security_group_ids = [aws_security_group.web.id]
   iam_instance_profile   = aws_iam_instance_profile.app[each.key].name
-  user_data              = file("${path.module}/user_data.sh")
+
+  # Rendered so each environment's instance boots with the backend runtime
+  # (KAN-31) pointed at ITS OWN Secrets Manager entries. user_data.sh embeds
+  # the Node-install / systemd-unit / nginx-proxy provisioning logic directly
+  # (kept byte-for-byte identical to infra/scripts/provision-backend.sh and
+  # infra/systemd/crypto-tracker-backend.service — see the comments in
+  # user_data.sh), which is also what deploy-backend-ec2.sh pushes over SSH
+  # to already-running instances, so both paths configure the box the same
+  # way. Only these 4 per-environment scalars are templated in.
+  user_data = templatefile("${path.module}/user_data.sh", {
+    environment     = each.key
+    aws_region      = var.aws_region
+    db_secret_name  = aws_secretsmanager_secret.db[each.key].name
+    jwt_secret_name = aws_secretsmanager_secret.jwt[each.key].name
+  })
 
   tags = {
     Name        = "${var.project_name}-${each.key}"
