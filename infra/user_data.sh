@@ -16,13 +16,11 @@ cat > /var/www/app/index.html <<'HTML'
 <!doctype html><html><body><h1>Provisioned. Waiting for first deploy...</h1></body></html>
 HTML
 
-# nginx site config for a single-page React app, plus (KAN-31) reverse-proxy
-# locations for the Node backend (server/) on 127.0.0.1:8080. The backend
-# locations are placed BEFORE the `location / { try_files ... }` SPA
-# catch-all so they take precedence over the frontend fallback. This same
-# block (byte-for-byte) is inserted by infra/scripts/provision-backend.sh
-# into an ALREADY-RUNNING instance's site file — see that script for the
-# idempotent, marker-guarded version of the identical location blocks below.
+# nginx site config for a single-page React app. (KAN-31) The Node backend
+# reverse-proxy locations are added to this SAME file below, by actually
+# RUNNING infra/scripts/provision-backend.sh (see the "Backend runtime"
+# section at the end of this script) — not by hand-writing a second copy of
+# those location blocks here.
 cat > /etc/nginx/sites-available/app <<'NGINX'
 server {
     listen 80 default_server;
@@ -31,44 +29,6 @@ server {
 
     root /var/www/app;
     index index.html;
-
-    # --- KAN-31 backend proxy (managed by provision-backend.sh) ---
-    location /auth/ {
-        proxy_pass http://127.0.0.1:8080;
-        proxy_set_header Host $host;
-        proxy_set_header X-Real-IP $remote_addr;
-        proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for;
-        proxy_set_header X-Forwarded-Proto $scheme;
-    }
-    location /portfolios/ {
-        proxy_pass http://127.0.0.1:8080;
-        proxy_set_header Host $host;
-        proxy_set_header X-Real-IP $remote_addr;
-        proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for;
-        proxy_set_header X-Forwarded-Proto $scheme;
-    }
-    location = /portfolios {
-        proxy_pass http://127.0.0.1:8080;
-        proxy_set_header Host $host;
-        proxy_set_header X-Real-IP $remote_addr;
-        proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for;
-        proxy_set_header X-Forwarded-Proto $scheme;
-    }
-    location /me/ {
-        proxy_pass http://127.0.0.1:8080;
-        proxy_set_header Host $host;
-        proxy_set_header X-Real-IP $remote_addr;
-        proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for;
-        proxy_set_header X-Forwarded-Proto $scheme;
-    }
-    location /health {
-        proxy_pass http://127.0.0.1:8080;
-        proxy_set_header Host $host;
-        proxy_set_header X-Real-IP $remote_addr;
-        proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for;
-        proxy_set_header X-Forwarded-Proto $scheme;
-    }
-    # --- end KAN-31 backend proxy ---
 
     # SPA fallback: unknown routes serve index.html
     location / {
@@ -91,17 +51,22 @@ systemctl enable nginx
 systemctl restart nginx
 
 # ------------------------------------------------------------------
-# Backend runtime (KAN-31): Node LTS + a systemd-managed server/ process.
+# Backend runtime (KAN-31): Node LTS + a systemd-managed server/ process,
+# fronted by nginx (/auth/, /portfolios, /me, /health -> 127.0.0.1:8080).
 #
-# This block is kept byte-for-byte identical (same commands, same systemd
-# unit body) to infra/scripts/provision-backend.sh / infra/systemd/
-# crypto-tracker-backend.service — that script is the idempotent version of
-# this same logic, pushed over SSH by deploy-backend-ec2.sh to configure
-# ALREADY-RUNNING instances. The only intentional difference is mechanical:
-# this file is rendered once by Terraform (templatefile), so the 4
-# per-environment values below come in as ${environment}/${aws_region}/
-# ${db_secret_name}/${jwt_secret_name} instead of provision-backend.sh's
-# exported env vars + sed placeholders.
+# This does NOT hand-write its own Node-install / systemd-unit-write / nginx
+# proxy sequence. infra/scripts/provision-backend.sh is the single source of
+# truth for all of that; Terraform (infra/main.tf) inlines its exact bytes
+# below via file(), and the last line of this section actually EXECUTES the
+# inlined script. deploy-backend-ec2.sh pushes and runs that SAME file
+# (unmodified) over SSH against already-running instances, so both delivery
+# paths always run identical bytes — there is no second, independently-
+# written install sequence to drift out of sync.
+#
+# The systemd unit body ([Unit]/[Service]/[Install], with __AWS_REGION__ /
+# __DB_SECRET_NAME__ / __JWT_SECRET_NAME__ placeholders) is likewise inlined
+# from infra/systemd/crypto-tracker-backend.service, byte-for-byte, and
+# provision-backend.sh renders it via sed using the env vars exported below.
 #
 # The first release + `npm ci --omit=dev` happen later, via
 # deploy-backend-ec2.sh, once server/ has actually been shipped — see that
@@ -110,68 +75,18 @@ systemctl restart nginx
 # health-check the backend itself (curl -fsS http://$IP/health and a
 # POST /auth/login probe) with automatic rollback on failure.
 # ------------------------------------------------------------------
-ENVIRONMENT="${environment}"
-AWS_REGION="${aws_region}"
-DB_SECRET_NAME="${db_secret_name}"
-JWT_SECRET_NAME="${jwt_secret_name}"
-export ENVIRONMENT AWS_REGION DB_SECRET_NAME JWT_SECRET_NAME
+export ENVIRONMENT="${environment}"
+export AWS_REGION="${aws_region}"
+export DB_SECRET_NAME="${db_secret_name}"
+export JWT_SECRET_NAME="${jwt_secret_name}"
 
-RELEASE_ROOT=/opt/crypto-tracker-backend
-NODE_MAJOR_REQUIRED=20
+cat > /opt/crypto-tracker-backend.service.template <<'CRYPTO_TRACKER_BACKEND_UNIT_TEMPLATE'
+${backend_unit_template}
+CRYPTO_TRACKER_BACKEND_UNIT_TEMPLATE
 
-# --- Node.js 20 (LTS): install only if missing or below the required major ---
-current_node_major="0"
-if command -v node >/dev/null 2>&1; then
-  current_node_major="$(node -v | sed -E 's/^v([0-9]+).*/\1/')"
-fi
-if [ "$current_node_major" -lt "$NODE_MAJOR_REQUIRED" ]; then
-  command -v curl >/dev/null 2>&1 || (apt-get update -y && apt-get install -y curl)
-  curl -fsSL "https://deb.nodesource.com/setup_$NODE_MAJOR_REQUIRED.x" | bash -
-  apt-get install -y nodejs
-fi
+cat > /opt/provision-backend.sh <<'CRYPTO_TRACKER_PROVISION_BACKEND_SCRIPT'
+${provision_backend_script}
+CRYPTO_TRACKER_PROVISION_BACKEND_SCRIPT
+chmod +x /opt/provision-backend.sh
 
-# --- Release layout: releases/<id>/ promoted via a `current` symlink ---
-mkdir -p "$RELEASE_ROOT/releases"
-chown -R ubuntu:ubuntu "$RELEASE_ROOT"
-
-# --- systemd unit (same [Unit]/[Service]/[Install] body as
-# infra/systemd/crypto-tracker-backend.service), placeholders filled from
-# this instance's own environment/region/secret names ---
-cat > /etc/systemd/system/crypto-tracker-backend.service.template <<'CRYPTO_TRACKER_BACKEND_UNIT'
-[Unit]
-Description=crypto-tracker backend (server/) — Node auth/portfolio API
-After=network-online.target
-Wants=network-online.target
-StartLimitIntervalSec=300
-StartLimitBurst=10
-
-[Service]
-Type=simple
-User=ubuntu
-Group=ubuntu
-WorkingDirectory=/opt/crypto-tracker-backend/current
-ExecStart=/usr/bin/env node /opt/crypto-tracker-backend/current/src/index.js
-Environment=NODE_ENV=production
-Environment=PORT=8080
-Environment=AWS_REGION=__AWS_REGION__
-Environment=DB_SECRET_NAME=__DB_SECRET_NAME__
-Environment=JWT_SECRET_NAME=__JWT_SECRET_NAME__
-Restart=on-failure
-RestartSec=5
-
-[Install]
-WantedBy=multi-user.target
-CRYPTO_TRACKER_BACKEND_UNIT
-
-sed \
-  -e "s#__AWS_REGION__#$AWS_REGION#g" \
-  -e "s#__DB_SECRET_NAME__#$DB_SECRET_NAME#g" \
-  -e "s#__JWT_SECRET_NAME__#$JWT_SECRET_NAME#g" \
-  /etc/systemd/system/crypto-tracker-backend.service.template > /etc/systemd/system/crypto-tracker-backend.service
-rm -f /etc/systemd/system/crypto-tracker-backend.service.template
-
-systemctl daemon-reload
-systemctl enable crypto-tracker-backend
-# Deliberately not started here: until the first release exists under
-# /opt/crypto-tracker-backend/current, ExecStart has nothing to run.
-# deploy-backend-ec2.sh restarts the service AFTER it promotes a release.
+/opt/provision-backend.sh

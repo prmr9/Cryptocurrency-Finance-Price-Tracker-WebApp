@@ -91,18 +91,21 @@ resource "aws_instance" "app" {
   iam_instance_profile   = aws_iam_instance_profile.app[each.key].name
 
   # Rendered so each environment's instance boots with the backend runtime
-  # (KAN-31) pointed at ITS OWN Secrets Manager entries. user_data.sh embeds
-  # the Node-install / systemd-unit / nginx-proxy provisioning logic directly
-  # (kept byte-for-byte identical to infra/scripts/provision-backend.sh and
-  # infra/systemd/crypto-tracker-backend.service — see the comments in
-  # user_data.sh), which is also what deploy-backend-ec2.sh pushes over SSH
-  # to already-running instances, so both paths configure the box the same
-  # way. Only these 4 per-environment scalars are templated in.
+  # (KAN-31) pointed at ITS OWN Secrets Manager entries. user_data.sh does
+  # NOT hand-write its own Node-install / systemd-unit-write sequence: it
+  # inlines infra/scripts/provision-backend.sh and infra/systemd/
+  # crypto-tracker-backend.service BYTE-FOR-BYTE via Terraform's file() below
+  # and then EXECUTES the inlined script, so this launch-time path and
+  # deploy-backend-ec2.sh's push-to-a-running-instance path always run the
+  # exact same bytes — there is no second, independently-written copy to
+  # drift out of sync.
   user_data = templatefile("${path.module}/user_data.sh", {
-    environment     = each.key
-    aws_region      = var.aws_region
-    db_secret_name  = aws_secretsmanager_secret.db[each.key].name
-    jwt_secret_name = aws_secretsmanager_secret.jwt[each.key].name
+    environment              = each.key
+    aws_region               = var.aws_region
+    db_secret_name           = aws_secretsmanager_secret.db[each.key].name
+    jwt_secret_name          = aws_secretsmanager_secret.jwt[each.key].name
+    provision_backend_script = file("${path.module}/scripts/provision-backend.sh")
+    backend_unit_template    = file("${path.module}/systemd/crypto-tracker-backend.service")
   })
 
   tags = {
