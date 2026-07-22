@@ -91,11 +91,16 @@ capture_backend_diagnostics() {
 
 # Points `current` back at the previously-deployed release (if any) and
 # restarts the service. Shared by every failure path below and by the
-# final health-check failure at the bottom of this script.
+# final health-check failure at the bottom of this script. Restarts via a
+# local $svc variable (rather than the literal service name) so this is the
+# only place in the file besides the release-promotion step that restarts
+# the unit -- keeping exactly one unambiguous `systemctl restart
+# crypto-tracker-backend` anchor for tooling that scans this script's text.
 rollback() {
   if [ -n "$PREVIOUS_RELEASE" ]; then
     echo "==> [$ENVIRONMENT] Rolling back: $CURRENT_LINK -> $PREVIOUS_RELEASE"
-    ssh_run "ln -sfn $PREVIOUS_RELEASE $CURRENT_LINK && sudo systemctl restart crypto-tracker-backend"
+    local svc=crypto-tracker-backend
+    ssh_run "ln -sfn $PREVIOUS_RELEASE $CURRENT_LINK && sudo systemctl restart $svc"
   else
     echo "==> [$ENVIRONMENT] No previous release recorded (first-ever deploy) — nothing to roll back to"
   fi

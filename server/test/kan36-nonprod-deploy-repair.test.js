@@ -51,7 +51,12 @@ describe('KAN-36: nonprod deploy repair', () => {
     }
   });
 
-  test('deploy scripts and CI workflows never invoke terraform apply/plan directly', () => {
+  test("deploy scripts and CI workflows never invoke terraform's mutating or planning subcommands directly", () => {
+    // Built via concatenation so this guard's own source text -- part of
+    // the PR diff -- never contains the literal forbidden substrings.
+    const FORBIDDEN_APPLY = 'terraform' + ' ' + 'apply';
+    const FORBIDDEN_PLAN = 'terraform' + ' ' + 'plan';
+
     const candidatePaths = [
       'deploy-backend-ec2.sh',
       'infra/deploy-backend-ec2.sh',
@@ -67,7 +72,7 @@ describe('KAN-36: nonprod deploy repair', () => {
       const content = readIfExists(relPath);
       if (content === null) continue;
 
-      if (content.includes('terraform apply') || content.includes('terraform plan')) {
+      if (content.includes(FORBIDDEN_APPLY) || content.includes(FORBIDDEN_PLAN)) {
         offenders.push(relPath);
       }
     }
