@@ -1619,6 +1619,38 @@
     "dismissals": 0
   },
   {
+    "id": "875f65b693252a8d",
+    "pattern": "A multi-stage gated flow must advance to the next stage from the EXECUTION path, not only the propose path",
+    "detail": "A staged pipeline (staging\u2192prod, canary\u2192full, migrate\u2192deploy) that only chains its NEXT stage on the INLINE/auto path silently DEAD-ENDS in gated/manual mode. Observed live: the staging\u2192prod release proposed PRODUCTION only inside the same function that ran STAGING inline \u2014 so in the human-gated mode (propose nonprod \u2192 return; the grant runs it LATER via a separate executor) NOTHING proposed prod after the nonprod grant executed, and the prod approval card NEVER appeared (KAN-14 shipped to nonprod and its prod step was orphaned forever). RULE: whatever advances a multi-stage flow (propose the next stage, mark complete, trigger the follow-up) must fire from the point where the stage ACTUALLY COMPLETES \u2014 which in a gated design is the grant-EXECUTION handler, not the propose-time function that returned early. After each stage verifies, propose the next as its own gated step (never auto-advance a one-way door). Provider/stack/org-agnostic.\nObserved: staging->prod chain only in the auto/in",
+    "source_ticket": "KAN-14",
+    "source_pr": "",
+    "source_repo": "",
+    "author": "",
+    "author_tier": "",
+    "path_globs": [],
+    "created": "2026-07-22T12:47:46.465661Z",
+    "tags": [
+      "pipeline",
+      "staged-release",
+      "staging",
+      "prod",
+      "gated",
+      "manual-mode",
+      "chain",
+      "orphaned"
+    ],
+    "kind": "reflection",
+    "weight": 1.0,
+    "times_applied": 0,
+    "times_confirmed": 0,
+    "safety_class": "guardrail",
+    "safety_reason": "The lesson prohibits chaining next pipeline stages during the propose path (inline auto-execution) and requires them only in the execution path (post-approval). Not following this causes production de",
+    "enforced": false,
+    "enforce_confirm_tickets": [],
+    "guardrail_fp_count": 0,
+    "dismissals": 0
+  },
+  {
     "id": "87cb1de1557df1f8",
     "pattern": "A self-audit only verifies the dimensions its checklist encodes; passing it is proof of nothing along axes the checklist never captured, so orthogonal quality dimensions (visual, UX, accessibility, pe",
     "detail": "Watch for: UI-facing tickets whose acceptance criteria are written in purely functional/behavioral terms ('button added', 'click triggers X') with no visual, layout, or style criteria \u2014 self-audit is structurally blind to spacing, alignment, contrast, or responsiveness regressions; Self-audit performed by the same agent/person who wrote the implementation, who tends to confirm their own mental model of 'done' rather than notice effects outside the scope they were tracking; Small or 'simple'-looking changes (one button, one field, one config flag) given lighter scrutiny on the assumption that small diff size implies small regression risk, when the risk surface (rendered UI, downstream consumers) doesn't scale with lines changed; Any green automated gate (tests pass, checklist complete, CI green) being treated as general proof of quality rather than proof of only the specific properties that gate was built to measure. Generalized from: AC self-audit passing 8/8 does not catch UI/visual r",
