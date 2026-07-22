@@ -454,9 +454,9 @@
       "monorepo"
     ],
     "kind": "reflection",
-    "weight": 1.4641000000000006,
+    "weight": 1.6105100000000008,
     "times_applied": 0,
-    "times_confirmed": 4,
+    "times_confirmed": 5,
     "safety_class": "guardrail",
     "safety_reason": "Requires a verification step (merge base/dependency branches) and prohibits implementing on stale branches missing dependencies. Prevents silent bugs where code appears missing but is actually a branc",
     "enforced": false,
@@ -941,9 +941,9 @@
       "branch-freshness"
     ],
     "kind": "reflection",
-    "weight": 1.1,
+    "weight": 1.2100000000000002,
     "times_applied": 0,
-    "times_confirmed": 1,
+    "times_confirmed": 2,
     "safety_class": "guardrail",
     "safety_reason": "Prohibits a risky pattern (committing/shipping on unresolved conflicted branches) that would ship work built on outdated code. Requires proper conflict resolution and oversight before proceeding.",
     "enforced": false,
