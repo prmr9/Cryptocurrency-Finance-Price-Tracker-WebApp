@@ -148,3 +148,4 @@
 {"ts": 1784699656.443923, "agent": "devagent-bot", "ticket": "KAN-14", "kind": "plan", "text": "Reworking KAN-14 (require_green_before_pr): not shippable yet", "to": null}
 {"ts": 1784700195.9228978, "agent": "devagent-bot", "ticket": "KAN-14", "kind": "blocked", "text": "Blocked: Ticket KAN-14 exceeded cost cap: $25.2959 > $25.0000", "to": null}
 {"ts": 1784700696.91248, "agent": "devagent-bot", "ticket": "KAN-14", "kind": "blocked", "text": "Blocked: Ticket KAN-14 exceeded cost cap: $27.7178 > $25.0000", "to": null}
+{"ts": 1784701391.1806688, "agent": "devagent-bot", "ticket": "KAN-14", "kind": "blocked", "text": "Blocked: Ticket KAN-14 exceeded cost cap: $30.1398 > $25.0000", "to": null}
