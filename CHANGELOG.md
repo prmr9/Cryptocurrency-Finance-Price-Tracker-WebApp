@@ -1,6 +1,7 @@
 # Changelog
 
 ## Unreleased
+- KAN-15: Implement GET /portfolios, PUT /portfolios, POST /me/import, Frontend API client (replaces localStorage; holds no DB creds) (DevAgent)
 - KAN-14: Implement POST /auth/signup, POST /auth/login, POST /auth/logout, GET /auth/me (DevAgent)
 - KAN-13: Define GET /health + Auth session (secure HttpOnly cookie / JWT). Adds the first web tier in server/ (express app + boot entrypoint) as the sole DB-facing HTTP service: GET /health runs the secret->pool->`select 1` chain under a bounded timeout (200 ok / prompt 503 unhealthy, no error text leaked). Delivers the reusable session mechanism — issueSession/requireSession/revokeSession — as a stateless JWT in a Secure(env-gated)/HttpOnly/SameSite=Lax cookie, backed by a DB-authoritative revoked_sessions denylist (migration 1720000000000) fronted by a swept in-memory cache. JWT signing key is fetched at runtime (JWT_SECRET or Secrets Manager JWT_SECRET_NAME) with a fail-fast boot check and no committed fallback. (DevAgent)
 - KAN-12: Model users (id, email unique, password_hash, created_at), user_profiles (user_id fk, display_name, avatar_url, updated_at), portfolios (id, user_id fk, name, holdings jsonb, created_at, updated_at) (DevAgent)
