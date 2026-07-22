@@ -20,5 +20,20 @@
     ],
     "created": 1784732187.860063,
     "expires": 1784739387.860063
+  },
+  {
+    "ticket": "KAN-31",
+    "agent": "devagent-bot",
+    "repo": "prmr9/Cryptocurrency-Finance-Price-Tracker-WebApp",
+    "files": [
+      "deploy-backend-ec2.sh",
+      "infra/database.tf",
+      "infra/iam.tf",
+      "infra/scripts/provision-backend.sh",
+      "infra/systemd/crypto-tracker-backend.service",
+      "infra/user_data.sh"
+    ],
+    "created": 1784734073.3565629,
+    "expires": 1784741273.3565629
   }
 ]
