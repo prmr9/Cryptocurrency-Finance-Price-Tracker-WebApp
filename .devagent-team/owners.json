@@ -1,14 +1,4 @@
 {
-  "KAN-16": {
-    "agent": "devagent-bot",
-    "instance": "08e8eef498d9:devagent-bot",
-    "expires": 1784769180.297598
-  },
-  "KAN-36": {
-    "agent": "devagent-bot",
-    "instance": "08e8eef498d9:devagent-bot",
-    "expires": 1784769470.637014
-  },
   "KAN-14": {
     "agent": "devagent-bot",
     "instance": "08e8eef498d9:devagent-bot",
@@ -18,5 +8,15 @@
     "agent": "devagent-bot",
     "instance": "08e8eef498d9:devagent-bot",
     "expires": 1784769459.7385962
+  },
+  "KAN-16": {
+    "agent": "devagent-bot",
+    "instance": "08e8eef498d9:devagent-bot",
+    "expires": 1784769180.297598
+  },
+  "KAN-36": {
+    "agent": "devagent-bot",
+    "instance": "08e8eef498d9:devagent-bot",
+    "expires": 1784769470.637014
   }
 }
