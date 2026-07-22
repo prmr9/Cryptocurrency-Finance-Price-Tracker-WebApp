@@ -18,12 +18,14 @@
 
 const { getPool } = require('./pool');
 
-const PORTFOLIO_COLUMNS = 'id, user_id, name, holdings, version, created_at, updated_at';
+// Every query below is a fixed string literal -- no interpolation of any kind
+// (not even of the fixed column list) into the SQL text. All caller-supplied
+// values are passed exclusively as parameterized arguments ($1, $2, ...).
 
 async function getPortfoliosByUserId(userId) {
   const pool = await getPool();
   const { rows } = await pool.query(
-    `SELECT ${PORTFOLIO_COLUMNS} FROM portfolios WHERE user_id = $1`,
+    'SELECT id, user_id, name, holdings, version, created_at, updated_at FROM portfolios WHERE user_id = $1',
     [userId]
   );
   return rows;
@@ -32,7 +34,7 @@ async function getPortfoliosByUserId(userId) {
 async function getPortfolioByUserAndName(userId, name) {
   const pool = await getPool();
   const { rows } = await pool.query(
-    `SELECT ${PORTFOLIO_COLUMNS} FROM portfolios WHERE user_id = $1 AND name = $2`,
+    'SELECT id, user_id, name, holdings, version, created_at, updated_at FROM portfolios WHERE user_id = $1 AND name = $2',
     [userId, name]
   );
   return rows[0] || null;
@@ -46,7 +48,7 @@ async function upsertPortfolioWithVersion(userId, name, holdings, expectedVersio
      ON CONFLICT (user_id, name) DO UPDATE
        SET holdings = $3::jsonb, version = portfolios.version + 1, updated_at = now()
        WHERE portfolios.version = $4
-     RETURNING ${PORTFOLIO_COLUMNS}`,
+     RETURNING id, user_id, name, holdings, version, created_at, updated_at`,
     [userId, name, JSON.stringify(holdings), expectedVersion]
   );
   return { rows, rowCount };
