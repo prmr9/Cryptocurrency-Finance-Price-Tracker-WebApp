@@ -1784,6 +1784,38 @@
     "dismissals": 0
   },
   {
+    "id": "b2974801dd288f24",
+    "pattern": "A build/static-check refusal leaves edits UNCOMMITTED \u2014 fold its reason into the retry and escalate with it, or the work loops invisibly and evaporates",
+    "detail": "When the verified-commit step REFUSES to commit (edits were built and failed a static check / compile \u2014 distinct from the test suite, which can be green), the edits are written to the checkout but NOT committed or pushed, and the next cycle's `reset --hard`/re-clone WIPES those untracked files. If the exact refusal reason is NOT folded into the next implementation prompt, the model re-produces BYTE-IDENTICAL failing code -> fails the same check -> is wiped again: an invisible loop that surfaces only as a misleading 'same-prompt loop: cannot self-converge'. Observed live (KAN-14): the auth-endpoint code PASSED the whole test suite (216+63 tests) but a static check refused the commit, so the work evaporated every cycle for HOURS and never shipped. ALWAYS: (1) fold the verbatim build/static-check error into the retry so the model fixes THAT specific failure, not the same thing again; (2) escalate with the REAL refusal reason, never a generic 'cannot converge'; (3) verify edits actually LA",
+    "source_ticket": "KAN-14",
+    "source_pr": "",
+    "source_repo": "",
+    "author": "",
+    "author_tier": "",
+    "path_globs": [],
+    "created": "2026-07-22T08:46:56.894407Z",
+    "tags": [
+      "commit",
+      "static-check",
+      "build-refusal",
+      "untracked",
+      "reset-hard",
+      "same-prompt-loop",
+      "context-fold",
+      "escalate"
+    ],
+    "kind": "reflection",
+    "weight": 1.0,
+    "times_applied": 0,
+    "times_confirmed": 0,
+    "safety_class": "guardrail",
+    "safety_reason": "Prohibits discarding build/static-check failure signals in retries; requires folding refusal reason into next prompt and escalating, preventing silent loops and work evaporation. Adds feedback control",
+    "enforced": false,
+    "enforce_confirm_tickets": [],
+    "guardrail_fp_count": 0,
+    "dismissals": 0
+  },
+  {
     "id": "b3ac615cfe2fa0d9",
     "pattern": "Scope creep is structural in UI redesign work \u2014 style changes cascade across components",
     "detail": "This redesign touched 3 files beyond the primary scope. When redesigning to match another product's visual aesthetic, changes inevitably cascade across components, layouts, and styles beyond the initial target. Either be more explicit and disciplined about scope boundaries, or allocate planning buffer to account for cascading adjustments.",
