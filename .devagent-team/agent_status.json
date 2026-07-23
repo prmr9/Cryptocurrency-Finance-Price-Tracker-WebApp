@@ -8,6 +8,6 @@
     "status": "blocked",
     "summary": "[Incident] Backend deploy FAILS on nonprod \u2014 health check status=00 (backend not starting); repair so /auth/* + /portfolios go live",
     "capacity": 12.0,
-    "updated_at": 1784807708.919112
+    "updated_at": 1784807768.931701
   }
 }
