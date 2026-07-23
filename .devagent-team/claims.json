@@ -1,14 +1,1 @@
-[
-  {
-    "ticket": "KAN-36",
-    "agent": "devagent-bot",
-    "repo": "prmr9/Cryptocurrency-Finance-Price-Tracker-WebApp",
-    "files": [
-      "deploy-backend-ec2.sh",
-      "server/test/kan36-deploy-prod-gate.test.js",
-      "server/test/kan36-deploy-script-hardening.test.js"
-    ],
-    "created": 1784762054.74854,
-    "expires": 1784769254.74854
-  }
-]
+[]
