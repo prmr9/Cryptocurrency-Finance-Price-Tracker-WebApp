@@ -1,8 +1,8 @@
 #!/usr/bin/env bash
 # ------------------------------------------------------------------
 # Configures GitHub Environments + secrets for the EC2 deploys.
-# Run this AFTER `terraform apply`, from an account with ADMIN rights
-# on the repo. Requires: gh (authenticated), terraform.
+# Run this AFTER Terraform has provisioned the infrastructure, from an
+# account with ADMIN rights on the repo. Requires: gh (authenticated), terraform.
 #
 #   cd infra && ./github-setup.sh
 # ------------------------------------------------------------------
