@@ -2,12 +2,12 @@
   "devagent-bot": {
     "agent": "devagent-bot",
     "account": "712020:ad3d4e51-4ea0-4043-8f1f-0e390e87f10b",
-    "ticket": "",
-    "repo": null,
-    "phase": "",
-    "status": "",
-    "summary": "",
+    "ticket": "KAN-36",
+    "repo": "prmr9/Cryptocurrency-Finance-Price-Tracker-WebApp",
+    "phase": "phase3_implementation",
+    "status": "in_review",
+    "summary": "[Incident] Backend deploy FAILS on nonprod \u2014 health check status=00 (backend not starting); repair so /auth/* + /portfolios go live",
     "capacity": 12.0,
-    "updated_at": 1784904244.4312599
+    "updated_at": 1784904512.5140638
   }
 }
