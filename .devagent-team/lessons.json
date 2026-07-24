@@ -683,7 +683,7 @@
       "monorepo"
     ],
     "kind": "reflection",
-    "weight": 1.5,
+    "weight": 2.5714285714285716,
     "times_applied": 7,
     "times_confirmed": 6,
     "safety_class": "guardrail",
@@ -1225,7 +1225,7 @@
       "branch-freshness"
     ],
     "kind": "reflection",
-    "weight": 1.5,
+    "weight": 1.7142857142857142,
     "times_applied": 7,
     "times_confirmed": 4,
     "safety_class": "guardrail",
@@ -1747,9 +1747,9 @@
       "dequeue"
     ],
     "kind": "reflection",
-    "weight": 1.5,
+    "weight": 3.0,
     "times_applied": 6,
-    "times_confirmed": 14,
+    "times_confirmed": 15,
     "safety_class": "guardrail",
     "safety_reason": "This lesson PROHIBITS the risky practice of incomplete state transitions (setting status locally without removing from polling source), and REQUIRES removing the ticket from its trigger source to prev",
     "enforced": false,
