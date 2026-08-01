@@ -884,7 +884,7 @@
       "security-bump"
     ],
     "kind": "reflection",
-    "weight": 1.657894736842105,
+    "weight": 2.25,
     "times_applied": 20,
     "times_confirmed": 15,
     "safety_class": "guardrail",
@@ -2341,14 +2341,14 @@
   {
     "id": "a16ef55f0feed29d",
     "pattern": "[architecture] Team codebase architecture overview",
-    "detail": "# Team architecture (structural)\n\n## aman90291/de-agent\n- language: unknown\n- top-level: n/a\n- files: 0\n- ",
+    "detail": "# Team architecture digest\n\n# Architecture Digest \u2014 prmr9 repos\n\nBased on the structural signals provided (top-level layout, file counts, README excerpts). Both repos read as **independent, standalone applications** \u2014 no shared package references, common libs, or cross-repo API calls are evident in the data given, so I'm treating them as two separate systems rather than a single distributed one.\n\n## 1. Cryptocurrency-Finance-Price-Tracker-WebApp\n- **Layout**: `.github`, `docs`, `infra`, `public`, `server`, `src` (127 files, JS)\n- **Inferred shape**: client/server web app (`src` = frontend, `server` = backend, `public` = static assets), with a dedicated `infra` dir suggesting IaC/deployment config (Docker, Terraform, or CI deploy scripts) and a `docs` dir for documentation, plus `.github` for CI workflows.\n- **Responsibility**: tracks and displays cryptocurrency/finance prices \u2014 implies a `server` that either proxies/aggregates a third-party price API (e.g., CoinGecko/CoinMarketCap-style) or polls one on a schedule, and a `src` frontend that renders live/near-live price data.\n- **Data store**: unknown \u2014 no DB dependency confirmed. Could be stateless (pure API passthrough) or backed by a cache/DB for historical price data; the `infra` dir is the most likely place this would be declared.\n- **Confidence**: low \u2014 README is empty, so responsibilities/data flow are inferred from naming and directory shape only.\n\n## 2. E-commerce-main\n- **Layout**: `client`, `server` (53 files, JS)\n- **Stack** (from README): React frontend (`client`) + Node.js/Express backend (`server`), Sequelize ORM over **PostgreSQL**.\n- **Responsibility**: standard e-commerce domain \u2014 auth, product browsing, cart, orders, favorites.\n- **Data store**: PostgreSQL (explicit), accessed via Sequelize models in `server`.\n- **Confidence**: high \u2014 README gives explicit stack and feature list.\n\n## Cross-cutting observations\n- **No shared libraries** are evident between the two repos \u2014 each owns its own `client`/`server` or `src`/`server` split independently. If a shared component (auth, UI kit, API client) exists, it isn't visible from the manifests given.\n- **No inter-service communication** is indicated \u2014 nothing suggests the crypto tracker and e-commerce app talk to each other.\n- **Asymmetric maturity**: E-commerce-main's stack is fully specified (React/Express/Sequelize/Postgres); Crypto-Tracker's is not \u2014 it has more infrastructure scaffolding (`infra`, `docs`, `.github`) but no manifest/README detail to confirm its actual backend framework, DB, or the price-data source it depends on.\n\n## Gaps to close before implementation planning\nTo firm this up, I'd need for the Crypto Tracker repo specifically:\n- `server/package.json` (framework, DB driver, third-party API client)\n- `infra/` contents (deployment target, whether a DB/cache is provisioned)\n- `docs/` contents (may already describe the intended architecture)\n\nLet me know if you can share those, or if you'd like me to treat this as two fully separate planning tracks as-is.\n\n---\n## Per-repo facts\n## prmr9/Cryptocurrency-Finance-Price-Tracker-WebApp\n- language: javascript\n- top-level: .github, docs, infra, public, server, src\n- files: 127\n- README.md:\n\n\n\n## prmr9/E-commerce-main\n- language: javascript\n- top-level: client, server\n- files: 53\n- README.md:\n# E-commerce Website (React + Node.js + PostgreSQL)\n\nThis project is a full-stack e-commerce web application with a React frontend and a Node.js/Express backend using PostgreSQL (via Sequelize ORM) for data storage. It supports user authentication, product browsing, cart, orders, and favorites.\n\n---\n\n## Project Structure\n\n```\nEcomerce-website-main-react-node/\n  client/   # React frontend\n  server/   # Node.js backend (Express + Sequelize + PostgreSQL)\n```\n\n---\n\n## Prerequisites\n\n- Node.js (v16+ recommended)\n- npm (v8+ recommended)\n- PostgreSQL database (Cloud SQL or local)\n\n---\n\n## 1. Backend Setup (`server/`)\n\n### Install dependencies\n\n```bash\ncd server\nnpm install\n```\n\n### Configure environment variables\n\nCreate a `.env` file in the `server/` directory with the following:\n\n```\nPORT=8080\n",
     "source_ticket": "",
     "source_pr": "",
     "source_repo": "",
     "author": "devagent-onboarding",
     "author_tier": "",
     "path_globs": [],
-    "created": "2026-07-18T20:59:20.280983Z",
+    "created": "2026-08-01T16:58:54.016730Z",
     "tags": [
       "onboarding",
       "team-knowledge"
@@ -2634,7 +2634,7 @@
       "gate"
     ],
     "kind": "rework",
-    "weight": 2.67,
+    "weight": 2.4545454545454546,
     "times_applied": 11,
     "times_confirmed": 9,
     "safety_class": "guardrail",
