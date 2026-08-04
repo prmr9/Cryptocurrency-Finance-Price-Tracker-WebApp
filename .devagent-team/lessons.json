@@ -25,7 +25,11 @@
     "enforced": false,
     "enforce_confirm_tickets": [],
     "guardrail_fp_count": 0,
-    "dismissals": 0
+    "dismissals": 0,
+    "confidence": null,
+    "confidence_confirms": 0,
+    "confidence_contradictions": 0,
+    "last_confirmed_ts": 0.0
   },
   {
     "id": "04e5e39dd65cdc3f",
@@ -52,7 +56,11 @@
     "enforced": false,
     "enforce_confirm_tickets": [],
     "guardrail_fp_count": 0,
-    "dismissals": 0
+    "dismissals": 0,
+    "confidence": null,
+    "confidence_confirms": 0,
+    "confidence_contradictions": 0,
+    "last_confirmed_ts": 0.0
   },
   {
     "id": "076066e7f17a8789",
@@ -80,7 +88,11 @@
     "enforced": false,
     "enforce_confirm_tickets": [],
     "guardrail_fp_count": 0,
-    "dismissals": 0
+    "dismissals": 0,
+    "confidence": null,
+    "confidence_confirms": 0,
+    "confidence_contradictions": 0,
+    "last_confirmed_ts": 0.0
   },
   {
     "id": "07a52c54d19b150a",
@@ -107,7 +119,11 @@
     "enforced": false,
     "enforce_confirm_tickets": [],
     "guardrail_fp_count": 0,
-    "dismissals": 0
+    "dismissals": 0,
+    "confidence": null,
+    "confidence_confirms": 0,
+    "confidence_contradictions": 0,
+    "last_confirmed_ts": 0.0
   },
   {
     "id": "081e6875fdff4669",
@@ -143,7 +159,11 @@
     "enforced": false,
     "enforce_confirm_tickets": [],
     "guardrail_fp_count": 0,
-    "dismissals": 0
+    "dismissals": 0,
+    "confidence": null,
+    "confidence_confirms": 0,
+    "confidence_contradictions": 0,
+    "last_confirmed_ts": 0.0
   },
   {
     "id": "08baff68731b63be",
@@ -172,7 +192,41 @@
     "enforced": false,
     "enforce_confirm_tickets": [],
     "guardrail_fp_count": 0,
-    "dismissals": 0
+    "dismissals": 0,
+    "confidence": null,
+    "confidence_confirms": 0,
+    "confidence_contradictions": 0,
+    "last_confirmed_ts": 0.0
+  },
+  {
+    "id": "08cc87127d72c92a",
+    "pattern": "[jira:history] Team's recent shipped work (Jira)",
+    "detail": "---\n\n## Domain Context for New Engineers\n\n**Product:** Cryptocurrency portfolio tracker where users sign up, manage crypto holdings (stored as JSON), and track values with live price feeds.\n\n**Tech Stack:**  \nNode.js backend on AWS (RDS PostgreSQL, Secrets Manager, nginx reverse-proxy); JavaScript frontend; SSH+rsync deployment with health-check gating and approval lanes.\n\n**Recurring Domains:**\n1. Backend/API (auth, portfolios, health checks)\n2. Frontend pages + API client (no local secrets)\n3. Infrastructure/DevOps (RDS, migrations, deployment verification)\n4. Database schemas (user, profile, portfolio with jsonb holdings)\n5. Incident response + synthetic drills\n\n**Vocabulary:**\n- **Portfolio** \u2014 per-user crypto holdings collection\n- **Holdings** \u2014 jsonb-stored crypto assets\n- **Migrations** \u2014 repo-stored schema versions, applied per environment\n- **Health check** \u2014 GET /health must return 200; status=00 means backend crashed\n- **Secrets** \u2014 auth + DB creds fetched from AWS Secrets Manager at runtime (IAM-gated)\n\n**How Work Gets Framed:**\n- Story-driven; infrastructure planning broken into atomic subtasks\n- Metrics instrumentation is separate but mandatory (each feature gets a KAN-N ticket)\n- Deployment gated by approval + health verification\n- Security findings block PRs (no waivers without justification)\n- Incident drills (synthetic) run regularly to validate on-call readiness\n\n**Current Blockers:**\n- Backend not yet deployed to nonprod (KAN-31); infrastructure provisioning in flight\n- Nonprod deploy fails with health-check status=00 (backend not starting) \u2014 KAN-36 blocking /auth/* and /portfolios\n- Security finding in PR diff (KAN-38) must be fixed before merge\n\n---\n\nContext distilled. A new engineer should start by understanding the three-tier architecture (backend API \u2192 frontend pages + client \u2192 RDS), then focus on the health-check deployment model and how migrations are versioned.",
+    "source_ticket": "",
+    "source_pr": "",
+    "source_repo": "",
+    "author": "devagent-onboarding",
+    "author_tier": "",
+    "path_globs": [],
+    "created": "2026-08-04T18:35:59.795516Z",
+    "tags": [
+      "onboarding",
+      "team-knowledge"
+    ],
+    "kind": "onboarding",
+    "weight": 1.4,
+    "times_applied": 0,
+    "times_confirmed": 1,
+    "safety_class": "neutral",
+    "safety_reason": "onboarding knowledge",
+    "enforced": false,
+    "enforce_confirm_tickets": [],
+    "guardrail_fp_count": 0,
+    "dismissals": 0,
+    "confidence": null,
+    "confidence_confirms": 0,
+    "confidence_contradictions": 0,
+    "last_confirmed_ts": 0.0
   },
   {
     "id": "0aed4c6e9d7e8136",
@@ -201,7 +255,11 @@
     "enforced": false,
     "enforce_confirm_tickets": [],
     "guardrail_fp_count": 0,
-    "dismissals": 0
+    "dismissals": 0,
+    "confidence": null,
+    "confidence_confirms": 0,
+    "confidence_contradictions": 0,
+    "last_confirmed_ts": 0.0
   },
   {
     "id": "0b28cfe30e18c7b6",
@@ -233,7 +291,11 @@
     "enforced": false,
     "enforce_confirm_tickets": [],
     "guardrail_fp_count": 0,
-    "dismissals": 0
+    "dismissals": 0,
+    "confidence": null,
+    "confidence_confirms": 0,
+    "confidence_contradictions": 0,
+    "last_confirmed_ts": 0.0
   },
   {
     "id": "0c313368c9a6f446",
@@ -261,7 +323,11 @@
     "enforced": false,
     "enforce_confirm_tickets": [],
     "guardrail_fp_count": 0,
-    "dismissals": 0
+    "dismissals": 0,
+    "confidence": null,
+    "confidence_confirms": 0,
+    "confidence_contradictions": 0,
+    "last_confirmed_ts": 0.0
   },
   {
     "id": "0d10cc0246dd35a9",
@@ -288,7 +354,11 @@
     "enforced": false,
     "enforce_confirm_tickets": [],
     "guardrail_fp_count": 0,
-    "dismissals": 0
+    "dismissals": 0,
+    "confidence": null,
+    "confidence_confirms": 0,
+    "confidence_contradictions": 0,
+    "last_confirmed_ts": 0.0
   },
   {
     "id": "0f383048449aed52",
@@ -316,7 +386,11 @@
     "enforced": false,
     "enforce_confirm_tickets": [],
     "guardrail_fp_count": 0,
-    "dismissals": 0
+    "dismissals": 0,
+    "confidence": null,
+    "confidence_confirms": 0,
+    "confidence_contradictions": 0,
+    "last_confirmed_ts": 0.0
   },
   {
     "id": "0ffa5d2df8cb787b",
@@ -345,7 +419,11 @@
     "enforced": false,
     "enforce_confirm_tickets": [],
     "guardrail_fp_count": 0,
-    "dismissals": 0
+    "dismissals": 0,
+    "confidence": null,
+    "confidence_confirms": 0,
+    "confidence_contradictions": 0,
+    "last_confirmed_ts": 0.0
   },
   {
     "id": "1038b01ad6bf9d3b",
@@ -374,7 +452,11 @@
     "enforced": false,
     "enforce_confirm_tickets": [],
     "guardrail_fp_count": 0,
-    "dismissals": 0
+    "dismissals": 0,
+    "confidence": null,
+    "confidence_confirms": 0,
+    "confidence_contradictions": 0,
+    "last_confirmed_ts": 0.0
   },
   {
     "id": "103ca26f784ad41d",
@@ -401,7 +483,11 @@
     "enforced": false,
     "enforce_confirm_tickets": [],
     "guardrail_fp_count": 0,
-    "dismissals": 0
+    "dismissals": 0,
+    "confidence": null,
+    "confidence_confirms": 0,
+    "confidence_contradictions": 0,
+    "last_confirmed_ts": 0.0
   },
   {
     "id": "124af0fe0d663759",
@@ -430,7 +516,11 @@
     "enforced": false,
     "enforce_confirm_tickets": [],
     "guardrail_fp_count": 0,
-    "dismissals": 0
+    "dismissals": 0,
+    "confidence": null,
+    "confidence_confirms": 0,
+    "confidence_contradictions": 0,
+    "last_confirmed_ts": 0.0
   },
   {
     "id": "136f21dc354be0aa",
@@ -459,7 +549,11 @@
     "enforced": false,
     "enforce_confirm_tickets": [],
     "guardrail_fp_count": 0,
-    "dismissals": 0
+    "dismissals": 0,
+    "confidence": null,
+    "confidence_confirms": 0,
+    "confidence_contradictions": 0,
+    "last_confirmed_ts": 0.0
   },
   {
     "id": "15979ec2fdd21fe7",
@@ -488,7 +582,11 @@
     "enforced": false,
     "enforce_confirm_tickets": [],
     "guardrail_fp_count": 0,
-    "dismissals": 0
+    "dismissals": 0,
+    "confidence": null,
+    "confidence_confirms": 0,
+    "confidence_contradictions": 0,
+    "last_confirmed_ts": 0.0
   },
   {
     "id": "1a61ccd9a1467148",
@@ -517,7 +615,11 @@
     "enforced": false,
     "enforce_confirm_tickets": [],
     "guardrail_fp_count": 0,
-    "dismissals": 0
+    "dismissals": 0,
+    "confidence": null,
+    "confidence_confirms": 0,
+    "confidence_contradictions": 0,
+    "last_confirmed_ts": 0.0
   },
   {
     "id": "1b1b23360af324d1",
@@ -549,7 +651,11 @@
     "enforced": false,
     "enforce_confirm_tickets": [],
     "guardrail_fp_count": 0,
-    "dismissals": 0
+    "dismissals": 0,
+    "confidence": null,
+    "confidence_confirms": 0,
+    "confidence_contradictions": 0,
+    "last_confirmed_ts": 0.0
   },
   {
     "id": "1ccd5c8257a957e0",
@@ -577,7 +683,11 @@
     "enforced": false,
     "enforce_confirm_tickets": [],
     "guardrail_fp_count": 0,
-    "dismissals": 0
+    "dismissals": 0,
+    "confidence": null,
+    "confidence_confirms": 0,
+    "confidence_contradictions": 0,
+    "last_confirmed_ts": 0.0
   },
   {
     "id": "2053f369d36aaa65",
@@ -606,7 +716,11 @@
     "enforced": false,
     "enforce_confirm_tickets": [],
     "guardrail_fp_count": 0,
-    "dismissals": 0
+    "dismissals": 0,
+    "confidence": null,
+    "confidence_confirms": 0,
+    "confidence_contradictions": 0,
+    "last_confirmed_ts": 0.0
   },
   {
     "id": "253e723e17bb80b0",
@@ -633,7 +747,11 @@
     "enforced": false,
     "enforce_confirm_tickets": [],
     "guardrail_fp_count": 0,
-    "dismissals": 0
+    "dismissals": 0,
+    "confidence": null,
+    "confidence_confirms": 0,
+    "confidence_contradictions": 0,
+    "last_confirmed_ts": 0.0
   },
   {
     "id": "25d581e4340a9145",
@@ -660,7 +778,11 @@
     "enforced": false,
     "enforce_confirm_tickets": [],
     "guardrail_fp_count": 0,
-    "dismissals": 0
+    "dismissals": 0,
+    "confidence": null,
+    "confidence_confirms": 0,
+    "confidence_contradictions": 0,
+    "last_confirmed_ts": 0.0
   },
   {
     "id": "25e3d2a89cb976ca",
@@ -691,7 +813,11 @@
     "enforced": false,
     "enforce_confirm_tickets": [],
     "guardrail_fp_count": 0,
-    "dismissals": 0
+    "dismissals": 0,
+    "confidence": null,
+    "confidence_confirms": 0,
+    "confidence_contradictions": 0,
+    "last_confirmed_ts": 0.0
   },
   {
     "id": "26b0843af589e494",
@@ -721,7 +847,11 @@
     "enforced": false,
     "enforce_confirm_tickets": [],
     "guardrail_fp_count": 0,
-    "dismissals": 0
+    "dismissals": 0,
+    "confidence": null,
+    "confidence_confirms": 0,
+    "confidence_contradictions": 0,
+    "last_confirmed_ts": 0.0
   },
   {
     "id": "27637f36ca667e52",
@@ -750,7 +880,11 @@
     "enforced": false,
     "enforce_confirm_tickets": [],
     "guardrail_fp_count": 0,
-    "dismissals": 0
+    "dismissals": 0,
+    "confidence": null,
+    "confidence_confirms": 0,
+    "confidence_contradictions": 0,
+    "last_confirmed_ts": 0.0
   },
   {
     "id": "2b750461a073328a",
@@ -779,7 +913,11 @@
     "enforced": false,
     "enforce_confirm_tickets": [],
     "guardrail_fp_count": 0,
-    "dismissals": 0
+    "dismissals": 0,
+    "confidence": null,
+    "confidence_confirms": 0,
+    "confidence_contradictions": 0,
+    "last_confirmed_ts": 0.0
   },
   {
     "id": "2bff7d8333cc1f71",
@@ -805,7 +943,11 @@
     "enforced": false,
     "enforce_confirm_tickets": [],
     "guardrail_fp_count": 0,
-    "dismissals": 0
+    "dismissals": 0,
+    "confidence": null,
+    "confidence_confirms": 0,
+    "confidence_contradictions": 0,
+    "last_confirmed_ts": 0.0
   },
   {
     "id": "2ca7b907c555225c",
@@ -833,7 +975,11 @@
     "enforced": false,
     "enforce_confirm_tickets": [],
     "guardrail_fp_count": 0,
-    "dismissals": 0
+    "dismissals": 0,
+    "confidence": null,
+    "confidence_confirms": 0,
+    "confidence_contradictions": 0,
+    "last_confirmed_ts": 0.0
   },
   {
     "id": "2d6fa366395cf00a",
@@ -862,7 +1008,11 @@
     "enforced": false,
     "enforce_confirm_tickets": [],
     "guardrail_fp_count": 0,
-    "dismissals": 0
+    "dismissals": 0,
+    "confidence": null,
+    "confidence_confirms": 0,
+    "confidence_contradictions": 0,
+    "last_confirmed_ts": 0.0
   },
   {
     "id": "2f3c612a16f068aa",
@@ -892,7 +1042,11 @@
     "enforced": false,
     "enforce_confirm_tickets": [],
     "guardrail_fp_count": 0,
-    "dismissals": 0
+    "dismissals": 0,
+    "confidence": null,
+    "confidence_confirms": 0,
+    "confidence_contradictions": 0,
+    "last_confirmed_ts": 0.0
   },
   {
     "id": "3009902d8afa469d",
@@ -923,7 +1077,11 @@
       "KAN-9"
     ],
     "guardrail_fp_count": 0,
-    "dismissals": 0
+    "dismissals": 0,
+    "confidence": null,
+    "confidence_confirms": 0,
+    "confidence_contradictions": 0,
+    "last_confirmed_ts": 0.0
   },
   {
     "id": "31e971b94b711773",
@@ -952,7 +1110,11 @@
     "enforced": false,
     "enforce_confirm_tickets": [],
     "guardrail_fp_count": 0,
-    "dismissals": 0
+    "dismissals": 0,
+    "confidence": null,
+    "confidence_confirms": 0,
+    "confidence_contradictions": 0,
+    "last_confirmed_ts": 0.0
   },
   {
     "id": "3398e03448e9ff43",
@@ -981,7 +1143,11 @@
     "enforced": false,
     "enforce_confirm_tickets": [],
     "guardrail_fp_count": 0,
-    "dismissals": 0
+    "dismissals": 0,
+    "confidence": null,
+    "confidence_confirms": 0,
+    "confidence_contradictions": 0,
+    "last_confirmed_ts": 0.0
   },
   {
     "id": "34853df17ae14d98",
@@ -1008,7 +1174,11 @@
     "enforced": false,
     "enforce_confirm_tickets": [],
     "guardrail_fp_count": 0,
-    "dismissals": 0
+    "dismissals": 0,
+    "confidence": null,
+    "confidence_confirms": 0,
+    "confidence_contradictions": 0,
+    "last_confirmed_ts": 0.0
   },
   {
     "id": "34f0919f4e1b4e27",
@@ -1037,7 +1207,11 @@
     "enforced": false,
     "enforce_confirm_tickets": [],
     "guardrail_fp_count": 0,
-    "dismissals": 0
+    "dismissals": 0,
+    "confidence": null,
+    "confidence_confirms": 0,
+    "confidence_contradictions": 0,
+    "last_confirmed_ts": 0.0
   },
   {
     "id": "39493aeec8b2b5b3",
@@ -1066,7 +1240,11 @@
     "enforced": false,
     "enforce_confirm_tickets": [],
     "guardrail_fp_count": 0,
-    "dismissals": 0
+    "dismissals": 0,
+    "confidence": null,
+    "confidence_confirms": 0,
+    "confidence_contradictions": 0,
+    "last_confirmed_ts": 0.0
   },
   {
     "id": "397b0ce8b9dd6934",
@@ -1095,7 +1273,11 @@
     "enforced": false,
     "enforce_confirm_tickets": [],
     "guardrail_fp_count": 0,
-    "dismissals": 0
+    "dismissals": 0,
+    "confidence": null,
+    "confidence_confirms": 0,
+    "confidence_contradictions": 0,
+    "last_confirmed_ts": 0.0
   },
   {
     "id": "3a20cd55571a1bd6",
@@ -1121,7 +1303,11 @@
     "enforced": false,
     "enforce_confirm_tickets": [],
     "guardrail_fp_count": 0,
-    "dismissals": 0
+    "dismissals": 0,
+    "confidence": null,
+    "confidence_confirms": 0,
+    "confidence_contradictions": 0,
+    "last_confirmed_ts": 0.0
   },
   {
     "id": "3aab3ab20b9b645f",
@@ -1148,7 +1334,11 @@
     "enforced": false,
     "enforce_confirm_tickets": [],
     "guardrail_fp_count": 0,
-    "dismissals": 0
+    "dismissals": 0,
+    "confidence": null,
+    "confidence_confirms": 0,
+    "confidence_contradictions": 0,
+    "last_confirmed_ts": 0.0
   },
   {
     "id": "4086e34e88733cb8",
@@ -1174,7 +1364,11 @@
     "enforced": false,
     "enforce_confirm_tickets": [],
     "guardrail_fp_count": 0,
-    "dismissals": 0
+    "dismissals": 0,
+    "confidence": null,
+    "confidence_confirms": 0,
+    "confidence_contradictions": 0,
+    "last_confirmed_ts": 0.0
   },
   {
     "id": "4195ca8e83905777",
@@ -1201,7 +1395,11 @@
     "enforced": false,
     "enforce_confirm_tickets": [],
     "guardrail_fp_count": 0,
-    "dismissals": 0
+    "dismissals": 0,
+    "confidence": null,
+    "confidence_confirms": 0,
+    "confidence_contradictions": 0,
+    "last_confirmed_ts": 0.0
   },
   {
     "id": "44ca15ffe0057fb6",
@@ -1230,7 +1428,11 @@
     "enforced": false,
     "enforce_confirm_tickets": [],
     "guardrail_fp_count": 0,
-    "dismissals": 0
+    "dismissals": 0,
+    "confidence": null,
+    "confidence_confirms": 0,
+    "confidence_contradictions": 0,
+    "last_confirmed_ts": 0.0
   },
   {
     "id": "484c93e17deb6faf",
@@ -1262,7 +1464,11 @@
     "enforced": false,
     "enforce_confirm_tickets": [],
     "guardrail_fp_count": 0,
-    "dismissals": 0
+    "dismissals": 0,
+    "confidence": null,
+    "confidence_confirms": 0,
+    "confidence_contradictions": 0,
+    "last_confirmed_ts": 0.0
   },
   {
     "id": "4d890875ac762c1a",
@@ -1291,7 +1497,11 @@
     "enforced": false,
     "enforce_confirm_tickets": [],
     "guardrail_fp_count": 0,
-    "dismissals": 0
+    "dismissals": 0,
+    "confidence": null,
+    "confidence_confirms": 0,
+    "confidence_contradictions": 0,
+    "last_confirmed_ts": 0.0
   },
   {
     "id": "4f949d8dd3940b9d",
@@ -1322,7 +1532,11 @@
     "enforced": false,
     "enforce_confirm_tickets": [],
     "guardrail_fp_count": 0,
-    "dismissals": 0
+    "dismissals": 0,
+    "confidence": null,
+    "confidence_confirms": 0,
+    "confidence_contradictions": 0,
+    "last_confirmed_ts": 0.0
   },
   {
     "id": "50fba38406b248bc",
@@ -1351,7 +1565,11 @@
     "enforced": false,
     "enforce_confirm_tickets": [],
     "guardrail_fp_count": 0,
-    "dismissals": 0
+    "dismissals": 0,
+    "confidence": null,
+    "confidence_confirms": 0,
+    "confidence_contradictions": 0,
+    "last_confirmed_ts": 0.0
   },
   {
     "id": "512588c26f3338b1",
@@ -1380,7 +1598,11 @@
     "enforced": false,
     "enforce_confirm_tickets": [],
     "guardrail_fp_count": 0,
-    "dismissals": 0
+    "dismissals": 0,
+    "confidence": null,
+    "confidence_confirms": 0,
+    "confidence_contradictions": 0,
+    "last_confirmed_ts": 0.0
   },
   {
     "id": "5207cc7f1f06ac1b",
@@ -1409,7 +1631,11 @@
     "enforced": false,
     "enforce_confirm_tickets": [],
     "guardrail_fp_count": 0,
-    "dismissals": 0
+    "dismissals": 0,
+    "confidence": null,
+    "confidence_confirms": 0,
+    "confidence_contradictions": 0,
+    "last_confirmed_ts": 0.0
   },
   {
     "id": "53e4214dcbfa8e35",
@@ -1437,7 +1663,11 @@
     "enforced": false,
     "enforce_confirm_tickets": [],
     "guardrail_fp_count": 0,
-    "dismissals": 0
+    "dismissals": 0,
+    "confidence": null,
+    "confidence_confirms": 0,
+    "confidence_contradictions": 0,
+    "last_confirmed_ts": 0.0
   },
   {
     "id": "576c36857847d94f",
@@ -1465,7 +1695,11 @@
     "enforced": false,
     "enforce_confirm_tickets": [],
     "guardrail_fp_count": 0,
-    "dismissals": 0
+    "dismissals": 0,
+    "confidence": null,
+    "confidence_confirms": 0,
+    "confidence_contradictions": 0,
+    "last_confirmed_ts": 0.0
   },
   {
     "id": "584f92309ac0c455",
@@ -1487,7 +1721,7 @@
       "escalate"
     ],
     "kind": "reflection",
-    "weight": 1.6505633837000013,
+    "weight": 1.5,
     "times_applied": 4,
     "times_confirmed": 12,
     "safety_class": "guardrail",
@@ -1495,7 +1729,11 @@
     "enforced": false,
     "enforce_confirm_tickets": [],
     "guardrail_fp_count": 0,
-    "dismissals": 0
+    "dismissals": 0,
+    "confidence": null,
+    "confidence_confirms": 0,
+    "confidence_contradictions": 0,
+    "last_confirmed_ts": 0.0
   },
   {
     "id": "5856fc4710d42dbb",
@@ -1523,7 +1761,11 @@
     "enforced": false,
     "enforce_confirm_tickets": [],
     "guardrail_fp_count": 0,
-    "dismissals": 0
+    "dismissals": 0,
+    "confidence": null,
+    "confidence_confirms": 0,
+    "confidence_contradictions": 0,
+    "last_confirmed_ts": 0.0
   },
   {
     "id": "5bb9019e62d8aad1",
@@ -1552,7 +1794,11 @@
     "enforced": false,
     "enforce_confirm_tickets": [],
     "guardrail_fp_count": 0,
-    "dismissals": 0
+    "dismissals": 0,
+    "confidence": null,
+    "confidence_confirms": 0,
+    "confidence_contradictions": 0,
+    "last_confirmed_ts": 0.0
   },
   {
     "id": "5e7b1659b043698c",
@@ -1580,7 +1826,11 @@
     "enforced": false,
     "enforce_confirm_tickets": [],
     "guardrail_fp_count": 0,
-    "dismissals": 0
+    "dismissals": 0,
+    "confidence": null,
+    "confidence_confirms": 0,
+    "confidence_contradictions": 0,
+    "last_confirmed_ts": 0.0
   },
   {
     "id": "5f442b900ca38317",
@@ -1607,7 +1857,11 @@
     "enforced": false,
     "enforce_confirm_tickets": [],
     "guardrail_fp_count": 0,
-    "dismissals": 0
+    "dismissals": 0,
+    "confidence": null,
+    "confidence_confirms": 0,
+    "confidence_contradictions": 0,
+    "last_confirmed_ts": 0.0
   },
   {
     "id": "67fbb37bf5b1cd88",
@@ -1636,7 +1890,11 @@
     "enforced": false,
     "enforce_confirm_tickets": [],
     "guardrail_fp_count": 0,
-    "dismissals": 0
+    "dismissals": 0,
+    "confidence": null,
+    "confidence_confirms": 0,
+    "confidence_contradictions": 0,
+    "last_confirmed_ts": 0.0
   },
   {
     "id": "69b592119276c2a2",
@@ -1662,7 +1920,11 @@
     "enforced": false,
     "enforce_confirm_tickets": [],
     "guardrail_fp_count": 0,
-    "dismissals": 0
+    "dismissals": 0,
+    "confidence": null,
+    "confidence_confirms": 0,
+    "confidence_contradictions": 0,
+    "last_confirmed_ts": 0.0
   },
   {
     "id": "6ba743b7e8f39386",
@@ -1691,7 +1953,11 @@
     "enforced": false,
     "enforce_confirm_tickets": [],
     "guardrail_fp_count": 0,
-    "dismissals": 0
+    "dismissals": 0,
+    "confidence": null,
+    "confidence_confirms": 0,
+    "confidence_contradictions": 0,
+    "last_confirmed_ts": 0.0
   },
   {
     "id": "6cbe4d7b66dd5498",
@@ -1722,7 +1988,11 @@
     "enforced": false,
     "enforce_confirm_tickets": [],
     "guardrail_fp_count": 0,
-    "dismissals": 0
+    "dismissals": 0,
+    "confidence": null,
+    "confidence_confirms": 0,
+    "confidence_contradictions": 0,
+    "last_confirmed_ts": 0.0
   },
   {
     "id": "6df444a103681a30",
@@ -1752,7 +2022,11 @@
     "enforced": false,
     "enforce_confirm_tickets": [],
     "guardrail_fp_count": 0,
-    "dismissals": 0
+    "dismissals": 0,
+    "confidence": null,
+    "confidence_confirms": 0,
+    "confidence_contradictions": 0,
+    "last_confirmed_ts": 0.0
   },
   {
     "id": "6f13bd05326aaa40",
@@ -1784,7 +2058,11 @@
     "enforced": false,
     "enforce_confirm_tickets": [],
     "guardrail_fp_count": 0,
-    "dismissals": 0
+    "dismissals": 0,
+    "confidence": null,
+    "confidence_confirms": 0,
+    "confidence_contradictions": 0,
+    "last_confirmed_ts": 0.0
   },
   {
     "id": "6f1f457e825da737",
@@ -1813,7 +2091,11 @@
     "enforced": false,
     "enforce_confirm_tickets": [],
     "guardrail_fp_count": 0,
-    "dismissals": 0
+    "dismissals": 0,
+    "confidence": null,
+    "confidence_confirms": 0,
+    "confidence_contradictions": 0,
+    "last_confirmed_ts": 0.0
   },
   {
     "id": "6f59afaf8eda9598",
@@ -1842,7 +2124,11 @@
     "enforced": false,
     "enforce_confirm_tickets": [],
     "guardrail_fp_count": 0,
-    "dismissals": 0
+    "dismissals": 0,
+    "confidence": null,
+    "confidence_confirms": 0,
+    "confidence_contradictions": 0,
+    "last_confirmed_ts": 0.0
   },
   {
     "id": "70022559dcebe09d",
@@ -1871,7 +2157,11 @@
     "enforced": false,
     "enforce_confirm_tickets": [],
     "guardrail_fp_count": 0,
-    "dismissals": 0
+    "dismissals": 0,
+    "confidence": null,
+    "confidence_confirms": 0,
+    "confidence_contradictions": 0,
+    "last_confirmed_ts": 0.0
   },
   {
     "id": "768901674e793b0a",
@@ -1899,7 +2189,11 @@
     "enforced": false,
     "enforce_confirm_tickets": [],
     "guardrail_fp_count": 0,
-    "dismissals": 0
+    "dismissals": 0,
+    "confidence": null,
+    "confidence_confirms": 0,
+    "confidence_contradictions": 0,
+    "last_confirmed_ts": 0.0
   },
   {
     "id": "78b15f898685813f",
@@ -1928,7 +2222,11 @@
     "enforced": false,
     "enforce_confirm_tickets": [],
     "guardrail_fp_count": 0,
-    "dismissals": 0
+    "dismissals": 0,
+    "confidence": null,
+    "confidence_confirms": 0,
+    "confidence_contradictions": 0,
+    "last_confirmed_ts": 0.0
   },
   {
     "id": "819be56816429546",
@@ -1959,7 +2257,11 @@
     "enforced": false,
     "enforce_confirm_tickets": [],
     "guardrail_fp_count": 0,
-    "dismissals": 0
+    "dismissals": 0,
+    "confidence": null,
+    "confidence_confirms": 0,
+    "confidence_contradictions": 0,
+    "last_confirmed_ts": 0.0
   },
   {
     "id": "829504fb3c0bdbbd",
@@ -1986,7 +2288,11 @@
     "enforced": false,
     "enforce_confirm_tickets": [],
     "guardrail_fp_count": 0,
-    "dismissals": 0
+    "dismissals": 0,
+    "confidence": null,
+    "confidence_confirms": 0,
+    "confidence_contradictions": 0,
+    "last_confirmed_ts": 0.0
   },
   {
     "id": "875f65b693252a8d",
@@ -2018,7 +2324,11 @@
     "enforced": false,
     "enforce_confirm_tickets": [],
     "guardrail_fp_count": 0,
-    "dismissals": 0
+    "dismissals": 0,
+    "confidence": null,
+    "confidence_confirms": 0,
+    "confidence_contradictions": 0,
+    "last_confirmed_ts": 0.0
   },
   {
     "id": "87cb1de1557df1f8",
@@ -2047,7 +2357,11 @@
     "enforced": false,
     "enforce_confirm_tickets": [],
     "guardrail_fp_count": 0,
-    "dismissals": 0
+    "dismissals": 0,
+    "confidence": null,
+    "confidence_confirms": 0,
+    "confidence_contradictions": 0,
+    "last_confirmed_ts": 0.0
   },
   {
     "id": "8a74cbed05ea7759",
@@ -2076,7 +2390,11 @@
     "enforced": false,
     "enforce_confirm_tickets": [],
     "guardrail_fp_count": 0,
-    "dismissals": 0
+    "dismissals": 0,
+    "confidence": null,
+    "confidence_confirms": 0,
+    "confidence_contradictions": 0,
+    "last_confirmed_ts": 0.0
   },
   {
     "id": "8b6b9770d94f4b6f",
@@ -2105,7 +2423,11 @@
     "enforced": false,
     "enforce_confirm_tickets": [],
     "guardrail_fp_count": 0,
-    "dismissals": 0
+    "dismissals": 0,
+    "confidence": null,
+    "confidence_confirms": 0,
+    "confidence_contradictions": 0,
+    "last_confirmed_ts": 0.0
   },
   {
     "id": "9019ca48c5138eac",
@@ -2134,7 +2456,11 @@
     "enforced": false,
     "enforce_confirm_tickets": [],
     "guardrail_fp_count": 0,
-    "dismissals": 0
+    "dismissals": 0,
+    "confidence": null,
+    "confidence_confirms": 0,
+    "confidence_contradictions": 0,
+    "last_confirmed_ts": 0.0
   },
   {
     "id": "92e61d90cf684a00",
@@ -2163,7 +2489,11 @@
     "enforced": false,
     "enforce_confirm_tickets": [],
     "guardrail_fp_count": 0,
-    "dismissals": 0
+    "dismissals": 0,
+    "confidence": null,
+    "confidence_confirms": 0,
+    "confidence_contradictions": 0,
+    "last_confirmed_ts": 0.0
   },
   {
     "id": "93bb850395e02b22",
@@ -2192,7 +2522,11 @@
     "enforced": false,
     "enforce_confirm_tickets": [],
     "guardrail_fp_count": 0,
-    "dismissals": 0
+    "dismissals": 0,
+    "confidence": null,
+    "confidence_confirms": 0,
+    "confidence_contradictions": 0,
+    "last_confirmed_ts": 0.0
   },
   {
     "id": "954e273e8ff83ec7",
@@ -2221,7 +2555,11 @@
     "enforced": false,
     "enforce_confirm_tickets": [],
     "guardrail_fp_count": 0,
-    "dismissals": 0
+    "dismissals": 0,
+    "confidence": null,
+    "confidence_confirms": 0,
+    "confidence_contradictions": 0,
+    "last_confirmed_ts": 0.0
   },
   {
     "id": "95e7d5adbf0455ad",
@@ -2250,7 +2588,11 @@
     "enforced": false,
     "enforce_confirm_tickets": [],
     "guardrail_fp_count": 0,
-    "dismissals": 0
+    "dismissals": 0,
+    "confidence": null,
+    "confidence_confirms": 0,
+    "confidence_contradictions": 0,
+    "last_confirmed_ts": 0.0
   },
   {
     "id": "9815aeb8d3ed1bfe",
@@ -2278,7 +2620,11 @@
     "enforced": false,
     "enforce_confirm_tickets": [],
     "guardrail_fp_count": 0,
-    "dismissals": 0
+    "dismissals": 0,
+    "confidence": null,
+    "confidence_confirms": 0,
+    "confidence_contradictions": 0,
+    "last_confirmed_ts": 0.0
   },
   {
     "id": "982add229efe83e4",
@@ -2299,7 +2645,7 @@
       "Reflection-and-replan cycles in multi-step tasks where identical subtask is re-prompted after prior failure, without augmenting prompt with error context or dependency status"
     ],
     "kind": "principle",
-    "weight": 1.771561000000001,
+    "weight": 1.5,
     "times_applied": 0,
     "times_confirmed": 6,
     "safety_class": "guardrail",
@@ -2307,7 +2653,11 @@
     "enforced": false,
     "enforce_confirm_tickets": [],
     "guardrail_fp_count": 0,
-    "dismissals": 0
+    "dismissals": 0,
+    "confidence": null,
+    "confidence_confirms": 0,
+    "confidence_contradictions": 0,
+    "last_confirmed_ts": 0.0
   },
   {
     "id": "99fa6d47babcb7de",
@@ -2336,19 +2686,23 @@
     "enforced": false,
     "enforce_confirm_tickets": [],
     "guardrail_fp_count": 0,
-    "dismissals": 0
+    "dismissals": 0,
+    "confidence": null,
+    "confidence_confirms": 0,
+    "confidence_contradictions": 0,
+    "last_confirmed_ts": 0.0
   },
   {
     "id": "a16ef55f0feed29d",
     "pattern": "[architecture] Team codebase architecture overview",
-    "detail": "# Team architecture digest\n\n# Architecture Digest \u2014 prmr9 repos\n\nBased on the structural signals provided (top-level layout, file counts, README excerpts). Both repos read as **independent, standalone applications** \u2014 no shared package references, common libs, or cross-repo API calls are evident in the data given, so I'm treating them as two separate systems rather than a single distributed one.\n\n## 1. Cryptocurrency-Finance-Price-Tracker-WebApp\n- **Layout**: `.github`, `docs`, `infra`, `public`, `server`, `src` (127 files, JS)\n- **Inferred shape**: client/server web app (`src` = frontend, `server` = backend, `public` = static assets), with a dedicated `infra` dir suggesting IaC/deployment config (Docker, Terraform, or CI deploy scripts) and a `docs` dir for documentation, plus `.github` for CI workflows.\n- **Responsibility**: tracks and displays cryptocurrency/finance prices \u2014 implies a `server` that either proxies/aggregates a third-party price API (e.g., CoinGecko/CoinMarketCap-style) or polls one on a schedule, and a `src` frontend that renders live/near-live price data.\n- **Data store**: unknown \u2014 no DB dependency confirmed. Could be stateless (pure API passthrough) or backed by a cache/DB for historical price data; the `infra` dir is the most likely place this would be declared.\n- **Confidence**: low \u2014 README is empty, so responsibilities/data flow are inferred from naming and directory shape only.\n\n## 2. E-commerce-main\n- **Layout**: `client`, `server` (53 files, JS)\n- **Stack** (from README): React frontend (`client`) + Node.js/Express backend (`server`), Sequelize ORM over **PostgreSQL**.\n- **Responsibility**: standard e-commerce domain \u2014 auth, product browsing, cart, orders, favorites.\n- **Data store**: PostgreSQL (explicit), accessed via Sequelize models in `server`.\n- **Confidence**: high \u2014 README gives explicit stack and feature list.\n\n## Cross-cutting observations\n- **No shared libraries** are evident between the two repos \u2014 each owns its own `client`/`server` or `src`/`server` split independently. If a shared component (auth, UI kit, API client) exists, it isn't visible from the manifests given.\n- **No inter-service communication** is indicated \u2014 nothing suggests the crypto tracker and e-commerce app talk to each other.\n- **Asymmetric maturity**: E-commerce-main's stack is fully specified (React/Express/Sequelize/Postgres); Crypto-Tracker's is not \u2014 it has more infrastructure scaffolding (`infra`, `docs`, `.github`) but no manifest/README detail to confirm its actual backend framework, DB, or the price-data source it depends on.\n\n## Gaps to close before implementation planning\nTo firm this up, I'd need for the Crypto Tracker repo specifically:\n- `server/package.json` (framework, DB driver, third-party API client)\n- `infra/` contents (deployment target, whether a DB/cache is provisioned)\n- `docs/` contents (may already describe the intended architecture)\n\nLet me know if you can share those, or if you'd like me to treat this as two fully separate planning tracks as-is.\n\n---\n## Per-repo facts\n## prmr9/Cryptocurrency-Finance-Price-Tracker-WebApp\n- language: javascript\n- top-level: .github, docs, infra, public, server, src\n- files: 127\n- README.md:\n\n\n\n## prmr9/E-commerce-main\n- language: javascript\n- top-level: client, server\n- files: 53\n- README.md:\n# E-commerce Website (React + Node.js + PostgreSQL)\n\nThis project is a full-stack e-commerce web application with a React frontend and a Node.js/Express backend using PostgreSQL (via Sequelize ORM) for data storage. It supports user authentication, product browsing, cart, orders, and favorites.\n\n---\n\n## Project Structure\n\n```\nEcomerce-website-main-react-node/\n  client/   # React frontend\n  server/   # Node.js backend (Express + Sequelize + PostgreSQL)\n```\n\n---\n\n## Prerequisites\n\n- Node.js (v16+ recommended)\n- npm (v8+ recommended)\n- PostgreSQL database (Cloud SQL or local)\n\n---\n\n## 1. Backend Setup (`server/`)\n\n### Install dependencies\n\n```bash\ncd server\nnpm install\n```\n\n### Configure environment variables\n\nCreate a `.env` file in the `server/` directory with the following:\n\n```\nPORT=8080\n",
+    "detail": "# Team architecture digest\n\n## Architecture Digest \u2014 prmr9/Cryptocurrency-Finance-Price-Tracker-WebApp\n\n**Shape: single full-stack JavaScript app, not a multi-service system.** One repo, one deployable unit (127 files). There are no separate service directories, no per-service manifests, and no evidence of independent deployables. Treat \"the architecture\" as one frontend + one backend-for-frontend, not a service mesh.\n\n### Components & responsibilities\n\n| Component | Dir | Responsibility | Evidence |\n|---|---|---|---|\n| **Frontend app** | `src` | Tracker UI \u2014 renders prices/charts, user interaction | dir name + app purpose |\n| **Static assets** | `public` | Browser-served static files (HTML shell, images, built bundle target) | dir name |\n| **Backend / API** | `server` | Brokers the external market-data feed: fetch, normalize, likely cache; serves the frontend | dir name + app purpose |\n| **Infra / deploy** | `infra` | IaC / deployment config (target unknown) | dir name |\n| **CI/CD** | `.github` | Build, test, pipeline | dir name |\n| **Docs** | `docs` | Documentation | dir name |\n\n### How they relate (inferred data flow)\n```\nExternal market-data API \u2192 server (fetch / normalize / cache) \u2192 src (frontend) \u2192 public (browser)\n                                                                    deployed via infra \u00b7 built via .github\n```\nThe `server` is the integration seam: it isolates the frontend from the third-party price provider (and any API keys/rate limits). This is the one boundary that matters for planning.\n\n### Shared libraries\n**None evidenced.** No `packages/`, `lib/`, or common module directory surfaced. For a single-app repo this is expected \u2014 shared code lives inside `src`/`server`, not as an internal library.\n\n### Data stores\n**None evidenced \u2014 this is the key unknown.** No `db/`, `models/`, `migrations/`, `prisma/`, or schema directory appeared. Two plausible states:\n- **Stateless pass-through / in-memory cache** (most likely if the app just displays live prices), or\n- **A datastore** (only if user accounts, watchlists, or price history are persisted).\n\n**This decision drives implementation planning** \u2014 it determines whether you're building against a stateless proxy or a stateful backend.\n\n### Confidence\nComponent *roles* are inferred from directory names plus the app's evident purpose (README is empty; no manifests were provided in this pass). Data stores, the external price provider, and the frontend framework are **not** evidenced.\n\n### Resolve before planning\n1. `server/` manifest \u2014 HTTP framework, which price provider, and whether a DB/cache client (Redis, pg, etc.) is present. *(Answers the data-store question.)*\n2. `src/` framework \u2014 React / Vue / vanilla (shapes any UI work).\n3. `infra/` \u2014 deployment target (serverless vs. container vs. static host).\n4. Whether persistence exists at all (accounts/watchlists vs. pure live display).\n\nIf you can share `server/package.json` and `src/package.json`, I can turn the inferred boxes above into a concrete, plan-ready map.\n\n*(No memory update \u2014 the structural facts match my existing note for this repo; nothing new was learned this pass.)*\n\n---\n## Per-repo facts\n## prmr9/Cryptocurrency-Finance-Price-Tracker-WebApp\n- language: javascript\n- top-level: .github, docs, infra, public, server, src\n- files: 127\n- README.md:\n\n",
     "source_ticket": "",
     "source_pr": "",
     "source_repo": "",
     "author": "devagent-onboarding",
     "author_tier": "",
     "path_globs": [],
-    "created": "2026-08-01T16:58:54.016730Z",
+    "created": "2026-08-04T18:35:14.824754Z",
     "tags": [
       "onboarding",
       "team-knowledge"
@@ -2362,7 +2716,11 @@
     "enforced": false,
     "enforce_confirm_tickets": [],
     "guardrail_fp_count": 0,
-    "dismissals": 0
+    "dismissals": 0,
+    "confidence": null,
+    "confidence_confirms": 0,
+    "confidence_contradictions": 0,
+    "last_confirmed_ts": 0.0
   },
   {
     "id": "a187a7fcf6059736",
@@ -2389,7 +2747,11 @@
     "enforced": false,
     "enforce_confirm_tickets": [],
     "guardrail_fp_count": 0,
-    "dismissals": 0
+    "dismissals": 0,
+    "confidence": null,
+    "confidence_confirms": 0,
+    "confidence_contradictions": 0,
+    "last_confirmed_ts": 0.0
   },
   {
     "id": "a1b948ddac674ed8",
@@ -2418,7 +2780,11 @@
     "enforced": false,
     "enforce_confirm_tickets": [],
     "guardrail_fp_count": 0,
-    "dismissals": 0
+    "dismissals": 0,
+    "confidence": null,
+    "confidence_confirms": 0,
+    "confidence_contradictions": 0,
+    "last_confirmed_ts": 0.0
   },
   {
     "id": "a34d53aab9a0d004",
@@ -2447,7 +2813,11 @@
     "enforced": false,
     "enforce_confirm_tickets": [],
     "guardrail_fp_count": 0,
-    "dismissals": 0
+    "dismissals": 0,
+    "confidence": null,
+    "confidence_confirms": 0,
+    "confidence_contradictions": 0,
+    "last_confirmed_ts": 0.0
   },
   {
     "id": "a3a185ffffd1f0f0",
@@ -2476,7 +2846,11 @@
     "enforced": false,
     "enforce_confirm_tickets": [],
     "guardrail_fp_count": 0,
-    "dismissals": 0
+    "dismissals": 0,
+    "confidence": null,
+    "confidence_confirms": 0,
+    "confidence_contradictions": 0,
+    "last_confirmed_ts": 0.0
   },
   {
     "id": "a90572316c0c4475",
@@ -2503,7 +2877,11 @@
     "enforced": false,
     "enforce_confirm_tickets": [],
     "guardrail_fp_count": 0,
-    "dismissals": 0
+    "dismissals": 0,
+    "confidence": null,
+    "confidence_confirms": 0,
+    "confidence_contradictions": 0,
+    "last_confirmed_ts": 0.0
   },
   {
     "id": "acf2480e8637cc01",
@@ -2532,7 +2910,11 @@
     "enforced": false,
     "enforce_confirm_tickets": [],
     "guardrail_fp_count": 0,
-    "dismissals": 0
+    "dismissals": 0,
+    "confidence": null,
+    "confidence_confirms": 0,
+    "confidence_contradictions": 0,
+    "last_confirmed_ts": 0.0
   },
   {
     "id": "ae5d20825ad455af",
@@ -2561,7 +2943,11 @@
     "enforced": false,
     "enforce_confirm_tickets": [],
     "guardrail_fp_count": 0,
-    "dismissals": 0
+    "dismissals": 0,
+    "confidence": null,
+    "confidence_confirms": 0,
+    "confidence_contradictions": 0,
+    "last_confirmed_ts": 0.0
   },
   {
     "id": "af1cc02d42521d28",
@@ -2588,7 +2974,11 @@
     "enforced": false,
     "enforce_confirm_tickets": [],
     "guardrail_fp_count": 0,
-    "dismissals": 0
+    "dismissals": 0,
+    "confidence": null,
+    "confidence_confirms": 0,
+    "confidence_contradictions": 0,
+    "last_confirmed_ts": 0.0
   },
   {
     "id": "b02101a0965ed7c2",
@@ -2616,7 +3006,11 @@
     "enforced": false,
     "enforce_confirm_tickets": [],
     "guardrail_fp_count": 0,
-    "dismissals": 0
+    "dismissals": 0,
+    "confidence": null,
+    "confidence_confirms": 0,
+    "confidence_contradictions": 0,
+    "last_confirmed_ts": 0.0
   },
   {
     "id": "b04c1fe21f705ee0",
@@ -2642,7 +3036,11 @@
     "enforced": false,
     "enforce_confirm_tickets": [],
     "guardrail_fp_count": 0,
-    "dismissals": 0
+    "dismissals": 0,
+    "confidence": null,
+    "confidence_confirms": 0,
+    "confidence_contradictions": 0,
+    "last_confirmed_ts": 0.0
   },
   {
     "id": "b2974801dd288f24",
@@ -2674,7 +3072,11 @@
     "enforced": false,
     "enforce_confirm_tickets": [],
     "guardrail_fp_count": 0,
-    "dismissals": 0
+    "dismissals": 0,
+    "confidence": null,
+    "confidence_confirms": 0,
+    "confidence_contradictions": 0,
+    "last_confirmed_ts": 0.0
   },
   {
     "id": "b29806fe8c2cc73d",
@@ -2702,7 +3104,11 @@
     "enforced": false,
     "enforce_confirm_tickets": [],
     "guardrail_fp_count": 0,
-    "dismissals": 0
+    "dismissals": 0,
+    "confidence": null,
+    "confidence_confirms": 0,
+    "confidence_contradictions": 0,
+    "last_confirmed_ts": 0.0
   },
   {
     "id": "b3ac615cfe2fa0d9",
@@ -2729,7 +3135,11 @@
     "enforced": false,
     "enforce_confirm_tickets": [],
     "guardrail_fp_count": 0,
-    "dismissals": 0
+    "dismissals": 0,
+    "confidence": null,
+    "confidence_confirms": 0,
+    "confidence_contradictions": 0,
+    "last_confirmed_ts": 0.0
   },
   {
     "id": "b57d36673c322a7e",
@@ -2758,7 +3168,11 @@
     "enforced": false,
     "enforce_confirm_tickets": [],
     "guardrail_fp_count": 0,
-    "dismissals": 0
+    "dismissals": 0,
+    "confidence": null,
+    "confidence_confirms": 0,
+    "confidence_contradictions": 0,
+    "last_confirmed_ts": 0.0
   },
   {
     "id": "b807bfcd40cdff9e",
@@ -2786,7 +3200,11 @@
     "enforced": false,
     "enforce_confirm_tickets": [],
     "guardrail_fp_count": 0,
-    "dismissals": 0
+    "dismissals": 0,
+    "confidence": null,
+    "confidence_confirms": 0,
+    "confidence_contradictions": 0,
+    "last_confirmed_ts": 0.0
   },
   {
     "id": "b903323bd38a4e28",
@@ -2815,7 +3233,11 @@
     "enforced": false,
     "enforce_confirm_tickets": [],
     "guardrail_fp_count": 0,
-    "dismissals": 0
+    "dismissals": 0,
+    "confidence": null,
+    "confidence_confirms": 0,
+    "confidence_contradictions": 0,
+    "last_confirmed_ts": 0.0
   },
   {
     "id": "bb1588a0f584f93e",
@@ -2845,7 +3267,11 @@
       "KAN-16"
     ],
     "guardrail_fp_count": 0,
-    "dismissals": 0
+    "dismissals": 0,
+    "confidence": null,
+    "confidence_confirms": 0,
+    "confidence_contradictions": 0,
+    "last_confirmed_ts": 0.0
   },
   {
     "id": "bca7d73a536cbc1b",
@@ -2872,7 +3298,11 @@
     "enforced": false,
     "enforce_confirm_tickets": [],
     "guardrail_fp_count": 0,
-    "dismissals": 0
+    "dismissals": 0,
+    "confidence": null,
+    "confidence_confirms": 0,
+    "confidence_contradictions": 0,
+    "last_confirmed_ts": 0.0
   },
   {
     "id": "bce8f05ea5bb2d92",
@@ -2899,7 +3329,11 @@
     "enforced": false,
     "enforce_confirm_tickets": [],
     "guardrail_fp_count": 0,
-    "dismissals": 0
+    "dismissals": 0,
+    "confidence": null,
+    "confidence_confirms": 0,
+    "confidence_contradictions": 0,
+    "last_confirmed_ts": 0.0
   },
   {
     "id": "beb67c0aea5645cb",
@@ -2926,7 +3360,11 @@
     "enforced": false,
     "enforce_confirm_tickets": [],
     "guardrail_fp_count": 0,
-    "dismissals": 0
+    "dismissals": 0,
+    "confidence": null,
+    "confidence_confirms": 0,
+    "confidence_contradictions": 0,
+    "last_confirmed_ts": 0.0
   },
   {
     "id": "bf3f2a65ff19cab1",
@@ -2955,7 +3393,11 @@
     "enforced": false,
     "enforce_confirm_tickets": [],
     "guardrail_fp_count": 0,
-    "dismissals": 0
+    "dismissals": 0,
+    "confidence": null,
+    "confidence_confirms": 0,
+    "confidence_contradictions": 0,
+    "last_confirmed_ts": 0.0
   },
   {
     "id": "c2de0c72337a39e0",
@@ -2984,7 +3426,11 @@
     "enforced": false,
     "enforce_confirm_tickets": [],
     "guardrail_fp_count": 0,
-    "dismissals": 0
+    "dismissals": 0,
+    "confidence": null,
+    "confidence_confirms": 0,
+    "confidence_contradictions": 0,
+    "last_confirmed_ts": 0.0
   },
   {
     "id": "c3b07373593afc29",
@@ -3013,7 +3459,11 @@
     "enforced": false,
     "enforce_confirm_tickets": [],
     "guardrail_fp_count": 0,
-    "dismissals": 0
+    "dismissals": 0,
+    "confidence": null,
+    "confidence_confirms": 0,
+    "confidence_contradictions": 0,
+    "last_confirmed_ts": 0.0
   },
   {
     "id": "c3c5e46bfc87a795",
@@ -3039,7 +3489,11 @@
     "enforced": false,
     "enforce_confirm_tickets": [],
     "guardrail_fp_count": 0,
-    "dismissals": 0
+    "dismissals": 0,
+    "confidence": null,
+    "confidence_confirms": 0,
+    "confidence_contradictions": 0,
+    "last_confirmed_ts": 0.0
   },
   {
     "id": "c42d45d4e4d242c6",
@@ -3066,7 +3520,11 @@
     "enforced": false,
     "enforce_confirm_tickets": [],
     "guardrail_fp_count": 0,
-    "dismissals": 0
+    "dismissals": 0,
+    "confidence": null,
+    "confidence_confirms": 0,
+    "confidence_contradictions": 0,
+    "last_confirmed_ts": 0.0
   },
   {
     "id": "c6f6d031af6bf30b",
@@ -3098,7 +3556,11 @@
     "enforced": false,
     "enforce_confirm_tickets": [],
     "guardrail_fp_count": 0,
-    "dismissals": 0
+    "dismissals": 0,
+    "confidence": null,
+    "confidence_confirms": 0,
+    "confidence_contradictions": 0,
+    "last_confirmed_ts": 0.0
   },
   {
     "id": "c7bcbdb0b75831ae",
@@ -3127,7 +3589,11 @@
     "enforced": false,
     "enforce_confirm_tickets": [],
     "guardrail_fp_count": 0,
-    "dismissals": 0
+    "dismissals": 0,
+    "confidence": null,
+    "confidence_confirms": 0,
+    "confidence_contradictions": 0,
+    "last_confirmed_ts": 0.0
   },
   {
     "id": "c96ead851ddceeb3",
@@ -3153,7 +3619,11 @@
     "enforced": false,
     "enforce_confirm_tickets": [],
     "guardrail_fp_count": 0,
-    "dismissals": 0
+    "dismissals": 0,
+    "confidence": null,
+    "confidence_confirms": 0,
+    "confidence_contradictions": 0,
+    "last_confirmed_ts": 0.0
   },
   {
     "id": "cb99730f2f4b41f7",
@@ -3182,7 +3652,11 @@
     "enforced": false,
     "enforce_confirm_tickets": [],
     "guardrail_fp_count": 0,
-    "dismissals": 0
+    "dismissals": 0,
+    "confidence": null,
+    "confidence_confirms": 0,
+    "confidence_contradictions": 0,
+    "last_confirmed_ts": 0.0
   },
   {
     "id": "cdc3c09f023577da",
@@ -3211,7 +3685,11 @@
     "enforced": false,
     "enforce_confirm_tickets": [],
     "guardrail_fp_count": 0,
-    "dismissals": 0
+    "dismissals": 0,
+    "confidence": null,
+    "confidence_confirms": 0,
+    "confidence_contradictions": 0,
+    "last_confirmed_ts": 0.0
   },
   {
     "id": "d1299fe619f7f2ef",
@@ -3240,7 +3718,11 @@
     "enforced": false,
     "enforce_confirm_tickets": [],
     "guardrail_fp_count": 0,
-    "dismissals": 0
+    "dismissals": 0,
+    "confidence": null,
+    "confidence_confirms": 0,
+    "confidence_contradictions": 0,
+    "last_confirmed_ts": 0.0
   },
   {
     "id": "d3ff3ebe75d5d57c",
@@ -3269,7 +3751,11 @@
     "enforced": false,
     "enforce_confirm_tickets": [],
     "guardrail_fp_count": 0,
-    "dismissals": 0
+    "dismissals": 0,
+    "confidence": null,
+    "confidence_confirms": 0,
+    "confidence_contradictions": 0,
+    "last_confirmed_ts": 0.0
   },
   {
     "id": "d430479db69b6281",
@@ -3296,7 +3782,11 @@
     "enforced": false,
     "enforce_confirm_tickets": [],
     "guardrail_fp_count": 0,
-    "dismissals": 0
+    "dismissals": 0,
+    "confidence": null,
+    "confidence_confirms": 0,
+    "confidence_contradictions": 0,
+    "last_confirmed_ts": 0.0
   },
   {
     "id": "d6368ed2a70adbba",
@@ -3326,7 +3816,11 @@
       "KAN-17"
     ],
     "guardrail_fp_count": 0,
-    "dismissals": 0
+    "dismissals": 0,
+    "confidence": null,
+    "confidence_confirms": 0,
+    "confidence_contradictions": 0,
+    "last_confirmed_ts": 0.0
   },
   {
     "id": "d70c7ca028f1863b",
@@ -3355,7 +3849,11 @@
     "enforced": false,
     "enforce_confirm_tickets": [],
     "guardrail_fp_count": 0,
-    "dismissals": 0
+    "dismissals": 0,
+    "confidence": null,
+    "confidence_confirms": 0,
+    "confidence_contradictions": 0,
+    "last_confirmed_ts": 0.0
   },
   {
     "id": "da9b98b2c685dce5",
@@ -3382,7 +3880,11 @@
     "enforced": false,
     "enforce_confirm_tickets": [],
     "guardrail_fp_count": 0,
-    "dismissals": 0
+    "dismissals": 0,
+    "confidence": null,
+    "confidence_confirms": 0,
+    "confidence_contradictions": 0,
+    "last_confirmed_ts": 0.0
   },
   {
     "id": "daae08cedfaed759",
@@ -3411,7 +3913,11 @@
     "enforced": false,
     "enforce_confirm_tickets": [],
     "guardrail_fp_count": 0,
-    "dismissals": 0
+    "dismissals": 0,
+    "confidence": null,
+    "confidence_confirms": 0,
+    "confidence_contradictions": 0,
+    "last_confirmed_ts": 0.0
   },
   {
     "id": "dab774cbedd830b9",
@@ -3437,7 +3943,11 @@
     "enforced": false,
     "enforce_confirm_tickets": [],
     "guardrail_fp_count": 0,
-    "dismissals": 0
+    "dismissals": 0,
+    "confidence": null,
+    "confidence_confirms": 0,
+    "confidence_contradictions": 0,
+    "last_confirmed_ts": 0.0
   },
   {
     "id": "ddee1f61e35f95f8",
@@ -3464,7 +3974,11 @@
     "enforced": false,
     "enforce_confirm_tickets": [],
     "guardrail_fp_count": 0,
-    "dismissals": 0
+    "dismissals": 0,
+    "confidence": null,
+    "confidence_confirms": 0,
+    "confidence_contradictions": 0,
+    "last_confirmed_ts": 0.0
   },
   {
     "id": "e3afd77b15e866ad",
@@ -3491,7 +4005,11 @@
     "enforced": false,
     "enforce_confirm_tickets": [],
     "guardrail_fp_count": 0,
-    "dismissals": 0
+    "dismissals": 0,
+    "confidence": null,
+    "confidence_confirms": 0,
+    "confidence_contradictions": 0,
+    "last_confirmed_ts": 0.0
   },
   {
     "id": "e68ba84fd0a8712b",
@@ -3521,7 +4039,11 @@
     "enforced": false,
     "enforce_confirm_tickets": [],
     "guardrail_fp_count": 0,
-    "dismissals": 0
+    "dismissals": 0,
+    "confidence": null,
+    "confidence_confirms": 0,
+    "confidence_contradictions": 0,
+    "last_confirmed_ts": 0.0
   },
   {
     "id": "e73305e17b0b7f01",
@@ -3548,7 +4070,11 @@
     "enforced": false,
     "enforce_confirm_tickets": [],
     "guardrail_fp_count": 0,
-    "dismissals": 0
+    "dismissals": 0,
+    "confidence": null,
+    "confidence_confirms": 0,
+    "confidence_contradictions": 0,
+    "last_confirmed_ts": 0.0
   },
   {
     "id": "eb7731d6ed022a3e",
@@ -3575,7 +4101,11 @@
     "enforced": false,
     "enforce_confirm_tickets": [],
     "guardrail_fp_count": 0,
-    "dismissals": 0
+    "dismissals": 0,
+    "confidence": null,
+    "confidence_confirms": 0,
+    "confidence_contradictions": 0,
+    "last_confirmed_ts": 0.0
   },
   {
     "id": "eeeda41bfd7b88d1",
@@ -3602,7 +4132,11 @@
     "enforced": false,
     "enforce_confirm_tickets": [],
     "guardrail_fp_count": 0,
-    "dismissals": 0
+    "dismissals": 0,
+    "confidence": null,
+    "confidence_confirms": 0,
+    "confidence_contradictions": 0,
+    "last_confirmed_ts": 0.0
   },
   {
     "id": "f07a16669da51f31",
@@ -3631,7 +4165,11 @@
     "enforced": false,
     "enforce_confirm_tickets": [],
     "guardrail_fp_count": 0,
-    "dismissals": 0
+    "dismissals": 0,
+    "confidence": null,
+    "confidence_confirms": 0,
+    "confidence_contradictions": 0,
+    "last_confirmed_ts": 0.0
   },
   {
     "id": "f08c8067a3126e24",
@@ -3661,7 +4199,11 @@
     "enforced": false,
     "enforce_confirm_tickets": [],
     "guardrail_fp_count": 0,
-    "dismissals": 0
+    "dismissals": 0,
+    "confidence": null,
+    "confidence_confirms": 0,
+    "confidence_contradictions": 0,
+    "last_confirmed_ts": 0.0
   },
   {
     "id": "f1d15bfce7e9e5bc",
@@ -3690,7 +4232,11 @@
     "enforced": false,
     "enforce_confirm_tickets": [],
     "guardrail_fp_count": 0,
-    "dismissals": 0
+    "dismissals": 0,
+    "confidence": null,
+    "confidence_confirms": 0,
+    "confidence_contradictions": 0,
+    "last_confirmed_ts": 0.0
   },
   {
     "id": "f3caa4b3053cb5bb",
@@ -3717,7 +4263,11 @@
     "enforced": false,
     "enforce_confirm_tickets": [],
     "guardrail_fp_count": 0,
-    "dismissals": 0
+    "dismissals": 0,
+    "confidence": null,
+    "confidence_confirms": 0,
+    "confidence_contradictions": 0,
+    "last_confirmed_ts": 0.0
   },
   {
     "id": "f4090bd9fedee2e8",
@@ -3746,7 +4296,11 @@
     "enforced": false,
     "enforce_confirm_tickets": [],
     "guardrail_fp_count": 0,
-    "dismissals": 0
+    "dismissals": 0,
+    "confidence": null,
+    "confidence_confirms": 0,
+    "confidence_contradictions": 0,
+    "last_confirmed_ts": 0.0
   },
   {
     "id": "f5ae51bce6f09f28",
@@ -3773,7 +4327,11 @@
     "enforced": false,
     "enforce_confirm_tickets": [],
     "guardrail_fp_count": 0,
-    "dismissals": 0
+    "dismissals": 0,
+    "confidence": null,
+    "confidence_confirms": 0,
+    "confidence_contradictions": 0,
+    "last_confirmed_ts": 0.0
   },
   {
     "id": "f657390f72c082b1",
@@ -3801,7 +4359,11 @@
     "enforced": false,
     "enforce_confirm_tickets": [],
     "guardrail_fp_count": 0,
-    "dismissals": 0
+    "dismissals": 0,
+    "confidence": null,
+    "confidence_confirms": 0,
+    "confidence_contradictions": 0,
+    "last_confirmed_ts": 0.0
   },
   {
     "id": "f65864a471232e53",
@@ -3830,7 +4392,11 @@
     "enforced": false,
     "enforce_confirm_tickets": [],
     "guardrail_fp_count": 0,
-    "dismissals": 0
+    "dismissals": 0,
+    "confidence": null,
+    "confidence_confirms": 0,
+    "confidence_contradictions": 0,
+    "last_confirmed_ts": 0.0
   },
   {
     "id": "fcac5e5bd9e8021e",
@@ -3859,7 +4425,11 @@
     "enforced": false,
     "enforce_confirm_tickets": [],
     "guardrail_fp_count": 0,
-    "dismissals": 0
+    "dismissals": 0,
+    "confidence": null,
+    "confidence_confirms": 0,
+    "confidence_contradictions": 0,
+    "last_confirmed_ts": 0.0
   },
   {
     "id": "fcc5186eb2d7d0f0",
@@ -3887,7 +4457,11 @@
     "enforced": false,
     "enforce_confirm_tickets": [],
     "guardrail_fp_count": 0,
-    "dismissals": 0
+    "dismissals": 0,
+    "confidence": null,
+    "confidence_confirms": 0,
+    "confidence_contradictions": 0,
+    "last_confirmed_ts": 0.0
   },
   {
     "id": "fe084af012d8049d",
@@ -3917,7 +4491,11 @@
     "enforced": false,
     "enforce_confirm_tickets": [],
     "guardrail_fp_count": 0,
-    "dismissals": 0
+    "dismissals": 0,
+    "confidence": null,
+    "confidence_confirms": 0,
+    "confidence_contradictions": 0,
+    "last_confirmed_ts": 0.0
   },
   {
     "id": "feb33ba00d7c3fd1",
@@ -3946,6 +4524,10 @@
     "enforced": false,
     "enforce_confirm_tickets": [],
     "guardrail_fp_count": 0,
-    "dismissals": 0
+    "dismissals": 0,
+    "confidence": null,
+    "confidence_confirms": 0,
+    "confidence_contradictions": 0,
+    "last_confirmed_ts": 0.0
   }
 ]
