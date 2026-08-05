@@ -2,11 +2,11 @@
   "KAN-48": {
     "agent": "devagent-prashant",
     "instance": "ae01593414a1:devagent-prashant",
-    "expires": 1785953836.550153
+    "expires": 1785953863.881231
   },
   "KAN-49": {
     "agent": "devagent-local",
     "instance": "ae01593414a1:devagent-local",
-    "expires": 1785953842.750465
+    "expires": 1785953850.709714
   }
 }
