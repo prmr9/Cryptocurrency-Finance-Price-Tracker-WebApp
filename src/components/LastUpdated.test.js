@@ -65,16 +65,16 @@ describe('LastUpdated component', () => {
 
     test('a failed refresh (unchanged timestamp) leaves the rendered text byte-identical', () => {
         const ts = Date.now() - 12_000 // last successful refresh: 12s ago
-        const { rerender, container } = render(<LastUpdated timestamp={ts} />)
+        const { rerender } = render(<LastUpdated timestamp={ts} />)
 
-        const before = container.querySelector('.last-updated').textContent
+        const before = screen.getByText('updated 12s ago').textContent
         expect(before).toBe('updated 12s ago')
 
         // A failed refresh does NOT change lastUpdated, so the same timestamp is
         // passed again. The displayed value must be preserved exactly.
         rerender(<LastUpdated timestamp={ts} />)
 
-        const after = container.querySelector('.last-updated').textContent
+        const after = screen.getByText('updated 12s ago').textContent
         expect(after).toBe(before)
     })
 })
