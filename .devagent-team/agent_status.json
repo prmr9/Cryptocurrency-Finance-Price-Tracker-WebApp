@@ -2,12 +2,12 @@
   "devagent-local": {
     "agent": "devagent-local",
     "account": "712020:ad3d4e51-4ea0-4043-8f1f-0e390e87f10b",
-    "ticket": "",
-    "repo": null,
-    "phase": "",
-    "status": "",
-    "summary": "",
+    "ticket": "KAN-49",
+    "repo": "prmr9/Cryptocurrency-Finance-Price-Tracker-WebApp",
+    "phase": "phase4_review",
+    "status": "in_review",
+    "summary": "[Metrics] Instrument the change from KAN-48",
     "capacity": 20.0,
-    "updated_at": 1785957174.0655959
+    "updated_at": 1785957187.561742
   }
 }
