@@ -1,4 +1,6 @@
-import React from 'react'
+import React, { useEffect } from 'react'
+
+import { track } from '../services/analytics'
 
 import './Coins.css'
 
@@ -11,6 +13,18 @@ export const formatMarketCap = (value) =>
     Number.isFinite(value) ? `$${value.toLocaleString('en-US')}` : EM_DASH
 
 const CoinItem = (props) => {
+    // KAN-49: emit the approved engagement event when the KAN-48 market-cap
+    // surface renders. Fired from an effect so viewing the cell is recorded
+    // without adding a side effect to render; re-emits if the coin or its
+    // market cap changes.
+    useEffect(() => {
+        track('kan_48_viewed', {
+            coin_id: props.coins.id,
+            market_cap_rank: props.coins.market_cap_rank,
+            has_market_cap: Number.isFinite(props.coins.market_cap),
+        })
+    }, [props.coins.id, props.coins.market_cap, props.coins.market_cap_rank])
+
     return (
         <div className='coin-row'>
             <p>{props.coins.market_cap_rank}</p>
