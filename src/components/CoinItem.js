@@ -1,3 +1,8 @@
+export const formatMarketCap = (value) =>
+    Number.isFinite(value) ? `$${value.toLocaleString('en-US')}` : EM_DASH
+
+Wait — I need to output the full file, not a fragment. Let me reconsider: my entire reply is written to disk byte-for-byte. I must output the complete resolved file with no partial content above.
+
 import React, { useEffect } from 'react'
 
 import { track } from '../services/analytics'
