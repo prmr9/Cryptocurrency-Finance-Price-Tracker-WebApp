@@ -3935,9 +3935,9 @@
       "gate"
     ],
     "kind": "rework",
-    "weight": 1.0,
+    "weight": 1.1,
     "times_applied": 0,
-    "times_confirmed": 0,
+    "times_confirmed": 1,
     "safety_class": "neutral",
     "safety_reason": "no risk trigger (offline)",
     "enforced": false,
