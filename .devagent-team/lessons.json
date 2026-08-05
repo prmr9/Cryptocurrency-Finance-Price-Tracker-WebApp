@@ -1084,6 +1084,38 @@
     "last_confirmed_ts": 0.0
   },
   {
+    "id": "3034022c2c7d4867",
+    "pattern": "Keep each PR focused on a single feature, fix, or logical concern; move unrelated maintenance, refactoring, or doc updates into separate changes",
+    "detail": "Mixing unrelated edits obscures the PR's core purpose, creates review friction, and makes git history harder to parse. Focused PRs let reviewers evaluate each change independently and make it safer to revert specific changes without unintended side effects.",
+    "source_ticket": "KAN-48",
+    "source_pr": "https://github.com/prmr9/Cryptocurrency-Finance-Price-Tracker-WebApp/pull/18",
+    "source_repo": "prmr9/Cryptocurrency-Finance-Price-Tracker-WebApp",
+    "author": "prmr9",
+    "author_tier": "peer_bot",
+    "path_globs": [],
+    "created": "2026-08-05T16:24:07.369040Z",
+    "tags": [
+      "pr-scope",
+      "code-organization",
+      "review-clarity",
+      "atomic-changes"
+    ],
+    "kind": "review",
+    "weight": 1.0,
+    "times_applied": 0,
+    "times_confirmed": 0,
+    "safety_class": "neutral",
+    "safety_reason": "no risk trigger (offline)",
+    "enforced": false,
+    "enforce_confirm_tickets": [],
+    "guardrail_fp_count": 0,
+    "dismissals": 0,
+    "confidence": null,
+    "confidence_confirms": 0,
+    "confidence_contradictions": 0,
+    "last_confirmed_ts": 0.0
+  },
+  {
     "id": "31e971b94b711773",
     "pattern": "Green tests confirm code executes as written, not that it fulfills the acceptance criteria \u2014 verify by re-reading the specific assertions the AC points to, not by re-running the suite.",
     "detail": "Watch for: An AC or spec explicitly cites a test file/line as the source of truth \u2014 treat that assertion's literal content as the spec, and diff your implementation against it directly rather than trusting suite exit status; Iterating on a failing AC by repeatedly re-running the full suite instead of opening the referenced test to see what it actually asserts (e.g. exact values, call args, error messages) versus what merely doesn't throw; Tests that are weak or mis-scoped (missing assertions, overly loose matchers, mocked-out behavior) so they pass regardless of whether the real requirement is met; Any 'definition of done' framed as a pass/fail signal (CI green, tests pass, build succeeds) when the actual requirement is a specific behavior, value, or content match that the signal doesn't guarantee. Generalized from: A green test suite does not imply acceptance criteria are satisfied, especially when the AC references a specific test file's assertions dir",
