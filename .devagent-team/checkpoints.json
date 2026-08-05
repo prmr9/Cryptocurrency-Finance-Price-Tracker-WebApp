@@ -232,11 +232,11 @@
   "KAN-51": {
     "ticket": "KAN-51",
     "agent": "devagent-local",
-    "updated": 1785956334.069895,
+    "updated": 1785957301.029695,
     "branch": "feature/KAN-51",
     "base_branch": "main",
     "repo": "prmr9/Cryptocurrency-Finance-Price-Tracker-WebApp",
-    "phase": "phase1_ingestion",
+    "phase": "phase2_proposal",
     "pr_number": null
   },
   "KAN-52": {
