@@ -805,7 +805,7 @@
       "monorepo"
     ],
     "kind": "reflection",
-    "weight": 2.9571428571428573,
+    "weight": 2.625,
     "times_applied": 8,
     "times_confirmed": 7,
     "safety_class": "guardrail",
@@ -1034,7 +1034,7 @@
       "security-bump"
     ],
     "kind": "reflection",
-    "weight": 2.5875,
+    "weight": 2.2857142857142856,
     "times_applied": 21,
     "times_confirmed": 16,
     "safety_class": "guardrail",
@@ -1488,7 +1488,7 @@
       "branch-freshness"
     ],
     "kind": "reflection",
-    "weight": 1.971428571428571,
+    "weight": 1.875,
     "times_applied": 8,
     "times_confirmed": 5,
     "safety_class": "guardrail",
@@ -1753,7 +1753,7 @@
       "escalate"
     ],
     "kind": "reflection",
-    "weight": 1.7249999999999999,
+    "weight": 3.0,
     "times_applied": 5,
     "times_confirmed": 13,
     "safety_class": "guardrail",
@@ -2612,7 +2612,7 @@
       "Tests that could pass vacuously \u2014 skipped/mocked assertions, asserting on the wrong element, or not actually exercising the changed code path \u2014 where 'green' is necessary but not sufficient"
     ],
     "kind": "principle",
-    "weight": 1.7249999999999999,
+    "weight": 1.5,
     "times_applied": 17,
     "times_confirmed": 6,
     "safety_class": "guardrail",
