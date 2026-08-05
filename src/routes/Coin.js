@@ -19,6 +19,8 @@ const Coin = () => {
         }).catch((error) => {
             console.log(error)
         })
+        // Mount-only fetch: the coin detail is loaded once when the route mounts.
+        // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [])
 
     return (
