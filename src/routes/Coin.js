@@ -2,6 +2,7 @@ import axios from 'axios'
 import { useParams } from 'react-router-dom'
 import React, { useState, useEffect } from 'react'
 import DOMPurify from 'dompurify'
+import LastUpdated from '../components/LastUpdated'
 
 import './Coin.css'
 
@@ -9,6 +10,7 @@ const Coin = () => {
 
     const params = useParams()
     const [coin, setCoin] = useState({})
+    const [lastUpdated, setLastUpdated] = useState(null)
 
     const url = `https://api.coingecko.com/api/v3/coins/${params.coinId}`
 
@@ -16,6 +18,7 @@ const Coin = () => {
     useEffect(() => {
         axios.get(url).then((res) => {
             setCoin(res.data)
+            setLastUpdated(Date.now())
         }).catch((error) => {
             console.log(error)
         })
@@ -45,6 +48,7 @@ const Coin = () => {
                 </div>
 
                 <div className='content'>
+                    <LastUpdated timestamp={lastUpdated} />{' '}
                     <table>
                         <thead>
                             <tr>
