@@ -1,5 +1,3 @@
-{"ts": 1784426820.5190232, "agent": "devagent-bot", "ticket": "KAN-1", "kind": "blocked", "text": "Blocked: Acceptance criteria could not be completed automatically: Given src/components/Navbar.test.js When its assertions are inspected Then one a", "to": null}
-{"ts": 1784427732.751746, "agent": "devagent-bot", "ticket": "KAN-1", "kind": "blocked", "text": "Blocked: Acceptance criteria could not be completed automatically: Given src/components/Navbar.test.js When its assertions are inspected Then one a", "to": null}
 {"ts": 1784428522.4752269, "agent": "devagent-bot", "ticket": "KAN-1", "kind": "review_request", "text": "Requesting peer review of prmr9/Cryptocurrency-Finance-Price-Tracker-WebApp#1", "to": null}
 {"ts": 1784428554.599244, "agent": "devagent-bot", "ticket": "KAN-1", "kind": "pr", "text": "Opened PR for KAN-1: https://github.com/prmr9/Cryptocurrency-Finance-Price-Tracker-WebApp/pull/1", "to": null}
 {"ts": 1784428555.1659908, "agent": "devagent-bot", "ticket": "KAN-1", "kind": "pr", "text": "KAN-1 PR open for review: https://github.com/prmr9/Cryptocurrency-Finance-Price-Tracker-WebApp/pull/1", "to": null}
@@ -298,3 +296,5 @@
 {"ts": 1785954187.086431, "agent": "devagent-local", "ticket": "KAN-49", "kind": "pr", "text": "KAN-49 PR open for review: https://github.com/prmr9/Cryptocurrency-Finance-Price-Tracker-WebApp/pull/19", "to": null}
 {"ts": 1785954320.911432, "agent": "devagent-local", "ticket": "KAN-50", "kind": "started", "text": "Started KAN-50 on prmr9/Cryptocurrency-Finance-Price-Tracker-WebApp (branch feature/KAN-50).", "to": null}
 {"ts": 1785955220.591394, "agent": "devagent-local", "ticket": "KAN-50", "kind": "plan", "text": "Posted implementation plan for KAN-50; awaiting approval.", "to": null}
+{"ts": 1785955298.4821289, "agent": "devagent-local", "ticket": "KAN-51", "kind": "started", "text": "Started KAN-51 on prmr9/Cryptocurrency-Finance-Price-Tracker-WebApp (branch feature/KAN-51).", "to": null}
+{"ts": 1785956334.067998, "agent": "devagent-local", "ticket": "KAN-51", "kind": "plan", "text": "Posted implementation plan for KAN-51; awaiting approval.", "to": null}
