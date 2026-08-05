@@ -1,21 +1,5 @@
 [
   {
-    "ticket": "KAN-45",
-    "agent": "devagent-local",
-    "repo": "prmr9/Cryptocurrency-Finance-Price-Tracker-WebApp",
-    "files": [
-      "(git) merge origin/main into the KAN-45 branch",
-      "docs/analytics-events.md",
-      "src/App.js",
-      "src/__tests__/price-refresh-instrumentation.test.js",
-      "src/components/Coins.js",
-      "src/utils/__tests__/refreshError.test.js",
-      "src/utils/refreshError.js"
-    ],
-    "created": 1785934852.160987,
-    "expires": 1785942052.160987
-  },
-  {
     "ticket": "KAN-48",
     "agent": "devagent-prashant",
     "repo": "prmr9/Cryptocurrency-Finance-Price-Tracker-WebApp",
