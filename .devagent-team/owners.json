@@ -2,26 +2,11 @@
   "KAN-48": {
     "agent": "devagent-prashant",
     "instance": "ae01593414a1:devagent-prashant",
-    "expires": 1785948583.182061
+    "expires": 1785952684.1518238
   },
   "KAN-49": {
     "agent": "devagent-local",
     "instance": "ae01593414a1:devagent-local",
-    "expires": 1785948882.3823528
-  },
-  "KAN-45": {
-    "agent": "devagent-local",
-    "instance": "ae01593414a1:devagent-local",
-    "expires": 1785941993.6497211
-  },
-  "KAN-47": {
-    "agent": "devagent-prashant",
-    "instance": "ae01593414a1:devagent-prashant",
-    "expires": 1785944858.518204
-  },
-  "KAN-44": {
-    "agent": "devagent-prashant",
-    "instance": "ae01593414a1:devagent-prashant",
-    "expires": 1785941987.95343
+    "expires": 1785952675.623528
   }
 }
