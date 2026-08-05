@@ -2,23 +2,12 @@
   "devagent-local": {
     "agent": "devagent-local",
     "account": "712020:ad3d4e51-4ea0-4043-8f1f-0e390e87f10b",
-    "ticket": "KAN-50",
+    "ticket": "KAN-51",
     "repo": "prmr9/Cryptocurrency-Finance-Price-Tracker-WebApp",
-    "phase": "phase2_proposal",
+    "phase": "phase1_ingestion",
     "status": "pending_approval",
     "summary": "[Metrics] Instrument the change from KAN-49",
     "capacity": 20.0,
-    "updated_at": 1785955287.061314
-  },
-  "devagent-prashant": {
-    "agent": "devagent-prashant",
-    "account": "712020:ad3d4e51-4ea0-4043-8f1f-0e390e87f10b",
-    "ticket": "KAN-48",
-    "repo": "prmr9/Cryptocurrency-Finance-Price-Tracker-WebApp",
-    "phase": "phase4_review",
-    "status": "in_review",
-    "summary": "Format the market-cap figure with thousands separators",
-    "capacity": 20.0,
-    "updated_at": 1785952270.675145
+    "updated_at": 1785956334.0689971
   }
 }
