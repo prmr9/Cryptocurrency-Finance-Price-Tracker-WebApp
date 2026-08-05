@@ -3856,6 +3856,37 @@
     "last_confirmed_ts": 0.0
   },
   {
+    "id": "d6baeec64fac950f",
+    "pattern": "Flag scope drift in reviews, even when the out-of-scope changes are improvements",
+    "detail": "When a diff modifies code explicitly marked as out-of-scope in the ticket description, flag it for stakeholder confirmation\u2014regardless of whether the change is technically sound or an incidental bug fix. Scope boundaries exist for coordination and prioritization, not just correctness. This prevents accidental scope creep and keeps the ticket owner aware of what was actually changed.",
+    "source_ticket": "KAN-44",
+    "source_pr": "https://github.com/prmr9/Cryptocurrency-Finance-Price-Tracker-WebApp/pull/17",
+    "source_repo": "prmr9/Cryptocurrency-Finance-Price-Tracker-WebApp",
+    "author": "prmr9",
+    "author_tier": "peer_bot",
+    "path_globs": [],
+    "created": "2026-08-05T12:27:02.332377Z",
+    "tags": [
+      "scope-management",
+      "stakeholder-communication",
+      "scope-drift"
+    ],
+    "kind": "review",
+    "weight": 1.0,
+    "times_applied": 0,
+    "times_confirmed": 0,
+    "safety_class": "neutral",
+    "safety_reason": "no risk trigger (offline)",
+    "enforced": false,
+    "enforce_confirm_tickets": [],
+    "guardrail_fp_count": 0,
+    "dismissals": 0,
+    "confidence": null,
+    "confidence_confirms": 0,
+    "confidence_contradictions": 0,
+    "last_confirmed_ts": 0.0
+  },
+  {
     "id": "d70c7ca028f1863b",
     "pattern": "Visual and style changes in shared components cascade across dependents; scope is non-local and structural, not containable.",
     "detail": "Watch for: Redesigning core or widely-composed components to match new aesthetics \u2014 consumers often need alignment, spacing, or sizing adjustments; Design system or theme overhauls \u2014 changes to colors, typography, or spacing conventions ripple to all downstream components; Changing visual contracts (size, aspect ratio, appearance) of components with implicit layout dependencies in consuming code; Accessibility styling changes \u2014 modifications to focus states, contrast, or keyboard indicators often cascade to layout and spacing across the tree. Generalized from: Scope creep is structural in UI redesign work \u2014 style changes cascade across components",
