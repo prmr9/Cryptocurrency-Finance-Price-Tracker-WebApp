@@ -1,14 +1,12 @@
 import React from 'react';
 import { render } from '@testing-library/react';
-import { MemoryRouter } from 'react-router-dom';
 import CoinItem from '../CoinItem';
 
 // Regression test for KAN-48.
 //
-// The prices table renders market cap as a raw integer, so a nine-digit value
-// is unreadable at a glance. Market cap must be formatted with locale-aware
-// thousands separators, and a null/undefined market cap must render a dash
-// (never NaN or "undefined").
+// Market cap must render with locale-aware thousands separators so a
+// nine-digit value stays readable at a glance, and a null/undefined market
+// cap must render a dash (never NaN or "undefined").
 
 const baseCoin = {
   id: 'bitcoin',
@@ -22,19 +20,12 @@ const baseCoin = {
   market_cap: 1234567890,
 };
 
-const renderRow = (coin) =>
-  render(
-    <MemoryRouter>
-      <CoinItem coins={coin} />
-    </MemoryRouter>
-  );
+const renderRow = (coin) => render(<CoinItem coins={coin} />);
 
 describe('KAN-48 market cap formatting in the prices table', () => {
   it('renders the market cap with thousands separators', () => {
     const { container } = renderRow({ ...baseCoin, market_cap: 1234567890 });
 
-    // The buggy component renders the raw integer "1234567890" (no
-    // separators), so this assertion fails until the value is formatted.
     expect(container.textContent).toContain('1,234,567,890');
   });
 
