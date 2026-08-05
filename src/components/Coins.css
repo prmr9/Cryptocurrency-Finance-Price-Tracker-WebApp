@@ -120,6 +120,14 @@ img {
 
 
 
+.last-updated {
+    display: block;
+    text-align: right;
+    color: var(--color-text-muted);
+    font-size: 0.8rem;
+    margin: 0 1.25rem -0.25rem;
+}
+
 @media screen and (max-width: 720px) {
     .hide-mobile {
         display: none;

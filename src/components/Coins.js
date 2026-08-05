@@ -1,6 +1,7 @@
 import React, { useState } from 'react'
 import CoinItem from './CoinItem'
 import Coin from '../routes/Coin'
+import LastUpdated from './LastUpdated'
 import { Link } from 'react-router-dom'
 
 import './Coins.css'
@@ -40,6 +41,7 @@ const Coins = (props) => {
             </div>
 
             <div>
+                <LastUpdated timestamp={props.lastUpdated} />
                 <div className='heading'>
                     <p>#</p>
                     <p className='coin-name'>Coin</p>
