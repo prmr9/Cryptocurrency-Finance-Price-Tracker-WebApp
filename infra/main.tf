@@ -108,6 +108,22 @@ resource "aws_instance" "app" {
     backend_unit_template    = file("${path.module}/systemd/crypto-tracker-backend.service")
   })
 
+  # These are long-lived, rsync-deployed hosts, not cattle: replacing one wipes
+  # /var/www/app (the live site) and the on-host release history under
+  # /opt/crypto-tracker-backend. Because data.aws_ami.ubuntu is `most_recent`,
+  # every new Canonical publish would otherwise schedule a destroy/create of
+  # BOTH environments on the next apply — a full outage triggered by an
+  # unrelated upstream image bump. user_data is likewise boot-only: for an
+  # instance that is already running, infra/scripts/provision-backend.sh pushed
+  # over SSH by deploy-backend-ec2.sh is the in-place path, so a diff here has
+  # no runtime effect to recover. Ignoring both keeps applies additive. Neither
+  # affects instances Terraform creates fresh (ignore_changes is a no-op on
+  # create), and a deliberate image roll is still available via
+  # `terraform apply -replace='aws_instance.app["nonprod"]'`.
+  lifecycle {
+    ignore_changes = [ami, user_data]
+  }
+
   tags = {
     Name        = "${var.project_name}-${each.key}"
     Project     = var.project_name

@@ -1,2 +1,7 @@
 # Server package deps — installed per-env, never committed (kept out of the CRA build too).
 /node_modules
+
+# Release manifest: written into the release directory on the host by
+# deploy-backend-ec2.sh and served by GET /health. Never authored in a
+# checkout — health.test.js creates one transiently.
+/release.json

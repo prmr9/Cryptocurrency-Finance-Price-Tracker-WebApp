@@ -3,6 +3,15 @@
 # frontend — no manual gate for nonprod.
 name: deploy-backend-nonprod
 
+# The REST API answers a workflow_dispatch with 204 and no body, so a caller
+# never learns which run its request created. deploy_id closes that gap: it is
+# stamped into the run name (visible in the runs list, so a caller can find its
+# run by name), into the job log, and into the release manifest that GET /health
+# serves back — letting a caller confirm ITS release is live, not merely that a
+# run happened to succeed.
+run-name: >-
+  deploy-backend-nonprod${{ inputs.deploy_id && format(' [{0}]', inputs.deploy_id) || '' }}
+
 on:
   push:
     branches: [develop]
@@ -13,6 +22,11 @@ on:
       - "deploy-backend-ec2.sh"
       - ".github/workflows/deploy-backend-nonprod.yml"
   workflow_dispatch:
+    inputs:
+      deploy_id:
+        description: "Optional correlation id from the caller. [A-Za-z0-9._:-], max 64 chars; anything else fails the deploy."
+        required: false
+        type: string
 
 jobs:
   deploy:
@@ -27,4 +41,6 @@ jobs:
           EC2_SSH_KEY: ${{ secrets.EC2_SSH_KEY }}
           ENVIRONMENT: nonprod
           AWS_REGION: ${{ vars.AWS_REGION || 'us-east-1' }}
+          # Empty on push-triggered runs; the script treats that as "no id".
+          DEPLOY_ID: ${{ inputs.deploy_id }}
         run: bash deploy-backend-ec2.sh

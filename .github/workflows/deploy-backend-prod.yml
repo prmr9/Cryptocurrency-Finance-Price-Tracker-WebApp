@@ -5,6 +5,15 @@
 # (typed-confirm / required reviewers) — no autonomous prod changes.
 name: deploy-backend-prod
 
+# See deploy-backend-nonprod.yml for why deploy_id exists. The staging and the
+# gate below are deliberately untouched: verify-nonprod still runs first, and
+# deploy-prod still `needs` it and still runs in the protected `prod`
+# Environment, so its required reviewers remain the only way into prod. A
+# caller polling this workflow must therefore expect a long `waiting` status
+# while a human approves — that is the gate working, not a stalled deploy.
+run-name: >-
+  deploy-backend-prod${{ inputs.deploy_id && format(' [{0}]', inputs.deploy_id) || '' }}
+
 on:
   push:
     branches: [main]
@@ -15,6 +24,11 @@ on:
       - "deploy-backend-ec2.sh"
       - ".github/workflows/deploy-backend-prod.yml"
   workflow_dispatch:
+    inputs:
+      deploy_id:
+        description: "Optional correlation id from the caller. [A-Za-z0-9._:-], max 64 chars; anything else fails the deploy."
+        required: false
+        type: string
 
 jobs:
   verify-nonprod:
@@ -30,6 +44,7 @@ jobs:
           EC2_SSH_KEY: ${{ secrets.EC2_SSH_KEY }}
           ENVIRONMENT: nonprod
           AWS_REGION: ${{ vars.AWS_REGION || 'us-east-1' }}
+          DEPLOY_ID: ${{ inputs.deploy_id }}
         run: bash deploy-backend-ec2.sh
 
   deploy-prod:
@@ -46,4 +61,5 @@ jobs:
           EC2_SSH_KEY: ${{ secrets.EC2_SSH_KEY }}
           ENVIRONMENT: prod
           AWS_REGION: ${{ vars.AWS_REGION || 'us-east-1' }}
+          DEPLOY_ID: ${{ inputs.deploy_id }}
         run: bash deploy-backend-ec2.sh
