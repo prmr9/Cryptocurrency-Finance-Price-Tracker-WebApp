@@ -1,0 +1,13 @@
+# Reviewers DevAgent routes to. Last matching pattern wins.
+#
+# Without this file there is no data for reviewer routing, and engineer mode
+# arms merge_require_human_and_bot - a human AND a bot approval before merge.
+
+*                       @prmr9
+
+# The price table is the product surface; changes here are user-visible.
+/src/components/        @prmr9
+/src/routes/            @prmr9
+
+# CI and deploy definitions gate everything else.
+/.github/workflows/     @prmr9
