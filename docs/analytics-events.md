@@ -124,15 +124,81 @@ shared session envelope in addition to the properties listed for it.
 | `was_active` | boolean | True when the removed account was the active one. |
 | `account_age_days` | number \| null | Null for pre-existing accounts — see above. |
 
+## Prices-table market-cap funnel (KAN-49)
+
+KAN-49 instruments the market-cap formatting behaviour KAN-48 introduced in the
+home-route (`/`) prices table. The four events are emitted from the prices-table
+**view** (`src/components/Coins.js`) — never from the pure presentational
+`CoinItem` row — via a single `useEffect` gated to fire once on the FIRST
+non-empty coins load, so the data-quality payload is computed over real rows
+rather than the initial empty array. Emission reuses `src/services/analytics.js`;
+`track()` auto-attaches the session envelope (`session_id` + `ts`) and never
+throws. Every storage and `track()` call is wrapped in a single `try/catch` so
+telemetry can never break render.
+
+`user_id` and `timestamp` from the generic stubs are **omitted**: the home route
+is anonymous (no authenticated user) and `track()` already attaches `session_id`
+and `ts`. The funnel is **session/device-scoped, not per-user** — `kan_48_returned`
+is a device-return heuristic (a `localStorage` flag set on the first visit),
+disambiguated from an in-session remount (prices → coin detail → Back) by a
+`sessionStorage` flag that suppresses a re-fire within the same session. All four
+events carry `source: 'prices_table'`.
+
+`missing_market_cap_count` counts rows where `!Number.isFinite(coin.market_cap)`
+— the SAME predicate as KAN-48's `formatMarketCap` guard — so the count equals
+the number of em-dashes rendered: `null`/`undefined`/`NaN` are missing while a
+legitimate `0` (and any finite number) counts as present.
+
+### `kan_48_viewed`
+
+| Property | Type | Notes |
+| --- | --- | --- |
+| `source` | string | UI surface — always `prices_table`. |
+
+_Engagement — the user sees the prices-table entry point. Emitted on first
+non-empty load and on a device return; suppressed on an in-session remount._
+
+### `kan_48_started`
+
+| Property | Type | Notes |
+| --- | --- | --- |
+| `source` | string | UI surface — always `prices_table`. |
+
+_Activation — first-visit only (localStorage `kan48_prices_seen` falsy)._
+
+### `kan_48_completed`
+
+| Property | Type | Notes |
+| --- | --- | --- |
+| `source` | string | UI surface — always `prices_table`. |
+| `row_count` | number | Rows in the first non-empty coins load. |
+| `missing_market_cap_count` | number | Rows where `!Number.isFinite(market_cap)` (`null`/`undefined`/`NaN`); a `0` counts as present. Equals the number of em-dashes rendered. |
+| `outcome` | enum | `has_missing` when `missing_market_cap_count > 0`, else `all_present`. |
+| `duration_ms` | number | Milliseconds from component mount to the emission. |
+
+_Activation — first-visit only; the aha moment (the formatted market-cap column
+is on screen). Sets `kan48_prices_seen` so a later session reads as a return._
+
+### `kan_48_returned`
+
+| Property | Type | Notes |
+| --- | --- | --- |
+| `source` | string | UI surface — always `prices_table`. |
+
+_Retention — a genuine cross-session device return (`kan48_prices_seen` truthy).
+Device/session-scoped, not a true per-user return._
+
 ## Loop coverage
 
-The approved plan's eight events map onto the four growth loops as follows.
+The KAN-5 plan's eight events plus KAN-49's four map onto the four growth loops
+as follows. KAN-49 adds **+2 activation** (`kan_48_started`, `kan_48_completed`)
+and **+1 retention** (`kan_48_returned`); `kan_48_viewed` is an engagement event.
 
 | Loop | Events | What it answers |
 | --- | --- | --- |
-| Activation | `accounts_view_opened`, `add_account_submitted`, `add_account_validation_failed`, `account_added` | How many users who reach the accounts view finish adding a first account, and where the funnel leaks. |
-| Engagement | `account_activated`, `add_account_submitted` | Whether users work with more than one account and how often they switch the active one. |
-| Retention | `accounts_returned`, `account_removed` | Whether users come back after their first account, and when they churn accounts back out. |
+| Activation | `accounts_view_opened`, `add_account_submitted`, `add_account_validation_failed`, `account_added`, `kan_48_started`, `kan_48_completed` | How many users who reach the accounts view finish adding a first account, and — for KAN-49 — how many who load the prices table reach the formatted market-cap column, with what data quality. |
+| Engagement | `account_activated`, `add_account_submitted`, `kan_48_viewed` | Whether users work with more than one account and how often they switch the active one, plus who sees the prices-table entry point. |
+| Retention | `accounts_returned`, `account_removed`, `kan_48_returned` | Whether users come back after their first account, when they churn accounts back out, and whether a device returns to the prices table across sessions. |
 | Revenue | `trade_link_clicked` | Outbound trade intent — the only monetising action in this flow. |
 
 Every approved event belongs to at least one loop: no event is collected without
