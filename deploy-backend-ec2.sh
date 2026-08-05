@@ -37,6 +37,19 @@ PROJECT_NAME="${PROJECT_NAME:-crypto-tracker}"
 DB_SECRET_NAME="${PROJECT_NAME}/${ENVIRONMENT}/db"
 JWT_SECRET_NAME="${PROJECT_NAME}/${ENVIRONMENT}/jwt"
 
+# Optional caller-supplied correlation id (see the workflows' deploy_id input).
+# It is embedded in the release manifest and therefore surfaces in GET /health,
+# which is what lets a caller prove THIS dispatch is the one now serving traffic
+# rather than trusting a run id it had to guess at.
+#
+# It reaches a remote shell and a JSON document, so the charset is restricted
+# rather than escaped: anything outside [A-Za-z0-9._:-] is rejected outright.
+DEPLOY_ID="${DEPLOY_ID:-}"
+if [ -n "$DEPLOY_ID" ] && ! printf '%s' "$DEPLOY_ID" | grep -Eq '^[A-Za-z0-9._:-]{1,64}$'; then
+  echo "==> [$ENVIRONMENT] Refusing to deploy: DEPLOY_ID must match ^[A-Za-z0-9._:-]{1,64}$" >&2
+  exit 2
+fi
+
 SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
 
 SSH_KEY_PATH="$(mktemp)"
@@ -82,6 +95,23 @@ rsync -avz --delete -e "ssh ${SSH_OPTS[*]}" \
 echo "==> [$ENVIRONMENT] Installing production dependencies in $RELEASE_DIR"
 ssh_run "cd $RELEASE_DIR && npm ci --omit=dev"
 
+# --- Release manifest: the identity GET /health will report back. Written
+# AFTER the rsync (which runs --delete and would otherwise remove it) and
+# BEFORE promotion, so the release is never `current` without its identity.
+# Every value here is non-secret by construction. ---
+GIT_SHA="$(git -C "$SCRIPT_DIR" rev-parse HEAD 2>/dev/null || echo unknown)"
+DEPLOYED_AT="$(date -u +%Y-%m-%dT%H:%M:%SZ)"
+echo "==> [$ENVIRONMENT] Writing release manifest (release_id=$RELEASE_ID git_sha=$GIT_SHA deploy_id=${DEPLOY_ID:-<none>})"
+ssh_run "cat > $RELEASE_DIR/release.json" <<JSON
+{
+  "release_id": "$RELEASE_ID",
+  "git_sha": "$GIT_SHA",
+  "deploy_id": "$DEPLOY_ID",
+  "deployed_at": "$DEPLOYED_AT",
+  "environment": "$ENVIRONMENT"
+}
+JSON
+
 echo "==> [$ENVIRONMENT] Promoting release: $CURRENT_LINK -> $RELEASE_DIR"
 ssh_run "ln -sfn $RELEASE_DIR $CURRENT_LINK && sudo systemctl restart crypto-tracker-backend"
 
@@ -107,10 +137,16 @@ if [ "$health_ok" = true ]; then
     "http://${EC2_HOST}/auth/login" || echo 000)"
 fi
 
+# --- Outcome reporting. The pass/fail decision, the rollback, and both exit
+# codes below are unchanged: this script remains the single rollback authority,
+# and a caller must consume the outcome rather than re-deciding or re-rolling
+# it. The RESULT= lines exist so that outcome is machine-readable in the job
+# log instead of only inferable from the exit code. ---
 if [ "$health_ok" = true ] && { [ "$login_status" = "400" ] || [ "$login_status" = "401" ]; }; then
   echo "==> [$ENVIRONMENT] Health check passed: GET /health is up, POST /auth/login -> $login_status"
   echo "==> [$ENVIRONMENT] Pruning old releases (keeping the 5 most recent)"
   ssh_run "cd $RELEASE_ROOT/releases && ls -1t | tail -n +6 | xargs -r rm -rf"
+  echo "==> [$ENVIRONMENT] RESULT=released release_id=$RELEASE_ID git_sha=$GIT_SHA deploy_id=${DEPLOY_ID:-<none>} rollback=none"
   exit 0
 fi
 
@@ -119,8 +155,10 @@ echo "==> [$ENVIRONMENT] Health check FAILED (health_ok=$health_ok, /auth/login 
 if [ -n "$PREVIOUS_RELEASE" ]; then
   echo "==> [$ENVIRONMENT] Rolling back: $CURRENT_LINK -> $PREVIOUS_RELEASE"
   ssh_run "ln -sfn $PREVIOUS_RELEASE $CURRENT_LINK && sudo systemctl restart crypto-tracker-backend"
+  echo "==> [$ENVIRONMENT] RESULT=rolled_back release_id=$RELEASE_ID deploy_id=${DEPLOY_ID:-<none>} rollback=$PREVIOUS_RELEASE"
 else
   echo "==> [$ENVIRONMENT] No previous release recorded (first-ever deploy) — nothing to roll back to"
+  echo "==> [$ENVIRONMENT] RESULT=failed_no_rollback release_id=$RELEASE_ID deploy_id=${DEPLOY_ID:-<none>} rollback=unavailable"
 fi
 
 exit 1
