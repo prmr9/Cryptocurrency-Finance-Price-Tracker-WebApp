@@ -1,6 +1,7 @@
 # Changelog
 
 ## Unreleased
+- KAN-44: Show a "Last updated" timestamp above the prices table (DevAgent)
 - KAN-31: [Incident] Backend (server/) not deployed to AWS — provision Node runtime + nginx reverse-proxy + gated backend release lane so /auth/* and /portfolios go live (DevAgent)
 - KAN-15: Implement GET /portfolios, PUT /portfolios, POST /me/import, Frontend API client (replaces localStorage; holds no DB creds) (DevAgent)
 - KAN-14: Implement POST /auth/signup, POST /auth/login, POST /auth/logout, GET /auth/me (DevAgent)
