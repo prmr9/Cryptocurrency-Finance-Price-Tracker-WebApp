@@ -7,7 +7,7 @@ const EM_DASH = '\u2014'
 // Guard with Number.isFinite so null/undefined/NaN take the dash branch while a
 // legitimate 0 still formats as $0. Locale pinned to 'en-US' for deterministic
 // grouping regardless of the runner's default ICU locale.
-const formatMarketCap = (value) =>
+export const formatMarketCap = (value) =>
     Number.isFinite(value) ? `$${value.toLocaleString('en-US')}` : EM_DASH
 
 const CoinItem = (props) => {
