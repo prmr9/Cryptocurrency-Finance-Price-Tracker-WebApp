@@ -1,1 +1,14 @@
-[]
+[
+  {
+    "ticket": "KAN-49",
+    "agent": "devagent-local",
+    "repo": "prmr9/Cryptocurrency-Finance-Price-Tracker-WebApp",
+    "files": [
+      "docs/analytics-events.md",
+      "src/components/Coins.js",
+      "src/components/__tests__/kan49-prices-metrics.test.js"
+    ],
+    "created": 1785947106.188117,
+    "expires": 1785954306.188117
+  }
+]
