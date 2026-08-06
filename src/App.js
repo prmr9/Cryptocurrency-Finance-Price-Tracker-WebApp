@@ -12,12 +12,14 @@ import About from './routes/About'
 function App() {
 
   const [coins, setCoins] = useState([])
+  const [lastUpdated, setLastUpdated] = useState(null)
 
   const url = 'https://api.coingecko.com/api/v3/coins/markets?vs_currency=usd&order=market_cap_desc&per_page=50&page=1&sparkline=false'
 
   useEffect(() => {
     axios.get(url).then((response) => {
       setCoins(response.data)
+      setLastUpdated(new Date())
       // console.log(response.data[0])
     }).catch((error) => {
       console.log(error)
@@ -28,7 +30,7 @@ function App() {
     <>
       <Navbar />
       <Routes>
-        <Route path='/' element={<Coins coins={coins} />} />
+        <Route path='/' element={<Coins coins={coins} lastUpdated={lastUpdated} />} />
         <Route path='/accounts' element={<Accounts />} />
         <Route path='/about' element={<About />} />
         <Route path='/coin' element={<Coin />}>
