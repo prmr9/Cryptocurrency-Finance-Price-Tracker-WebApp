@@ -25,26 +25,23 @@ describe('KAN-54 last-updated timestamp on the market table', () => {
   it('renders the fetch time once a successful fetch has completed', () => {
     const lastUpdated = new Date('2020-01-01T14:32:07');
 
-    const { container } = renderCoins({ lastUpdated });
+    renderCoins({ lastUpdated });
 
-    expect(screen.getByText(/Updated/)).toBeInTheDocument();
+    expect(screen.getByText(/Updated/)).toHaveClass('last-updated');
     expect(
       screen.getByText(new RegExp(lastUpdated.toLocaleTimeString()))
     ).toBeInTheDocument();
-    expect(container.querySelector('.last-updated')).toBeInTheDocument();
   });
 
   it('renders no timestamp before any successful fetch (lastUpdated=null)', () => {
-    const { container } = renderCoins({ lastUpdated: null });
+    renderCoins({ lastUpdated: null });
 
     expect(screen.queryByText(/Updated/)).not.toBeInTheDocument();
-    expect(container.querySelector('.last-updated')).not.toBeInTheDocument();
   });
 
   it('renders no timestamp when the lastUpdated prop is omitted', () => {
-    const { container } = renderCoins({});
+    renderCoins({});
 
     expect(screen.queryByText(/Updated/)).not.toBeInTheDocument();
-    expect(container.querySelector('.last-updated')).not.toBeInTheDocument();
   });
 });
