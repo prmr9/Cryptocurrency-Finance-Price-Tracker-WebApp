@@ -2,13 +2,13 @@
   "devagent-local": {
     "agent": "devagent-local",
     "account": "712020:ad3d4e51-4ea0-4043-8f1f-0e390e87f10b",
-    "ticket": "KAN-55",
-    "repo": "prmr9/Cryptocurrency-Finance-Price-Tracker-WebApp",
-    "phase": "phase1_ingestion",
-    "status": "pending_approval",
-    "summary": "[Metrics] Instrument the change from KAN-54",
+    "ticket": "",
+    "repo": null,
+    "phase": "",
+    "status": "",
+    "summary": "",
     "capacity": 20.0,
-    "updated_at": 1786014415.7312078
+    "updated_at": 1786014487.4323251
   },
   "devagent-prashant": {
     "agent": "devagent-prashant",
