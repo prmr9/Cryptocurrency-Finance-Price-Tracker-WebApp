@@ -10,6 +10,10 @@
   --color-border: #26262e;
   --color-accent: #ff37c7;
   --color-accent-2: #8a4bff;
+  /* 24h change direction — accessible contrast on --color-bg (#0d0d0f),
+     not pure #0f0/#f00 which reads harshly on the dark surface. */
+  --color-positive: #3ddc84;
+  --color-negative: #ff5b5b;
   --radius-pill: 9999px;
   --radius-card: 20px;
   --gradient-accent: linear-gradient(90deg, #ff37c7 0%, #8a4bff 100%);
