@@ -125,6 +125,29 @@ img {
     align-items: center;
 }
 
+/* Ticker + full name share the single flex slot the symbol already occupies, so
+   the extra label never pushes the other columns. min-width:0 lets the name's
+   ellipsis engage inside this flex parent. */
+.symbol-labels {
+    display: flex;
+    flex-direction: column;
+    min-width: 0;
+}
+
+/* Secondary, muted full name beside the ticker. Distinct from the .coin-name
+   heading rule above: smaller than the ticker <p> so it reads as secondary, and
+   truncated with an ellipsis (capped max-width) so a long name can't overflow
+   the row on narrow viewports. */
+.coin-fullname {
+    display: block;
+    font-size: 0.75rem;
+    color: var(--color-text-muted);
+    max-width: 140px;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+}
+
 
 
 /* 24h change direction — colour scoped directly on the cell class (not on an
@@ -161,5 +184,10 @@ img {
 @media screen and (max-width: 720px) {
     .hide-mobile {
         display: none;
+    }
+
+    /* Tighten the name cap on narrow viewports so the row stays contained. */
+    .coin-fullname {
+        max-width: 90px;
     }
 }
