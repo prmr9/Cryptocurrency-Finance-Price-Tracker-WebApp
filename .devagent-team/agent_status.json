@@ -8,17 +8,17 @@
     "status": "",
     "summary": "",
     "capacity": 20.0,
-    "updated_at": 1786010836.540821
+    "updated_at": 1786010912.3930151
   },
   "devagent-prashant": {
     "agent": "devagent-prashant",
     "account": "712020:ad3d4e51-4ea0-4043-8f1f-0e390e87f10b",
     "ticket": "KAN-54",
     "repo": "prmr9/Cryptocurrency-Finance-Price-Tracker-WebApp",
-    "phase": "phase1_ingestion",
+    "phase": "phase2_proposal",
     "status": "pending_approval",
     "summary": "[UI] Show when prices were last updated on the market table",
     "capacity": 20.0,
-    "updated_at": 1786010773.769463
+    "updated_at": 1786010850.748072
   }
 }
