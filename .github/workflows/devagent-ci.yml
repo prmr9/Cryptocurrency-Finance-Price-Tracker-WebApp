@@ -12,3 +12,9 @@ jobs:
         with:
           node-version: 22
       - run: npm ci && npm test
+      # The production build is what actually ships, and it is stricter than
+      # the tests: react-scripts runs with CI=true here, so every eslint
+      # warning is an error. Without this step CI went green on a tree that
+      # could not compile, while DevAgent's build gate — which DOES build —
+      # blocked branches for a fault CI had already passed.
+      - run: npm run build
