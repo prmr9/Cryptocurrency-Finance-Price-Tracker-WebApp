@@ -48,16 +48,19 @@ describe('CoinItem full name beside the ticker', () => {
         renderItem({ symbol: 'btc', name: 'BTC' })
         // Only one 'BTC' occurrence — the ticker — and no coin-fullname span.
         expect(screen.getAllByText('BTC')).toHaveLength(1)
+        // eslint-disable-next-line testing-library/no-node-access -- no class-based query in Testing Library; asserting absence of the node
         expect(document.querySelector('.coin-fullname')).toBeNull()
     })
 
     test('a whitespace-only name renders no coin-fullname span', () => {
         renderItem({ symbol: 'btc', name: '   ' })
+        // eslint-disable-next-line testing-library/no-node-access -- no class-based query in Testing Library; asserting absence of the node
         expect(document.querySelector('.coin-fullname')).toBeNull()
     })
 
     test('a null name renders no coin-fullname span', () => {
         renderItem({ symbol: 'btc', name: null })
+        // eslint-disable-next-line testing-library/no-node-access -- no class-based query in Testing Library; asserting absence of the node
         expect(document.querySelector('.coin-fullname')).toBeNull()
     })
 
