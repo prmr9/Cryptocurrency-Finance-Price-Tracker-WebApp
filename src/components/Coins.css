@@ -127,6 +127,37 @@ img {
 
 
 
+/* 24h change direction — colour scoped directly on the cell class (not on an
+   assumed row wrapper) so it matches regardless of the container element. The
+   signed value and the .sr-only direction word carry the same information for
+   users who cannot distinguish the colours. */
+.change-positive {
+    color: var(--color-positive);
+}
+
+.change-negative {
+    color: var(--color-negative);
+}
+
+.change-neutral {
+    color: var(--color-text);
+}
+
+/* Visually-hidden helper for the direction word announced to assistive tech.
+   Mirrors the global .sr-only in index.css so the span is hidden even if only
+   this component stylesheet is present. */
+.sr-only {
+    position: absolute;
+    width: 1px;
+    height: 1px;
+    padding: 0;
+    margin: -1px;
+    overflow: hidden;
+    clip: rect(0 0 0 0);
+    white-space: nowrap;
+    border: 0;
+}
+
 @media screen and (max-width: 720px) {
     .hide-mobile {
         display: none;

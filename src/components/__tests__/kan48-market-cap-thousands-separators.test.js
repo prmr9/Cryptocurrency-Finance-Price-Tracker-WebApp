@@ -1,5 +1,5 @@
 import React from 'react';
-import { render } from '@testing-library/react';
+import { render, screen } from '@testing-library/react';
 import CoinItem from '../CoinItem';
 
 // Regression test for KAN-48.
@@ -24,15 +24,15 @@ const renderRow = (coin) => render(<CoinItem coins={coin} />);
 
 describe('KAN-48 market cap formatting in the prices table', () => {
   it('renders the market cap with thousands separators', () => {
-    const { container } = renderRow({ ...baseCoin, market_cap: 1234567890 });
+    renderRow({ ...baseCoin, market_cap: 1234567890 });
 
-    expect(container.textContent).toContain('1,234,567,890');
+    expect(screen.getByText('$1,234,567,890')).toBeInTheDocument();
   });
 
   it('renders a dash for a null market cap instead of NaN or "undefined"', () => {
-    const { container } = renderRow({ ...baseCoin, market_cap: null });
+    renderRow({ ...baseCoin, market_cap: null });
 
-    expect(container.textContent).not.toContain('NaN');
-    expect(container.textContent).not.toContain('undefined');
+    expect(screen.queryByText(/NaN/)).toBeNull();
+    expect(screen.queryByText(/undefined/)).toBeNull();
   });
 });
