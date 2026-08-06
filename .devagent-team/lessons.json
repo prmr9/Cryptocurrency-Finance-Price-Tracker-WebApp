@@ -201,20 +201,20 @@
   {
     "id": "08cc87127d72c92a",
     "pattern": "[jira:history] Team's recent shipped work (Jira)",
-    "detail": "# Domain Context for prmr9/Cryptocurrency-Finance-Price-Tracker-WebApp\n\n## Product & Core Mission\nA full-stack web app for tracking cryptocurrency portfolios. Users create accounts, import holdings, and monitor portfolio values with live price data (CoinGecko API). Recent focus: UI polish on the prices table (readability, formatting, color-coding); wallet onboarding; Uniswap-inspired redesign.\n\n## Recurring Components & What Work Happens There\n\n| Area | What Ships | Current State |\n|------|-----------|----------------|\n| **Prices table UI** | Market-cap formatting, 24h change color-coding, \"Last updated\" timestamp, readability polish | Active work (KAN-42\u201347); metrics instrumentation required per feature |\n| **Backend API** | `/auth/{signup,login,logout,me}`, `/portfolios/*`, `/import`, `/health` | Core routes defined; **backend NOT YET deployed to AWS** (KAN-31 incident) |\n| **Infrastructure** | AWS provisioning (EC2 + nginx, RDS PostgreSQL 16), migrations, deployment gates, health checks | Major blocker: KAN-31 (deploy failure, health-check status=00); planned as atomic infra-plan tickets (KAN-32\u201335, KAN-23\u201330, etc.) |\n| **Auth & Sessions** | JWT/secure HTTP-only cookies, user + profile + portfolio schemas, jsonb holdings storage | Schema defined; gates deployment (KAN-13) |\n| **Database** | PostgreSQL 16, migration files stored in repo (run per-env via SSH tunnel) | Live; migrations applied via Secrets Manager IAM role |\n| **Frontend** | Login, signup, logout, portfolio view; React or vanilla JS; API client holds **no DB creds** | Layout defined; UI enhancements in flight |\n\n## Team Process & What You'll See\n\n- **Story-driven**: \"Story 0\" used to gate non-prod\u2192prod parity sync and rollout gates (KAN-17).\n- **Infra planning is methodical**: A parent ticket (e.g., KAN-31) spawns 3\u20134 atomic \"Infra plan\" children (KAN-32, 33, 34, 35) so changes ship incrementally and can be reviewed independently.\n- **Metrics-first**: Every feature gets a separate instrumentation ticket (KAN-45 follows KAN-44, KAN-5 follows KAN-4). This is non-negotiable.\n- **On-call & incident drills**: Rotational on-call (KAN-46), synthetic validation drills (KAN-39\u201341) to catch deploy/health-check regressions.\n- **Security gates PRs**: Technical debt + security findings block merges (KAN-38); must fix in-place, never suppress without justification.\n\n## Product Vocabulary\n- **Portfolio** = user's crypto holdings (jsonb in DB)\n- **Holdings** = individual crypto assets\n- **Health check** = GET /health status=200; status=00 means backend crashed at startup\n- **Market-cap** = displayed in prices table, recently formatted with thousands separators (KAN-47)\n- **24h change** = percentage delta, now color-coded (KAN-42)\n- **\"Last updated\" timestamp** = above prices table (KAN-44)\n\n## Current Blocker\n**KAN-31 (Incident)**: Backend not deployed to AWS; `/auth/*` and `/portfolios` endpoints unreachable. Root cause: health-check returns status=00 (backend fails to start). Blocking all subsequent work. Repair path: fix startup, gate release, verify health-check passes before going live.\n\n---\n\n**Key insight for new engineer**: This team is infrastructure-conscious and metrics-aware. Every feature has infra and instrumentation work attached. PR reviews will ask for both correctness *and* telemetry. The major current push is unblocking the backend deploy so auth and portfolios go live.",
+    "detail": "Based on these tickets, here's the domain context for a new engineer:\n\n---\n\n## **Product Domain**\n**Cryptocurrency Finance Price Tracker** \u2014 a web app where users track crypto portfolios in real-time with live market data (from CoinGecko API). Users create accounts, store holdings as JSON, and view prices with 24h change metrics. Recent direction: Uniswap-style UI redesign + wallet onboarding.\n\n---\n\n## **Recurring Components & Tech Areas**\n\n| Area | Scope |\n|------|-------|\n| **Frontend** (`src/`) | Portfolio view, signup/login, market price table with color-coded gains/losses, last-updated timestamps |\n| **Backend** (`server/`) | Node.js API serving `/auth/*` (signup/login/logout/me), `/portfolios/*` (GET/PUT), `/health` checks |\n| **Database** | PostgreSQL 16 (AWS RDS); `users`, `user_profiles` (display_name, avatar_url), `portfolios` (holdings stored as jsonb) |\n| **DevOps/Infra** | AWS (EC2 + nginx, RDS, Secrets Manager); SSH+rsync deploys with gated approval lanes; stored migrations run per-environment |\n| **External Data** | CoinGecko API integration (rate-limit handling observed: KAN-3) |\n\n---\n\n## **Product Vocabulary**\n\n- **Portfolio** \u2014 per-user collection of crypto holdings  \n- **Holdings** \u2014 crypto assets stored as jsonb in portfolio table  \n- **Market table** \u2014 UI showing live prices, 24h change (color-coded: gains/losses), last-update timestamps  \n- **Health check** \u2014 `GET /health` must return 200; status=00 indicates backend failure  \n- **Story 0** \u2014 non-prod parity baseline + rollout plan (non-prod \u2192 prod)  \n- **Migrations** \u2014 version-controlled DB schema changes, applied per environment via SSH tunnel  \n\n---\n\n## **How This Team Frames Work**\n\n1. **Incident-driven delivery** \u2014 blocking deploy issues become epic parents (KAN-31: backend not deployed) spawning atomic infra child tickets (KAN-32\u201335)  \n2. **Metrics as first-class** \u2014 every shipped feature gets a separate instrumentation ticket (KAN-5 after KAN-4)  \n3. **On-call / PR lanes** \u2014 rotating engineers review high-priority PRs; synthetic drill tickets validate runbooks (KAN-41)  \n4. **Security/tech-debt gating** \u2014 PRs can be blocked for security findings; fixes must be in-place before merge (KAN-38)  \n5. **Small UI iterations** \u2014 price display improvements batched (KAN-42\u201344 \u2192 KAN-56: color-coding + timestamps + formatting)  \n\n---\n\n## **Recent Work Patterns**\n\n- **Incidents** \u2014 nonprod deploy health-check failures (KAN-36) driving infrastructure provisioning (KAN-31)  \n- **Features** \u2014 wallet onboarding (KAN-4), Uniswap redesign (KAN-7), price table polish (KAN-42\u201356)  \n- **Metrics** \u2014 instrumentation tickets follow feature completion  \n\nThis is a **single-repo, full-stack team** (not microservices) shipping incremental portfolio UX improvements on a stable auth/DB/API foundation.",
     "source_ticket": "",
     "source_pr": "",
     "source_repo": "",
     "author": "devagent-onboarding",
     "author_tier": "",
     "path_globs": [],
-    "created": "2026-08-06T09:44:02.122648Z",
+    "created": "2026-08-06T17:52:55.674824Z",
     "tags": [
       "onboarding",
       "team-knowledge"
     ],
     "kind": "onboarding",
-    "weight": 1.6099999999999999,
+    "weight": 1.5,
     "times_applied": 1,
     "times_confirmed": 2,
     "safety_class": "neutral",
@@ -836,7 +836,7 @@
       "monorepo"
     ],
     "kind": "reflection",
-    "weight": 3.0,
+    "weight": 2.7,
     "times_applied": 10,
     "times_confirmed": 9,
     "safety_class": "guardrail",
@@ -1550,7 +1550,7 @@
       "branch-freshness"
     ],
     "kind": "reflection",
-    "weight": 2.4796875,
+    "weight": 2.1,
     "times_applied": 10,
     "times_confirmed": 7,
     "safety_class": "guardrail",
@@ -2738,7 +2738,7 @@
       "Tests that could pass vacuously \u2014 skipped/mocked assertions, asserting on the wrong element, or not actually exercising the changed code path \u2014 where 'green' is necessary but not sufficient"
     ],
     "kind": "principle",
-    "weight": 1.7249999999999999,
+    "weight": 1.5,
     "times_applied": 18,
     "times_confirmed": 7,
     "safety_class": "guardrail",
@@ -2853,20 +2853,20 @@
   {
     "id": "a16ef55f0feed29d",
     "pattern": "[architecture] Team codebase architecture overview",
-    "detail": "# Team architecture digest\n\nI can't write the architecture digest \u2014 there's nothing to base it on.\n\n**What I received:** The per-repository facts section says *\"No repositories were readable.\"* No directory structures, no manifests (`package.json`, `pom.xml`, `go.mod`, `requirements.txt`, etc.), no READMEs \u2014 zero structural input for any repo in the team's system.\n\nAn architecture digest names real services, data stores, and dependencies. With no readable input, anything I wrote would be invented \u2014 services that may not exist, relationships I'd be guessing at. That's worse than nothing for guiding implementation planning, since it would seed the plan with fabrications.\n\n**To note:** My memory holds architecture notes for one unrelated repo (`prmr9/Cryptocurrency-Finance-Price-Tracker-WebApp`, a single full-stack crypto price-tracker). That is a stored reference note from past work \u2014 not part of the input for this task, not evidence of the current team's system, and a single-repo app rather than a multi-service architecture. I'm deliberately not folding it into a digest.\n\n**To move forward, I need at least one of:**\n- Read access to the repositories (fix whatever made them unreadable \u2014 permissions, wrong paths, empty clone target).\n- The per-repo structure + manifests pasted or pointed to directly.\n- A repo list (owner/name) with a way to fetch each.\n\nOnce any repo is actually readable, I'll produce the digest: services and responsibilities, shared libraries, data stores, and how they relate \u2014 grounded in the manifests rather than inferred from names alone.\n\nWhich of these can you provide? If you expected the repos to be readable, tell me where they live and I'll retry.\n\n---\n## Per-repo facts\nNo repositories were readable.",
+    "detail": "# Team architecture digest\n\nI can't write the digest: **no repository data was available to analyze.**\n\nThe per-repository facts I was given contain a single line \u2014 \"No repositories were readable\" \u2014 and nothing else. There were no directory structures, manifests (`package.json`, `pom.xml`, `go.mod`, etc.), READMEs, or service definitions to work from. An architecture digest has to be grounded in the actual repos; producing one from nothing would mean inventing services, data stores, and relationships that may not exist, which would misdirect the very implementation planning it's meant to guide.\n\nI also have stored notes from earlier work on a `prmr9/Cryptocurrency-Finance-Price-Tracker-WebApp` repo, but that's a single-repo project under a different owner and almost certainly *not* this team's system \u2014 I won't pass it off as your architecture.\n\n## What I need to proceed\n\nAny one of these unblocks a real digest:\n\n- **Repo access** \u2014 clone URLs, a path to the checked-out repos, or read permissions if they failed on an auth/scope issue.\n- **Even partial structure** \u2014 for each repo, the top-level directory tree plus its manifest file is usually enough for a first-pass map of services, shared libs, and data stores.\n- **A manifest dump** \u2014 the dependency/build files alone (`package.json` / `go.mod` / `pom.xml` / `Dockerfile` / `docker-compose.yml` / IaC) let me infer stores, frameworks, and inter-service wiring.\n\n## Worth checking on your side\n\n\"No repositories were readable\" usually points at a fixable cause rather than empty repos:\n- The tool ran against an empty path, wrong org, or a directory with no repos checked out.\n- Auth/token lacked read scope, so every repo returned unreadable rather than not-found.\n- The repos are private and the integration isn't installed on them.\n\nTell me how you'd like to get me the data \u2014 point me at a directory, paste the trees/manifests, or fix access and re-run the extraction \u2014 and I'll turn it into the services / responsibilities / shared-libraries / data-stores / relationships digest you're after.\n\n---\n## Per-repo facts\nNo repositories were readable.",
     "source_ticket": "",
     "source_pr": "",
     "source_repo": "",
     "author": "devagent-onboarding",
     "author_tier": "",
     "path_globs": [],
-    "created": "2026-08-06T09:56:43.201908Z",
+    "created": "2026-08-06T17:52:24.803353Z",
     "tags": [
       "onboarding",
       "team-knowledge"
     ],
     "kind": "onboarding",
-    "weight": 2.07,
+    "weight": 1.8,
     "times_applied": 1,
     "times_confirmed": 2,
     "safety_class": "neutral",
@@ -3250,7 +3250,7 @@
       "gate"
     ],
     "kind": "rework",
-    "weight": 2.8227272727272728,
+    "weight": 2.5,
     "times_applied": 12,
     "times_confirmed": 10,
     "safety_class": "guardrail",
