@@ -40,6 +40,10 @@ const Coins = (props) => {
             </div>
 
             <div>
+                {props.lastUpdated && (
+                    <div className='last-updated'>Updated {props.lastUpdated.toLocaleTimeString()}</div>
+                )}
+
                 <div className='heading'>
                     <p>#</p>
                     <p className='coin-name'>Coin</p>
