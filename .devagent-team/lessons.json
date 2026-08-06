@@ -2885,6 +2885,38 @@
     "last_confirmed_ts": 0.0
   },
   {
+    "id": "a6a3edc93c4a8de9",
+    "pattern": "Consolidate test files that verify identical behavior into a single dedicated test file",
+    "detail": "When multiple test files assert the same core behavior with identical setup and assertion patterns, merge them into one file named after the primary behavior. This reduces maintenance burden and prevents test rot, where the same assertion must be updated across multiple locations. Separate test files should verify distinct behavioral areas or different components, not duplicate coverage of the same feature.",
+    "source_ticket": "KAN-54",
+    "source_pr": "https://github.com/prmr9/Cryptocurrency-Finance-Price-Tracker-WebApp/pull/21",
+    "source_repo": "prmr9/Cryptocurrency-Finance-Price-Tracker-WebApp",
+    "author": "prmr9",
+    "author_tier": "peer_bot",
+    "path_globs": [],
+    "created": "2026-08-06T10:56:40.030632Z",
+    "tags": [
+      "test-organization",
+      "duplication",
+      "maintenance",
+      "test-consolidation"
+    ],
+    "kind": "review",
+    "weight": 1.0,
+    "times_applied": 0,
+    "times_confirmed": 0,
+    "safety_class": "neutral",
+    "safety_reason": "no risk trigger (offline)",
+    "enforced": false,
+    "enforce_confirm_tickets": [],
+    "guardrail_fp_count": 0,
+    "dismissals": 0,
+    "confidence": null,
+    "confidence_confirms": 0,
+    "confidence_contradictions": 0,
+    "last_confirmed_ts": 0.0
+  },
+  {
     "id": "a90572316c0c4475",
     "pattern": "Stacked start on unmerged dependency creates latent blocker",
     "detail": "Starting a feature branch (KAN-14) on top of another feature's in-progress branch (KAN-13) hides a dependency in the branch topology. If the dependency fails or is delayed, the dependent PR cannot merge. Before stacking, verify the blocker is green or has high confidence ETA, or mock the dependency locally.",
