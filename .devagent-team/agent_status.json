@@ -8,7 +8,7 @@
     "status": "",
     "summary": "",
     "capacity": 20.0,
-    "updated_at": 1786011290.371274
+    "updated_at": 1786011365.0208828
   },
   "devagent-prashant": {
     "agent": "devagent-prashant",
@@ -19,6 +19,6 @@
     "status": "pending_approval",
     "summary": "[UI] Show when prices were last updated on the market table",
     "capacity": 20.0,
-    "updated_at": 1786011228.766465
+    "updated_at": 1786011303.509365
   }
 }
