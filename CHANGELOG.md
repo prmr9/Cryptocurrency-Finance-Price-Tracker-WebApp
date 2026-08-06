@@ -1,6 +1,7 @@
 # Changelog
 
 ## Unreleased
+- KAN-57: [UI] Show the coin symbol's full name beside the ticker in the market table (DevAgent)
 - KAN-56: [UI] Colour-code the 24h change so a gain and a loss are distinguishable (DevAgent)
 - KAN-54: [UI] Show when prices were last updated on the market table (DevAgent)
 - KAN-48: Format the market-cap figure with thousands separators (DevAgent)

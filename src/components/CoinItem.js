@@ -28,12 +28,23 @@ const formatChange = (value) => {
 
 const CoinItem = (props) => {
     const change = formatChange(props.coins.price_change_percentage_24h)
+    // Primary label stays the uppercase ticker. The full name is a secondary cue,
+    // so only render it when it adds information: skip null/empty/whitespace-only
+    // names, and skip a name that only restates the ticker (e.g. 'BTC' for 'btc')
+    // to avoid a redundant 'BTC BTC'.
+    const symbolUpper = props.coins.symbol.toUpperCase()
+    const rawName = props.coins.name
+    const fullName = typeof rawName === 'string' ? rawName.trim() : ''
+    const showName = fullName.length > 0 && fullName.toUpperCase() !== symbolUpper
     return (
         <div className='coin-row'>
             <p>{props.coins.market_cap_rank}</p>
             <div className='img-symbol'>
                 <img src={props.coins.image} alt='' />
-                <p>{props.coins.symbol.toUpperCase()}</p>
+                <div className='symbol-labels'>
+                    <p>{symbolUpper}</p>
+                    {showName && <span className='coin-fullname'>{fullName}</span>}
+                </div>
             </div>
             <p>${props.coins.current_price.toLocaleString()}</p>
             <p className={change.className}>
