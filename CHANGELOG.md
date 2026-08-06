@@ -1,6 +1,7 @@
 # Changelog
 
 ## Unreleased
+- KAN-56: [UI] Colour-code the 24h change so a gain and a loss are distinguishable (DevAgent)
 - KAN-54: [UI] Show when prices were last updated on the market table (DevAgent)
 - KAN-48: Format the market-cap figure with thousands separators (DevAgent)
 - KAN-31: [Incident] Backend (server/) not deployed to AWS — provision Node runtime + nginx reverse-proxy + gated backend release lane so /auth/* and /portfolios go live (DevAgent)
