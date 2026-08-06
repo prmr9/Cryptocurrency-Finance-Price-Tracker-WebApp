@@ -1,1 +1,7 @@
-{}
+{
+  "KAN-56": {
+    "agent": "devagent-local",
+    "instance": "ae01593414a1:devagent-local",
+    "expires": 1786030797.829609
+  }
+}
