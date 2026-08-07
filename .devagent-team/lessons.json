@@ -1581,7 +1581,7 @@
       "branch-freshness"
     ],
     "kind": "reflection",
-    "weight": 2.1,
+    "weight": 2.25,
     "times_applied": 12,
     "times_confirmed": 9,
     "safety_class": "guardrail",
@@ -3408,7 +3408,7 @@
       "Triaging or estimating remediation work from a scanner's summary count without cross-referencing which findings' file/line locations fall inside the actual diff"
     ],
     "kind": "principle",
-    "weight": 1.5208749999999995,
+    "weight": 3.0,
     "times_applied": 5,
     "times_confirmed": 5,
     "safety_class": "guardrail",
