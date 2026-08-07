@@ -13,12 +13,12 @@
   "devagent-prashant": {
     "agent": "devagent-prashant",
     "account": "712020:ad3d4e51-4ea0-4043-8f1f-0e390e87f10b",
-    "ticket": "KAN-59",
-    "repo": "prmr9/Cryptocurrency-Finance-Price-Tracker-WebApp",
-    "phase": "phase4_review",
-    "status": "in_review",
-    "summary": "[UI] Show each coin's rank movement arrow in the market table",
+    "ticket": "",
+    "repo": null,
+    "phase": "",
+    "status": "",
+    "summary": "",
     "capacity": 20.0,
-    "updated_at": 1786127836.557555
+    "updated_at": 1786127933.725214
   }
 }
