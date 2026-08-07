@@ -39,8 +39,8 @@
     ],
     "released": true,
     "reopen_reason": "Post-merge CI failure: CI run 31128083339",
-    "updated_by": "devagent-prashant",
-    "updated_at": 1786088385.551093
+    "updated_by": "devagent-aman",
+    "updated_at": 1786124084.0476532
   },
   "KAN-58": {
     "ticket": "KAN-58",
@@ -53,7 +53,7 @@
     ],
     "released": false,
     "reopen_reason": "",
-    "updated_by": "devagent-prashant",
-    "updated_at": 1786123972.469671
+    "updated_by": "devagent-aman",
+    "updated_at": 1786124085.284705
   }
 }
