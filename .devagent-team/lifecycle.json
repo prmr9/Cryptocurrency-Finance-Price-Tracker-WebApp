@@ -30,16 +30,16 @@
   "KAN-57": {
     "ticket": "KAN-57",
     "cycle": 2,
-    "stage": "merged",
+    "stage": "released",
     "branch": "fix/KAN-57-ci-1",
     "pr_number": 24,
     "merged_prs": [
       23,
       24
     ],
-    "released": false,
+    "released": true,
     "reopen_reason": "Post-merge CI failure: CI run 31128083339",
-    "updated_by": "devagent-aman",
-    "updated_at": 1786088336.1877189
+    "updated_by": "devagent-prashant",
+    "updated_at": 1786088385.551093
   }
 }
