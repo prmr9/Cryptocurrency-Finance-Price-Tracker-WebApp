@@ -1,6 +1,7 @@
 # Changelog
 
 ## Unreleased
+- KAN-59: [UI] Show each coin's rank movement arrow in the market table (DevAgent)
 - KAN-58: [UI] Show a coin's 7-day sparkline trend in the market table (DevAgent)
 - KAN-57: [UI] Show the coin symbol's full name beside the ticker in the market table (DevAgent)
 - KAN-56: [UI] Colour-code the 24h change so a gain and a loss are distinguishable (DevAgent)
