@@ -43,15 +43,15 @@
     "updated_at": 1786088385.551093
   },
   "KAN-58": {
-    "branch": "feature/KAN-58",
+    "ticket": "KAN-58",
     "cycle": 1,
-    "merged_prs": [],
+    "stage": "in_review",
+    "branch": "feature/KAN-58",
     "pr_number": 25,
+    "merged_prs": [],
     "released": false,
     "reopen_reason": "",
-    "stage": "in_review",
-    "ticket": "KAN-58",
-    "updated_at": 1786119937.801024,
-    "updated_by": "devagent-prashant"
+    "updated_by": "devagent-prashant",
+    "updated_at": 1786119937.801024
   }
 }
