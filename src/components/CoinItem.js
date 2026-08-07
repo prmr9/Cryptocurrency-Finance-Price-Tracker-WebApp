@@ -1,5 +1,6 @@
 import React from 'react'
 
+import SparkLine from './SparkLine'
 import './Coins.css'
 
 const EM_DASH = '\u2014'
@@ -50,6 +51,7 @@ const CoinItem = (props) => {
             <p className={change.className}>
                 {change.display}
                 <span className='sr-only'>{' '}{change.direction}</span>
+                <SparkLine prices={props.coins.sparkline_in_7d && props.coins.sparkline_in_7d.price} />
             </p>
             <p className='hide-mobile'>${props.coins.total_volume.toLocaleString()}</p>
             <p className='hide-mobile'>{formatMarketCap(props.coins.market_cap)}</p>
