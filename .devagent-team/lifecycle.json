@@ -59,13 +59,15 @@
   "KAN-59": {
     "ticket": "KAN-59",
     "cycle": 1,
-    "stage": "in_review",
+    "stage": "merged",
     "branch": "feature/KAN-59",
     "pr_number": 26,
-    "merged_prs": [],
+    "merged_prs": [
+      26
+    ],
     "released": false,
     "reopen_reason": "",
     "updated_by": "devagent-prashant",
-    "updated_at": 1786126740.73203
+    "updated_at": 1786127849.5934222
   }
 }
