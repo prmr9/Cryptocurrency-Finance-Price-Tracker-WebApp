@@ -45,13 +45,15 @@
   "KAN-58": {
     "ticket": "KAN-58",
     "cycle": 1,
-    "stage": "in_review",
+    "stage": "merged",
     "branch": "feature/KAN-58",
     "pr_number": 25,
-    "merged_prs": [],
+    "merged_prs": [
+      25
+    ],
     "released": false,
     "reopen_reason": "",
     "updated_by": "devagent-prashant",
-    "updated_at": 1786119937.801024
+    "updated_at": 1786123972.469671
   }
 }
