@@ -1,14 +1,1 @@
-[
-  {
-    "ticket": "KAN-59",
-    "agent": "devagent-prashant",
-    "repo": "prmr9/Cryptocurrency-Finance-Price-Tracker-WebApp",
-    "files": [
-      "src/components/CoinItem.js",
-      "src/components/Coins.css",
-      "src/components/__tests__/kan59-rank-movement.test.js"
-    ],
-    "created": 1786125952.834371,
-    "expires": 1786133152.834371
-  }
-]
+[]
