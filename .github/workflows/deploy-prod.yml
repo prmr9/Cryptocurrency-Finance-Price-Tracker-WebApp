@@ -1,9 +1,29 @@
 name: deploy-prod
 
+# See deploy-nonprod.yml for why deploy_id exists.
+run-name: >-
+  deploy-prod${{ inputs.deploy_id && format(' [{0}]', inputs.deploy_id) || '' }}
+
 on:
-  push:
-    branches: [main]
+  # PRODUCTION IS DISPATCH-ONLY, DELIBERATELY.
+  #
+  # This was `on: push: branches: [main]` with no paths filter, so EVERY merge —
+  # including a documentation-only one — started a production deployment. The
+  # release gate in the delivery pipeline was bypassed entirely, because a
+  # pipeline cannot gate a deployment it does not dispatch: the only remaining
+  # control was this environment's required reviewers.
+  #
+  # Production now ships when a release is explicitly authorised and dispatched.
+  # The `prod` environment's required reviewers still apply on top, so a
+  # production deployment needs BOTH an authorised release and a human approval.
+  # A human can still ship manually from the Actions tab — this removes the
+  # automatic trigger, not the ability to deploy.
   workflow_dispatch:
+    inputs:
+      deploy_id:
+        description: "Optional correlation id from the caller. [A-Za-z0-9._:-], max 64 chars."
+        required: false
+        type: string
 
 jobs:
   deploy:
