@@ -1630,6 +1630,36 @@
     "last_confirmed_ts": 0.0
   },
   {
+    "id": "4e83e1f2f23a5f95",
+    "pattern": "Prevent at implementation time: Post-merge CI failure: CI https://github.com/prmr9/Cryptocurrency-Finance-Price-Tracker-WebApp/actions/runs/31128083339",
+    "detail": "Ticket KAN-57 was held back by this gate and needed 0 rework pass(es) before it was shippable. Handle this in the FIRST implementation: Post-merge CI failure: CI https://github.com/prmr9/Cryptocurrency-Finance-Price-Tracker-WebApp/actions/runs/31128083339",
+    "source_ticket": "KAN-57",
+    "source_pr": "",
+    "source_repo": "",
+    "author": "",
+    "author_tier": "",
+    "path_globs": [],
+    "created": "2026-08-07T01:04:12.954120Z",
+    "tags": [
+      "rework",
+      "gate"
+    ],
+    "kind": "rework",
+    "weight": 1.0,
+    "times_applied": 0,
+    "times_confirmed": 0,
+    "safety_class": "neutral",
+    "safety_reason": "no risk trigger (offline)",
+    "enforced": false,
+    "enforce_confirm_tickets": [],
+    "guardrail_fp_count": 0,
+    "dismissals": 0,
+    "confidence": null,
+    "confidence_confirms": 0,
+    "confidence_contradictions": 0,
+    "last_confirmed_ts": 0.0
+  },
+  {
     "id": "4f949d8dd3940b9d",
     "pattern": "Keep shell scripts POSIX/bash-3.2 portable \u2014 macOS ships bash 3.2",
     "detail": "Bash-4+ features silently break on macOS's default `/bin/bash` 3.2: `${var^^}`/`${var,,}` (case) return 'bad substitution', and `mapfile`/`readarray`/`declare -A` (assoc arrays) are unsupported \u2014 the script dies before doing any work. Use portable equivalents: `tr '[:lower:]' '[:upper:]'` for case, `while read` loops instead of mapfile. Validate with `bash -n script.sh` AND run it under the deploy host's actual bash before shipping. A shebang of `#!/usr/bin/env bash` does NOT guarantee bash 4. Applies to any repo/team/org with shell scripts on mixed OSes.\nObserved: migrate-ec2.sh used ${ENVN^^} (bash-4) -> \"bad substitution\" on macOS bash 3.2; fixed with tr",
