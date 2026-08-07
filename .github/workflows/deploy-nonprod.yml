@@ -1,9 +1,29 @@
 name: deploy-nonprod
 
+# WHY deploy_id EXISTS. `POST /actions/workflows/{id}/dispatches` answers 204
+# with an empty body — it never tells the caller which run it created. Taking
+# "the newest run on the branch" attaches the caller to a CONCURRENT deployment
+# and reports someone else's success as its own. The correlation id is stamped
+# into the run name so a caller can find ITS run by exact match. Every other
+# deploy workflow here already does this; without it a dispatch carrying
+# deploy_id is rejected 422 (unexpected input) and nonprod cannot be deployed
+# by the pipeline at all.
+run-name: >-
+  deploy-nonprod${{ inputs.deploy_id && format(' [{0}]', inputs.deploy_id) || '' }}
+
 on:
+  # TRIGGERS ON THE BRANCH THIS REPOSITORY ACTUALLY MERGES TO. This was
+  # `develop`, which nothing merges to, so the frontend nonprod deployment had
+  # run exactly once — while production deployed on every merge. Nonprod must
+  # see a change BEFORE production does, not instead of never.
   push:
-    branches: [develop]
+    branches: [main]
   workflow_dispatch:
+    inputs:
+      deploy_id:
+        description: "Optional correlation id from the caller. [A-Za-z0-9._:-], max 64 chars."
+        required: false
+        type: string
 
 jobs:
   deploy:
