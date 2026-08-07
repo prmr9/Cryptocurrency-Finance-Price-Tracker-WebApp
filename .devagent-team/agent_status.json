@@ -8,7 +8,7 @@
     "status": "",
     "summary": "",
     "capacity": 20.0,
-    "updated_at": 1786119036.492417
+    "updated_at": 1786119130.619041
   },
   "devagent-prashant": {
     "agent": "devagent-prashant",
@@ -19,6 +19,6 @@
     "status": "approved",
     "summary": "[UI] Show a coin's 7-day sparkline trend in the market table",
     "capacity": 20.0,
-    "updated_at": 1786119015.451531
+    "updated_at": 1786119135.4671922
   }
 }
