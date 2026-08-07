@@ -88,9 +88,17 @@ describe('CoinItem full name beside the ticker', () => {
         // Two .coin-fullname blocks: the base rule, then the tightened one inside
         // the @media (max-width: 720px) block. The mobile cap must be smaller.
         expect(css).toMatch(/@media[^{]*max-width\s*:\s*720px/)
-        const maxWidths = [...css.matchAll(/\.coin-fullname\s*\{[^}]*max-width\s*:\s*(\d+)px/g)]
+        const maxWidths = [...css.matchAll(/\.coin-fullname\s*\{[^}]*max-width\s*:\s*([\d.]+)px/g)]
             .map((m) => Number(m[1]))
         expect(maxWidths.length).toBeGreaterThanOrEqual(2)
+        // Source order is load-bearing here, not incidental: the base rule and the
+        // @media override are both plain `.coin-fullname` (equal specificity, since
+        // media queries add none), so at <=720px the one written LATER wins the
+        // cascade. The tightening only takes effect when the media block follows the
+        // base rule -- i.e. the smaller value must be the SECOND match. Keeping the
+        // positional `tightened < base` check therefore also guards against a
+        // media-block-first regression, which would leave the mobile cap dead.
+        // Capture now allows a decimal so an equivalent `200.0px` rewrite still parses.
         const [base, tightened] = maxWidths
         expect(tightened).toBeLessThan(base)
     })
