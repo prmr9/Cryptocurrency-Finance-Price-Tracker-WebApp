@@ -8,7 +8,7 @@
     "status": "",
     "summary": "",
     "capacity": 20.0,
-    "updated_at": 1786126583.684258
+    "updated_at": 1786126675.1369998
   },
   "devagent-prashant": {
     "agent": "devagent-prashant",
@@ -19,6 +19,6 @@
     "status": "approved",
     "summary": "[UI] Show each coin's rank movement arrow in the market table",
     "capacity": 20.0,
-    "updated_at": 1786126542.446978
+    "updated_at": 1786126602.450633
   }
 }
