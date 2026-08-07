@@ -8,7 +8,7 @@
     "status": "",
     "summary": "",
     "capacity": 20.0,
-    "updated_at": 1786062542.343786
+    "updated_at": 1786062612.430783
   },
   "devagent-prashant": {
     "agent": "devagent-prashant",
@@ -19,6 +19,6 @@
     "status": "approved",
     "summary": "[UI] Show the coin symbol's full name beside the ticker in the market table",
     "capacity": 20.0,
-    "updated_at": 1786062499.826725
+    "updated_at": 1786062559.832876
   }
 }
