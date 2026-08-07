@@ -100,6 +100,12 @@
     display: flex;
     justify-content: space-between;
     align-items: center;
+    /* Minimum spacing between columns. space-between alone lets the columns
+       collide once the content fills the width (the narrow mobile case), which
+       ran the price and 24h value together ("$64,819-0.10%"); the gap guarantees
+       breathing room. On desktop the columns are spread far wider than this, so
+       the gap is never visible there. */
+    gap: 1rem;
     background-color: var(--color-surface);
     border: 1px solid var(--color-border);
     border-radius: var(--radius-card);
@@ -219,13 +225,46 @@ img {
     stroke-width: 1.5;
 }
 
+/* KAN-59 — rank-movement arrow beside the rank number. Sits INSIDE the existing
+   rank <p> (not a new .coin-row flex child), so the six-column layout, sparkline
+   and coin names are unchanged. The glyph SHAPE (▲ / ▼ / –) carries the meaning;
+   colour reuses the existing 24h direction tokens as a redundant, not sole, cue,
+   so direction survives red-green colour-blindness. The ~0.75em size keeps it a
+   subordinate mark next to the rank digit and preserves the row height. */
+.rank-movement {
+    font-size: 0.75em;
+    margin-left: 0.35em;
+    line-height: 1;
+    vertical-align: middle;
+}
+
+.rank-up {
+    color: var(--color-positive);
+}
+
+.rank-down {
+    color: var(--color-negative);
+}
+
+.rank-unchanged {
+    color: var(--color-text-muted);
+}
+
 @media screen and (max-width: 720px) {
     .hide-mobile {
         display: none;
     }
 
+    /* Reclaim horizontal room on narrow viewports: trim the row padding and the
+       gap so the four visible columns (rank, coin, price, 24h) keep their
+       breathing room without overflowing 390px. */
+    .coin-row {
+        gap: 0.6rem;
+        padding: 0.85rem 0.9rem;
+    }
+
     /* Tighten the name cap on narrow viewports so the row stays contained. */
     .coin-fullname {
-        max-width: 90px;
+        max-width: 70px;
     }
 }
