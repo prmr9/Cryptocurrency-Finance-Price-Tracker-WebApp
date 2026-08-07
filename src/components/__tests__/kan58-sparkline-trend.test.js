@@ -114,11 +114,11 @@ describe('KAN-58 SparkLine component', () => {
     })
 
     test('renders a reserved-space placeholder (no crash) when the series is missing', () => {
-        const { container } = render(<SparkLine prices={undefined} />)
+        render(<SparkLine prices={undefined} />)
         // eslint-disable-next-line testing-library/no-node-access -- asserting the placeholder box + absence of svg
-        expect(container.querySelector('svg')).toBeNull()
+        expect(document.querySelector('svg')).toBeNull()
         // eslint-disable-next-line testing-library/no-node-access -- placeholder reserves the same box
-        const placeholder = container.querySelector('.coin-sparkline--empty')
+        const placeholder = document.querySelector('.coin-sparkline--empty')
         expect(placeholder).not.toBeNull()
         // Hidden from assistive tech (it carries no information).
         expect(placeholder).toHaveAttribute('aria-hidden', 'true')
