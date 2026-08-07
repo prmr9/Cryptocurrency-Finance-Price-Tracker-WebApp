@@ -27,8 +27,39 @@ const formatChange = (value) => {
     return { className: 'change-negative', display: `${value.toFixed(2)}%`, direction: 'down' }
 }
 
+// KAN-59 — derive the rank-movement arrow beside the rank number.
+//
+// There is NO previous-rank field in the CoinGecko /coins/markets payload and
+// 'no API/schema/dependency change' is a hard acceptance criterion, so we cannot
+// fetch or store rank history. We deliberately do NOT derive direction from
+// market_cap_rank vs the list index: both come from the SAME snapshot, so their
+// disagreement measures cache-skew/tie-breaking at one instant, not movement
+// over time — a fabricated before/after (and it flips on pagination / client
+// re-sort / filtering). Instead we key off `market_cap_change_percentage_24h` —
+// a genuinely temporal 24h signal already present as a default field of the same
+// response (no App.js change, no new field). Market cap is the quantity rank is
+// ordered by, so 24h market-cap momentum is the honest, non-fabricated proxy for
+// rank-direction pressure: positive → moving up, negative → moving down.
+//
+// STRICT numeric guard: only a real finite number passes. `Number.isFinite`
+// rejects null, '', undefined and NaN in one check — closing the Number(null)===0
+// false-DOWN bug — and an explicit 0 also falls through to the neutral branch.
+// The three distinct glyphs (▲ / ▼ / –) carry the meaning by SHAPE, so colour is
+// only supplementary; srLabel is announced to assistive tech via role='img'.
+const formatRankMovement = (value) => {
+    const finite = typeof value === 'number' && Number.isFinite(value)
+    if (finite && value > 0) {
+        return { direction: 'up', className: 'rank-up', glyph: '▲', srLabel: 'rank rising' }
+    }
+    if (finite && value < 0) {
+        return { direction: 'down', className: 'rank-down', glyph: '▼', srLabel: 'rank falling' }
+    }
+    return { direction: 'unchanged', className: 'rank-unchanged', glyph: '–', srLabel: 'rank unchanged' }
+}
+
 const CoinItem = (props) => {
     const change = formatChange(props.coins.price_change_percentage_24h)
+    const rankMovement = formatRankMovement(props.coins.market_cap_change_percentage_24h)
     // Primary label stays the uppercase ticker. The full name is a secondary cue,
     // so only render it when it adds information: skip null/empty/whitespace-only
     // names, and skip a name that only restates the ticker (e.g. 'BTC' for 'btc')
@@ -39,7 +70,20 @@ const CoinItem = (props) => {
     const showName = fullName.length > 0 && fullName.toUpperCase() !== symbolUpper
     return (
         <div className='coin-row'>
-            <p>{props.coins.market_cap_rank}</p>
+            <p>
+                {props.coins.market_cap_rank}
+                {/* Rank-movement arrow inside the existing rank cell — NOT a new
+                    .coin-row flex child, so the six-column layout, sparkline and
+                    coin names are untouched. role='img' + aria-label announces the
+                    state and suppresses the raw glyph, mirroring SparkLine.js. */}
+                <span
+                    className={`rank-movement ${rankMovement.className}`}
+                    role='img'
+                    aria-label={rankMovement.srLabel}
+                >
+                    {rankMovement.glyph}
+                </span>
+            </p>
             <div className='img-symbol'>
                 <img src={props.coins.image} alt='' />
                 <div className='symbol-labels'>
@@ -59,4 +103,5 @@ const CoinItem = (props) => {
     )
 }
 
+export { formatRankMovement }
 export default CoinItem
