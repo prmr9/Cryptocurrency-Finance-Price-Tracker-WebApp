@@ -1,4 +1,3 @@
-{"ts": 1784583568.581019, "agent": "devagent-bot", "ticket": "KAN-8", "kind": "approved", "text": "KAN-8 approved \u2014 implementing now.", "to": null}
 {"ts": 1784583671.043794, "agent": "devagent-bot", "ticket": "KAN-9", "kind": "approved", "text": "KAN-9 approved \u2014 implementing now.", "to": null}
 {"ts": 1784583882.7142458, "agent": "devagent-bot", "ticket": "KAN-9", "kind": "blocked", "text": "Blocked: Acceptance criteria depend on other tickets: KAN-7", "to": null}
 {"ts": 1784583939.46831, "agent": "devagent-bot", "ticket": "KAN-9", "kind": "started", "text": "Resuming KAN-9; KAN-7 resolved.", "to": null}
@@ -298,3 +297,4 @@
 {"ts": 1786123699.1839218, "agent": "devagent-prashant", "ticket": "KAN-58", "kind": "approved", "text": "KAN-58 PR peer-approved \u2014 awaiting a HUMAN approval to merge: https://github.com/prmr9/Cryptocurrency-Finance-Price-Tracker-WebApp/pull/25", "to": null}
 {"ts": 1786124026.3114119, "agent": "devagent-prashant", "ticket": "KAN-58", "kind": "merged", "text": "Merged KAN-58: https://github.com/prmr9/Cryptocurrency-Finance-Price-Tracker-WebApp/pull/25", "to": null}
 {"ts": 1786124102.937027, "agent": "devagent-aman", "ticket": "KAN-58", "kind": "merged", "text": "Merged KAN-58: ", "to": null}
+{"ts": 1786124800.966599, "agent": "devagent-aman", "ticket": "KAN-59", "kind": "yield", "text": "Yielding KAN-59 to devagent-prashant (already in progress).", "to": "devagent-prashant"}
