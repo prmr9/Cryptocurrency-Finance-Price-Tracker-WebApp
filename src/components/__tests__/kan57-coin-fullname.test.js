@@ -68,8 +68,38 @@ describe('CoinItem full name beside the ticker', () => {
         const css = fs.readFileSync(path.join(__dirname, '..', 'Coins.css'), 'utf8')
         // Selector exists (raw file read — valid even though CSS is mocked in jsdom).
         expect(css).toMatch(/\.coin-fullname\s*\{/)
-        // Muted colour + truncation declarations.
+        // Muted colour + the full truncation declaration set the criteria require:
+        // max-width + overflow:hidden + text-overflow:ellipsis + white-space:nowrap.
         expect(css).toMatch(/\.coin-fullname\s*\{[^}]*color\s*:\s*var\(--color-text-muted\)/)
+        expect(css).toMatch(/\.coin-fullname\s*\{[^}]*max-width\s*:/)
+        expect(css).toMatch(/\.coin-fullname\s*\{[^}]*overflow\s*:\s*hidden/)
         expect(css).toMatch(/\.coin-fullname\s*\{[^}]*text-overflow\s*:\s*ellipsis/)
+        expect(css).toMatch(/\.coin-fullname\s*\{[^}]*white-space\s*:\s*nowrap/)
+        // Font size is a fractional rem (< the ticker <p>'s default 1rem), so the
+        // name reads as the secondary label. Extract and compare rather than pin
+        // the exact value, so a tweak to 0.7rem/0.8rem doesn't break the test.
+        const fontMatch = css.match(/\.coin-fullname\s*\{[^}]*font-size\s*:\s*([\d.]+)rem/)
+        expect(fontMatch).not.toBeNull()
+        expect(Number(fontMatch[1])).toBeLessThan(1)
+    })
+
+    test('the 720px breakpoint tightens .coin-fullname max-width so the row stays contained', () => {
+        const css = fs.readFileSync(path.join(__dirname, '..', 'Coins.css'), 'utf8')
+        // Two .coin-fullname blocks: the base rule, then the tightened one inside
+        // the @media (max-width: 720px) block. The mobile cap must be smaller.
+        expect(css).toMatch(/@media[^{]*max-width\s*:\s*720px/)
+        const maxWidths = [...css.matchAll(/\.coin-fullname\s*\{[^}]*max-width\s*:\s*([\d.]+)px/g)]
+            .map((m) => Number(m[1]))
+        expect(maxWidths.length).toBeGreaterThanOrEqual(2)
+        // Source order is load-bearing here, not incidental: the base rule and the
+        // @media override are both plain `.coin-fullname` (equal specificity, since
+        // media queries add none), so at <=720px the one written LATER wins the
+        // cascade. The tightening only takes effect when the media block follows the
+        // base rule -- i.e. the smaller value must be the SECOND match. Keeping the
+        // positional `tightened < base` check therefore also guards against a
+        // media-block-first regression, which would leave the mobile cap dead.
+        // Capture now allows a decimal so an equivalent `200.0px` rewrite still parses.
+        const [base, tightened] = maxWidths
+        expect(tightened).toBeLessThan(base)
     })
 })
