@@ -1,44 +1,44 @@
 {
   "KAN-54": {
-    "branch": "",
+    "ticket": "KAN-54",
     "cycle": 1,
+    "stage": "released",
+    "branch": "",
+    "pr_number": 21,
     "merged_prs": [
       21
     ],
-    "pr_number": 21,
     "released": true,
     "reopen_reason": "",
-    "stage": "released",
-    "ticket": "KAN-54",
-    "updated_at": 1786062076.313258,
-    "updated_by": "devagent-prashant"
+    "updated_by": "devagent-prashant",
+    "updated_at": 1786062076.313258
   },
   "KAN-56": {
-    "branch": "",
+    "ticket": "KAN-56",
     "cycle": 1,
+    "stage": "released",
+    "branch": "",
+    "pr_number": 22,
     "merged_prs": [
       22
     ],
-    "pr_number": 22,
     "released": true,
     "reopen_reason": "",
-    "stage": "released",
-    "ticket": "KAN-56",
-    "updated_at": 1786062076.31358,
-    "updated_by": "devagent-prashant"
+    "updated_by": "devagent-prashant",
+    "updated_at": 1786062076.31358
   },
   "KAN-57": {
-    "branch": "fix/KAN-57-ci-1",
+    "ticket": "KAN-57",
     "cycle": 2,
+    "stage": "implementing",
+    "branch": "fix/KAN-57-ci-1",
+    "pr_number": null,
     "merged_prs": [
       23
     ],
-    "pr_number": null,
     "released": false,
     "reopen_reason": "Post-merge CI failure: CI run 31128083339",
-    "stage": "implementing",
-    "ticket": "KAN-57",
-    "updated_at": 1786062076.313941,
-    "updated_by": "devagent-prashant"
+    "updated_by": "devagent-prashant",
+    "updated_at": 1786062076.313941
   }
 }
