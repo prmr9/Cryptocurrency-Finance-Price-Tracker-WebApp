@@ -52,6 +52,15 @@ fi
 
 SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
 
+# Log level per environment. Deliberately a two-line shell conditional and not a
+# lookup into observability/connectors.json: that file is METADATA describing
+# where logs end up (for humans and DevAgent), and nothing at runtime reads it.
+# Keeping prod at info is also the cost control — debug multiplies CloudWatch
+# ingest volume.
+if [ "$ENVIRONMENT" = "prod" ]; then LOG_LEVEL="${LOG_LEVEL:-info}"; else LOG_LEVEL="${LOG_LEVEL:-debug}"; fi
+
+echo "==> [$ENVIRONMENT] Observability: log_level=$LOG_LEVEL -> /crypto-tracker/$ENVIRONMENT/backend"
+
 SSH_KEY_PATH="$(mktemp)"
 trap 'rm -f "$SSH_KEY_PATH"' EXIT
 echo "$EC2_SSH_KEY" > "$SSH_KEY_PATH"
@@ -83,7 +92,7 @@ rsync -avz -e "ssh ${SSH_OPTS[*]}" \
 ssh_run "sudo mv /tmp/crypto-tracker-backend.service /opt/crypto-tracker-backend.service.template && \
   sudo mv /tmp/provision-backend.sh /opt/provision-backend.sh && \
   sudo chmod +x /opt/provision-backend.sh && \
-  sudo env ENVIRONMENT=$ENVIRONMENT AWS_REGION=$AWS_REGION DB_SECRET_NAME=$DB_SECRET_NAME JWT_SECRET_NAME=$JWT_SECRET_NAME /opt/provision-backend.sh"
+  sudo env ENVIRONMENT=$ENVIRONMENT AWS_REGION=$AWS_REGION DB_SECRET_NAME=$DB_SECRET_NAME JWT_SECRET_NAME=$JWT_SECRET_NAME LOG_LEVEL=$LOG_LEVEL /opt/provision-backend.sh"
 
 echo "==> [$ENVIRONMENT] Shipping server/ to $RELEASE_DIR"
 ssh_run "mkdir -p $RELEASE_DIR"

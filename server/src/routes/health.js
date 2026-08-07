@@ -33,6 +33,9 @@ const fs = require('fs');
 const path = require('path');
 
 const { getPool } = require('../db/pool');
+const { logger } = require('../observability');
+
+const log = logger.child({ component: 'health' });
 
 // Upper bound on how long the whole DB probe may take before we declare 503.
 const HEALTH_TIMEOUT_MS = 2000;
@@ -95,8 +98,10 @@ async function healthHandler(_req, res) {
     await withTimeout(client.query('select 1'), HEALTH_TIMEOUT_MS, 'db query');
     return res.status(200).json({ status: 'ok', ...getReleaseIdentity() });
   } catch (err) {
-    // Log server-side for operators; NEVER leak error text to the client.
-    console.error('[health] DB dependency check failed:', err && err.message);
+    // Log server-side for operators; NEVER leak error text to the client. The
+    // 503 body stays exactly as it was — health.test.js pins its shape as a
+    // no-information-leak guarantee.
+    log.error('DB dependency check failed', { error: err });
     return res.status(503).json({ status: 'unhealthy' });
   } finally {
     if (client) client.release();
