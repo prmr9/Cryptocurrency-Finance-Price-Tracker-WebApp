@@ -638,7 +638,7 @@
       "Any process where the same agent (or a lightly-modified prompt of it) both performs the work and certifies its own success, rather than a separate, differently-scoped process doing the certification"
     ],
     "kind": "principle",
-    "weight": 1.5208749999999995,
+    "weight": 1.5,
     "times_applied": 3,
     "times_confirmed": 3,
     "safety_class": "guardrail",
@@ -836,7 +836,7 @@
       "monorepo"
     ],
     "kind": "reflection",
-    "weight": 3.0,
+    "weight": 2.7,
     "times_applied": 13,
     "times_confirmed": 12,
     "safety_class": "guardrail",
@@ -1581,7 +1581,7 @@
       "branch-freshness"
     ],
     "kind": "reflection",
-    "weight": 2.5875,
+    "weight": 2.25,
     "times_applied": 13,
     "times_confirmed": 10,
     "safety_class": "guardrail",
@@ -3242,7 +3242,7 @@
       "team-knowledge"
     ],
     "kind": "onboarding",
-    "weight": 2.07,
+    "weight": 1.8,
     "times_applied": 3,
     "times_confirmed": 4,
     "safety_class": "neutral",
