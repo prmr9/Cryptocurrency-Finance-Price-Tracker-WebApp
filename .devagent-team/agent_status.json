@@ -8,17 +8,17 @@
     "status": "",
     "summary": "",
     "capacity": 20.0,
-    "updated_at": 1786125597.785129
+    "updated_at": 1786125622.466229
   },
   "devagent-prashant": {
     "agent": "devagent-prashant",
     "account": "712020:ad3d4e51-4ea0-4043-8f1f-0e390e87f10b",
-    "ticket": "KAN-59",
-    "repo": "prmr9/Cryptocurrency-Finance-Price-Tracker-WebApp",
-    "phase": "phase1_ingestion",
-    "status": "pending_approval",
-    "summary": "[UI] Show each coin's rank movement arrow in the market table",
+    "ticket": "",
+    "repo": null,
+    "phase": "",
+    "status": "",
+    "summary": "",
     "capacity": 20.0,
-    "updated_at": 1786125597.275616
+    "updated_at": 1786125622.472762
   }
 }
