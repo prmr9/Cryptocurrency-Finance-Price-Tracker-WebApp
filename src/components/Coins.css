@@ -181,6 +181,44 @@ img {
     border: 0;
 }
 
+/* KAN-58 — 7-day trend sparkline beside the 24h change. FIXED width/height +
+   vertical-align so an absent or empty series reserves exactly the same box:
+   the row height never shifts between the pre-data and post-data frames (no
+   layout jump). Sits inline after the change value inside the existing 24h
+   cell — it is NOT a new .coin-row flex child, so the six columns don't move. */
+.coin-sparkline {
+    display: inline-block;
+    width: 56px;
+    height: 20px;
+    vertical-align: middle;
+    margin-left: 8px;
+}
+
+/* Empty placeholder shown when a coin has no drawable 7-day series. Inherits
+   the fixed .coin-sparkline box (inline-block width/height) so the space is held
+   open by CSS alone — it renders no text and so never disturbs the column. */
+.coin-sparkline--empty {
+    background: transparent;
+}
+
+/* Direction is carried by the line's SLOPE (non-colour cue); the stroke colour
+   reuses the existing 24h direction tokens as a redundant, not sole, signal.
+   trend-flat uses the neutral text colour to match a no-change week. */
+.trend-up {
+    stroke: var(--color-positive);
+    stroke-width: 1.5;
+}
+
+.trend-down {
+    stroke: var(--color-negative);
+    stroke-width: 1.5;
+}
+
+.trend-flat {
+    stroke: var(--color-text);
+    stroke-width: 1.5;
+}
+
 @media screen and (max-width: 720px) {
     .hide-mobile {
         display: none;
