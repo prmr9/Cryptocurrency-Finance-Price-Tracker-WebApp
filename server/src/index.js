@@ -18,24 +18,36 @@
 
 const { createApp } = require('./app');
 const { getJwtSecret } = require('./auth/config');
+const { logger, initObservability, installProcessHandlers, flush } = require('./observability');
 
 const PORT = process.env.PORT || 8080;
 
+const log = logger.child({ component: 'boot' });
+
 async function main() {
+  // Observability comes up FIRST — before the secret check, before the port.
+  // The fail-fast below is precisely the failure most worth having a structured,
+  // shipped log line for: a backend that refuses to start is invisible to every
+  // signal that depends on it being up, so its last words are the only evidence.
+  initObservability();
+  installProcessHandlers();
+
   // Fail fast: validate the signing key BEFORE we bind a port. Throws if the key
   // is missing or too short — there is no default/fallback.
   await getJwtSecret();
 
   const app = createApp();
   app.listen(PORT, () => {
-    console.log(`crypto-tracker backend listening on :${PORT}`);
+    log.info('backend listening', { port: Number(PORT) });
   });
 }
 
 if (require.main === module) {
   main().catch((err) => {
-    console.error('Fatal: backend failed to start:', err && err.message);
-    process.exit(1);
+    // flush() before exit, so the one record explaining why the process died is
+    // written before the runtime tears stdout down.
+    log.fatal('backend failed to start', { error: err });
+    flush().finally(() => process.exit(1));
   });
 }
 

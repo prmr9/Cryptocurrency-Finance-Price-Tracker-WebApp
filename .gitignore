@@ -25,6 +25,17 @@ yarn-error.log*
 # DevAgent internal control files & local infra/secret state — never commit
 .devagent-*
 .devagent-state/
+
+# DevAgent's local browser console hook. Carries a control token and its own
+# header says "never commit this file" — but nothing was enforcing that, so a
+# `git add -A` would have committed the token. See OBSERVABILITY.md §1: the
+# production path is the structured pipeline, not this local-dev shim.
+public/devagent-observability.js
+
+# Local operator docs. CLAUDE.md already describes these as local + gitignored;
+# both contain live infra identifiers and credential-adjacent detail.
+OPERATIONS.md
+DATABASE.local.md
 terraform.tfstate
 terraform.tfstate.*
 *.tfstate

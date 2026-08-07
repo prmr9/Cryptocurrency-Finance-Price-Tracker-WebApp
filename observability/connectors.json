@@ -1,0 +1,143 @@
+{
+  "$comment": [
+    "OBSERVABILITY CONNECTOR REGISTRY — METADATA ONLY.",
+    "",
+    "This file describes WHERE this service's logs end up, per environment, so that a",
+    "human or DevAgent can answer 'what is the active observability backend for prod?'",
+    "by reading one file instead of tracing shell scripts and Terraform.",
+    "",
+    "IT IS NOT A RUNTIME CONFIGURATION. Nothing reads it at runtime, at deploy time, or",
+    "at build time. The actual pipeline is: the backend writes JSON lines to stdout,",
+    "systemd appends them to backend.log, the CloudWatch agent tails that file. Editing",
+    "this file changes no behaviour — it is documentation with a schema. Changing where",
+    "logs actually go means editing infra/scripts/provision-backend.sh and",
+    "infra/observability.tf, and then updating this file to match.",
+    "",
+    "That separation is deliberate. An earlier draft had a registry that the deploy",
+    "script parsed to decide which exporters to build, which meant a documentation file",
+    "could break a deploy. Metadata should not be able to do that.",
+    "",
+    "EXTENSIBILITY: `destinations` is an array so a second backend (Grafana Loki, an",
+    "OTLP collector, anything) can be listed alongside CloudWatch with enabled:false, and",
+    "DevAgent can highlight the active one, without the application's logging",
+    "implementation changing at all. The app only ever writes JSON to stdout."
+  ],
+  "schema_version": 1,
+  "service": "crypto-tracker-backend",
+
+  "pipeline": {
+    "$comment": "The actual, implemented path. Nothing else is implemented.",
+    "stages": [
+      "application writes structured JSON (one object per line) to stdout",
+      "systemd StandardOutput=append: -> /var/log/crypto-tracker/backend.log",
+      "logrotate (copytruncate, 50M x 5) bounds the file on disk",
+      "CloudWatch agent tails the file",
+      "CloudWatch Logs (per-environment log group)",
+      "CloudWatch Logs Insights for querying"
+    ],
+    "application_knows_about_cloudwatch": false
+  },
+
+  "environments": {
+    "nonprod": {
+      "log_level": "debug",
+      "destinations": [
+        {
+          "id": "cloudwatch_logs",
+          "enabled": true,
+          "provider": "aws",
+          "service": "CloudWatch Logs",
+          "signal": "logs",
+          "log_group": "/crypto-tracker/nonprod/backend",
+          "log_stream": "{instance_id}/backend",
+          "region_source": "AWS_REGION on the instance",
+          "shipper": "amazon-cloudwatch-agent (tails /var/log/crypto-tracker/backend.log)",
+          "authentication": {
+            "method": "ec2-instance-role",
+            "role": "crypto-tracker-nonprod-app",
+            "credentials_stored": false,
+            "$comment": "No token, key, or secret exists anywhere in this path. The instance role grants logs:PutLogEvents on THIS environment's log group ARNs only (infra/observability.tf), so nonprod cannot write into prod's logs."
+          },
+          "retention_days": 14,
+          "cost": {
+            "tier": "aws-always-free",
+            "free_allowance": "5GB ingest + 5GB storage per month",
+            "estimated": "$0 at this service's volume",
+            "notes": "Retention is capped in Terraform rather than left at the CloudWatch default of never-expire, which is the usual cause of an unexpected bill. Logs Insights queries cost $0.005 per GB scanned."
+          }
+        },
+        {
+          "id": "nginx_access_logs",
+          "enabled": true,
+          "provider": "aws",
+          "service": "CloudWatch Logs",
+          "signal": "logs",
+          "log_group": "/crypto-tracker/nonprod/nginx",
+          "shipper": "amazon-cloudwatch-agent (tails /var/log/nginx/*.log)",
+          "authentication": { "method": "ec2-instance-role", "credentials_stored": false },
+          "retention_days": 14,
+          "$comment": "Edge logs. Plain text, not JSON — nginx's default combined format."
+        }
+      ]
+    },
+
+    "prod": {
+      "log_level": "info",
+      "$comment": "info, not debug: prod volume is the cost driver for CloudWatch ingest.",
+      "destinations": [
+        {
+          "id": "cloudwatch_logs",
+          "enabled": true,
+          "provider": "aws",
+          "service": "CloudWatch Logs",
+          "signal": "logs",
+          "log_group": "/crypto-tracker/prod/backend",
+          "log_stream": "{instance_id}/backend",
+          "region_source": "AWS_REGION on the instance",
+          "shipper": "amazon-cloudwatch-agent (tails /var/log/crypto-tracker/backend.log)",
+          "authentication": {
+            "method": "ec2-instance-role",
+            "role": "crypto-tracker-prod-app",
+            "credentials_stored": false,
+            "$comment": "Separate role from nonprod, scoped to prod's log group ARNs only."
+          },
+          "retention_days": 30,
+          "cost": {
+            "tier": "aws-always-free",
+            "free_allowance": "5GB ingest + 5GB storage per month",
+            "estimated": "$0 at this service's volume",
+            "notes": "Beyond the free tier: $0.50/GB ingested."
+          }
+        },
+        {
+          "id": "nginx_access_logs",
+          "enabled": true,
+          "provider": "aws",
+          "service": "CloudWatch Logs",
+          "signal": "logs",
+          "log_group": "/crypto-tracker/prod/nginx",
+          "shipper": "amazon-cloudwatch-agent (tails /var/log/nginx/*.log)",
+          "authentication": { "method": "ec2-instance-role", "credentials_stored": false },
+          "retention_days": 30
+        }
+      ]
+    }
+  },
+
+  "log_record_fields": {
+    "$comment": "The JSON fields on every backend record. These are what make a separate metrics system unnecessary — Logs Insights derives request rate, error counts and p99 latency from them. Queries are in OBSERVABILITY.md.",
+    "always": ["timestamp", "severity", "body", "service.name", "deployment.environment", "release_id", "git_sha", "deploy_id", "host.name"],
+    "per_request": ["trace_id", "span_id", "request_id", "http.method", "http.route", "http.status_code", "duration_ms"],
+    "severity_values": ["debug", "info", "warn", "error", "fatal"]
+  },
+
+  "not_implemented": {
+    "$comment": "Listed so nobody — human or agent — builds a dashboard against something that does not exist. These are FUTURE CAPABILITIES, not current ones.",
+    "metrics": "No /metrics endpoint, no CloudWatch custom metrics, no EMF. Use Logs Insights.",
+    "traces": "trace_id/span_id are stamped on log records, but NO spans are exported. There is no X-Ray or tracing backend.",
+    "dashboards": "None. No Grafana, no CloudWatch dashboards.",
+    "alarms": "None.",
+    "slos": "No SLOs, error budgets, deploy watch, or incident management.",
+    "frontend": "No browser telemetry."
+  }
+}

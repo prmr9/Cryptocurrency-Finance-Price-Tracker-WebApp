@@ -28,12 +28,21 @@ const { router: authRouter } = require('./routes/auth');
 const { router: portfoliosRouter } = require('./routes/portfolios');
 const { router: meRouter } = require('./routes/me');
 const { sweepDenylist, requireSession } = require('./auth/session');
+const { requestContext, accessLog, errorHandler } = require('./observability');
 
 // How often to prune expired in-memory revocations.
 const DENYLIST_SWEEP_INTERVAL_MS = 60 * 1000;
 
 function createApp() {
   const app = express();
+
+  // Observability first, and in this order. requestContext() establishes the
+  // AsyncLocalStorage scope that carries trace_id/request_id, so it must run
+  // before ANY other middleware — including express.json(), whose rejection of
+  // a malformed body is itself a log line that needs correlating. accessLog()
+  // follows it so the context it reads is already in place.
+  app.use(requestContext());
+  app.use(accessLog());
 
   app.use(express.json());
   app.use(cookieParser());
@@ -48,6 +57,12 @@ function createApp() {
   // middleware instance as /auth/me.
   app.use('/portfolios', requireSession, portfoliosRouter);
   app.use('/me', requireSession, meRouter);
+
+  // Terminal error handler — mounted LAST because express only routes to a
+  // 4-arity middleware once everything registered before it has passed. It
+  // replaces express's default handler, which prints an unstructured stack to
+  // stderr and can echo internals into the response body.
+  app.use(errorHandler());
 
   // C9 — keep the in-memory denylist bounded. unref() so this timer never keeps
   // the process (or a test run) alive on its own.

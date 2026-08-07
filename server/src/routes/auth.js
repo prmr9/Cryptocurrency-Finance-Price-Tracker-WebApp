@@ -11,6 +11,11 @@ const express = require('express');
 
 const { hashPassword, verifyPassword, validatePassword, DUMMY_HASH } = require('../auth/password');
 const { createUser, findUserByEmail, findUserById, UNIQUE_VIOLATION } = require('../repos/userRepo');
+const { logger } = require('../observability');
+
+// The '[auth]' string prefix these lines used to carry is now a queryable
+// `component` label instead of text to grep for.
+const log = logger.child({ component: 'auth' });
 const {
   issueSession,
   requireSession,
@@ -47,7 +52,7 @@ router.post('/signup', async (req, res) => {
     if (err && err.code === UNIQUE_VIOLATION) {
       return res.status(409).json({ error: 'email already registered' });
     }
-    console.error('[auth] signup failed:', err && err.message);
+    log.error('signup failed', { error: err });
     return res.status(500).json({ error: 'signup failed' });
   }
 });
@@ -77,7 +82,7 @@ router.post('/login', async (req, res) => {
     await issueSession(res, { userId: user.id });
     return res.status(200).json({ id: user.id, email: user.email });
   } catch (err) {
-    console.error('[auth] login failed:', err && err.message);
+    log.error('login failed', { error: err });
     return res.status(500).json({ error: 'login failed' });
   }
 });

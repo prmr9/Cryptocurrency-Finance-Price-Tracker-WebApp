@@ -6,14 +6,15 @@
   "engines": {
     "node": ">=18"
   },
+  "$comment:test-env": "LOG_SINK=none selects the no-op telemetry sink (server/src/observability/sinks.js). Without it every logged line lands on stdout mid-run and buries the test reporter's own output. Tests that need to assert on log records install a capturing sink directly via setSinksForTest().",
   "scripts": {
     "start": "node src/index.js",
     "migrate": "node migrate.js",
     "migrate:down": "node migrate.js down",
-    "test": "node --test test/*.test.js && jest",
-    "test:node": "node --test test/*.test.js",
-    "test:jest": "jest",
-    "test:integration": "node --test test/schema-integration.test.js"
+    "test": "LOG_SINK=none node --test test/*.test.js && LOG_SINK=none jest",
+    "test:node": "LOG_SINK=none node --test test/*.test.js",
+    "test:jest": "LOG_SINK=none jest",
+    "test:integration": "LOG_SINK=none node --test test/schema-integration.test.js"
   },
   "dependencies": {
     "@aws-sdk/client-secrets-manager": "^3.552.0",

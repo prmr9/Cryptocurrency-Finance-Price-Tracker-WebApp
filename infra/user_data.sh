@@ -80,6 +80,11 @@ export AWS_REGION="${aws_region}"
 export DB_SECRET_NAME="${db_secret_name}"
 export JWT_SECRET_NAME="${jwt_secret_name}"
 
+# Observability: a safe launch-time floor only. deploy-backend-ec2.sh re-runs
+# provision-backend.sh on EVERY deploy and sets the real per-environment value,
+# so this just has to be sane for the window between boot and first deploy.
+export LOG_LEVEL="info"
+
 cat > /opt/crypto-tracker-backend.service.template <<'CRYPTO_TRACKER_BACKEND_UNIT_TEMPLATE'
 ${backend_unit_template}
 CRYPTO_TRACKER_BACKEND_UNIT_TEMPLATE

@@ -27,6 +27,11 @@ const jwt = require('jsonwebtoken');
 
 const { getJwtSecret } = require('./config');
 const { getPool } = require('../db/pool');
+const { logger } = require('../observability');
+
+// The '[auth]' string prefix these lines used to carry is now a queryable
+// `component` label instead of text to grep for.
+const log = logger.child({ component: 'auth' });
 
 const COOKIE_NAME = 'session';
 // Session lifetime. Kept modest; refresh/rotation is a later concern.
@@ -151,7 +156,7 @@ async function requireSession(req, res, next) {
   } catch (err) {
     // Fail CLOSED: if the denylist cannot be consulted we cannot prove the token
     // is still valid, so we reject rather than risk honoring a revoked session.
-    console.error('[auth] denylist check failed:', err && err.message);
+    log.error('denylist check failed', { error: err });
     return res.status(401).json({ error: 'unauthenticated' });
   }
 

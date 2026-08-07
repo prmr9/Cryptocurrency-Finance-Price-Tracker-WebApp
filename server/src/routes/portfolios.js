@@ -14,6 +14,11 @@ const {
   upsertPortfolioWithVersion,
 } = require('../db/portfolios');
 const { validatePortfolioName, validateHoldings, ValidationError } = require('../validation/holdings');
+const { logger } = require('../observability');
+
+// The '[portfolios]' string prefix these lines used to carry is now a queryable
+// `component` label instead of text to grep for.
+const log = logger.child({ component: 'portfolios' });
 
 const router = express.Router();
 
@@ -25,7 +30,7 @@ router.get('/', async (req, res) => {
     const portfolios = await getPortfoliosByUserId(req.user.id);
     return res.status(200).json({ portfolios });
   } catch (err) {
-    console.error('[portfolios] get failed:', err && err.message);
+    log.error('get failed', { error: err });
     return res.status(500).json({ error: 'failed to load portfolios' });
   }
 });
@@ -67,7 +72,7 @@ router.put('/', async (req, res) => {
 
     return res.status(200).json(rows[0]);
   } catch (err) {
-    console.error('[portfolios] put failed:', err && err.message);
+    log.error('put failed', { error: err });
     return res.status(500).json({ error: 'failed to save portfolio' });
   }
 });

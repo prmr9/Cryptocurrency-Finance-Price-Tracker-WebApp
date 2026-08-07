@@ -17,6 +17,11 @@ const express = require('express');
 const { mergeHoldings } = require('../domain/holdings');
 const { validateHoldings, ValidationError, ALLOWED_PORTFOLIO_NAMES } = require('../validation/holdings');
 const { getPortfolioByUserAndName, upsertPortfolioWithVersion } = require('../db/portfolios');
+const { logger } = require('../observability');
+
+// The '[me]' string prefix these lines used to carry is now a queryable
+// `component` label instead of text to grep for.
+const log = logger.child({ component: 'me' });
 
 const router = express.Router();
 
@@ -59,7 +64,7 @@ router.post('/import', async (req, res) => {
 
     return res.status(200).json({ imported });
   } catch (err) {
-    console.error('[me] import failed:', err && err.message);
+    log.error('import failed', { error: err });
     return res.status(500).json({ error: 'import failed' });
   }
 });

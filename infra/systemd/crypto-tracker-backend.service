@@ -16,6 +16,55 @@ Environment=PORT=8080
 Environment=AWS_REGION=__AWS_REGION__
 Environment=DB_SECRET_NAME=__DB_SECRET_NAME__
 Environment=JWT_SECRET_NAME=__JWT_SECRET_NAME__
+
+# Log level for the structured logger. Rendered per environment by
+# provision-backend.sh: debug in nonprod, info in prod. Keeping prod at info is
+# also the cost control — debug multiplies CloudWatch ingest volume.
+Environment=LOG_LEVEL=__LOG_LEVEL__
+
+# ---------------------------------------------------------------------------
+# Log destination.
+#
+# The process writes one JSON object per line to stdout. Sending that to a FILE
+# rather than the journal is deliberate and is the whole reason this works: the
+# CloudWatch agent collects log FILES, and cannot read the systemd journal. With
+# the default (journal) the agent has nothing to tail and backend logs never
+# leave the box.
+#
+# THE DIRECTORY MUST ALREADY EXIST. provision-backend.sh creates
+# /var/log/crypto-tracker (owned by this unit's User) before the service is
+# started, and deliberately does NOT rely on systemd's LogsDirectory= for it:
+# systemd sets up standard output BEFORE it creates LogsDirectory=, so with only
+# LogsDirectory= the unit fails at spawn with
+#
+#     Failed to set up standard output: No such file or directory
+#     Main process exited, code=exited, status=209/STDOUT
+#
+# and then restart-loops. That failure is silent in every static check — it only
+# appears when the unit actually starts — so the directory creation lives in the
+# provisioning script where it runs first, and is pinned by a test.
+#
+# Rotation is handled by logrotate with `copytruncate` — see provision-backend.sh
+# for why that specific mode is required with append:.
+# ---------------------------------------------------------------------------
+StandardOutput=append:/var/log/crypto-tracker/backend.log
+
+# stderr goes to the JOURNAL, not to backend.log, so that file stays 100% valid
+# JSON — one parseable object per line, with nothing else in it.
+#
+# The Node runtime writes plain text to stderr that this application does not
+# control and cannot format: deprecation notices, and the AWS SDK v3
+# NodeVersionSupportWarning. Merging those into backend.log put unparseable
+# lines into CloudWatch (19 of 33 on the first real deploy). They are still
+# captured — `journalctl -u crypto-tracker-backend` — just not mixed into the
+# structured stream.
+#
+# Crash information is NOT lost by this: installProcessHandlers() catches
+# uncaughtException and unhandledRejection and logs them as structured JSON on
+# stdout, so they reach CloudWatch. Only Node's own unstructured duplicate stays
+# local.
+StandardError=journal
+
 Restart=on-failure
 RestartSec=5
 
