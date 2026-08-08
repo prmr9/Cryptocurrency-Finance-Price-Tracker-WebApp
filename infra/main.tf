@@ -99,14 +99,24 @@ resource "aws_instance" "app" {
   # deploy-backend-ec2.sh's push-to-a-running-instance path always run the
   # exact same bytes — there is no second, independently-written copy to
   # drift out of sync.
-  user_data = templatefile("${path.module}/user_data.sh", {
+  # base64gzip, not plain user_data: EC2 caps user data at 16384 bytes, and the
+  # rendered template (user_data.sh + the inlined provision-backend.sh + the
+  # inlined systemd unit) crossed that when the log-shipping block was added —
+  # 18766 bytes, failing EVERY non-targeted `terraform plan` with
+  #
+  #     expected length of user_data to be in the range (0 - 16384)
+  #
+  # cloud-init detects gzip-compressed user data and decompresses it before
+  # running, so this is transparent at boot. Compressed it is ~6.5KB, which
+  # leaves real headroom rather than sitting just under the line.
+  user_data_base64 = base64gzip(templatefile("${path.module}/user_data.sh", {
     environment              = each.key
     aws_region               = var.aws_region
     db_secret_name           = aws_secretsmanager_secret.db[each.key].name
     jwt_secret_name          = aws_secretsmanager_secret.jwt[each.key].name
     provision_backend_script = file("${path.module}/scripts/provision-backend.sh")
     backend_unit_template    = file("${path.module}/systemd/crypto-tracker-backend.service")
-  })
+  }))
 
   # These are long-lived, rsync-deployed hosts, not cattle: replacing one wipes
   # /var/www/app (the live site) and the on-host release history under
@@ -121,7 +131,7 @@ resource "aws_instance" "app" {
   # create), and a deliberate image roll is still available via
   # `terraform apply -replace='aws_instance.app["nonprod"]'`.
   lifecycle {
-    ignore_changes = [ami, user_data]
+    ignore_changes = [ami, user_data, user_data_base64]
   }
 
   tags = {
