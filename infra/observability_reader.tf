@@ -80,25 +80,50 @@ data "aws_iam_policy_document" "devagent_observability_read" {
       "logs:FilterLogEvents",
       "logs:GetLogEvents",
       "logs:DescribeLogStreams",
-      "logs:DescribeLogGroups",
     ]
     resources = [
       "arn:aws:logs:${var.aws_region}:${data.aws_caller_identity.current.account_id}:log-group:/${var.project_name}/*",
     ]
   }
 
-  # GetQueryResults and StopQuery do NOT support resource-level permissions --
-  # a Logs Insights query id is not addressable by ARN, so AWS requires "*"
-  # here. This is an AWS API constraint, not a shortcut: the query itself could
-  # only have been started against the groups allowed above, so results are
-  # still confined to this project's logs.
+  # These actions do NOT support resource-level permissions and AWS requires "*".
+  # That is an API constraint, not a shortcut, and it is worth being precise
+  # about what it does and does not grant:
+  #
+  #   logs:DescribeLogGroups  -- the call carries no log group, so a scoped ARN
+  #     can never match it. This lets the role LIST log group names across the
+  #     account. It does NOT let it read any group's CONTENTS: reading is
+  #     governed by the statement above, which is pinned to /crypto-tracker/*.
+  #     Names only, and that is the minimum DevAgent needs to resolve the two
+  #     groups from observability/connectors.json.
+  #
+  #   logs:GetQueryResults / StopQuery / DescribeQueries -- a Logs Insights
+  #     query id is not addressable by ARN. Results stay confined to this
+  #     project's logs anyway, because the query could only have been STARTED
+  #     against the groups allowed above.
+  #
+  #   cloudwatch:Describe*/Get*/List* -- DevAgent's connector probes for alarms
+  #     and metrics during its handshake, and a denial there fails the whole
+  #     connection rather than degrading. This service publishes NO metrics and
+  #     defines NO alarms (see observability/connectors.json -> not_implemented),
+  #     so these calls return empty. Granting read on nothing costs nothing and
+  #     keeps the connector from erroring on a capability we chose not to build.
+  #
+  # Every action here is read-only. None can write, delete, or reach any service
+  # other than CloudWatch.
   statement {
-    sid    = "ReadInsightsResults"
+    sid    = "ReadAccountWideMetadata"
     effect = "Allow"
     actions = [
+      "logs:DescribeLogGroups",
       "logs:GetQueryResults",
       "logs:StopQuery",
       "logs:DescribeQueries",
+      "cloudwatch:DescribeAlarms",
+      "cloudwatch:DescribeAlarmHistory",
+      "cloudwatch:ListMetrics",
+      "cloudwatch:GetMetricData",
+      "cloudwatch:GetMetricStatistics",
     ]
     resources = ["*"]
   }
