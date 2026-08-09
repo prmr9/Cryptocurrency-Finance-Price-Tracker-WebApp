@@ -7,7 +7,7 @@
 // duplicate rows, the unique index actually rejecting a collision) is proven
 // separately by an integration test against real PostgreSQL.
 
-const migration = require('./1730000000000_add-portfolios-version-and-unique-name');
+const migration = require('../../migrations/1730000000000_add-portfolios-version-and-unique-name');
 
 function makeRecordingPgm() {
   const calls = [];

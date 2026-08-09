@@ -10,7 +10,7 @@
 // through methods on the injected `pgm` object, so a recording proxy over
 // `pgm` catches any future edit that smuggles real work into the baseline.
 
-const migration = require('./1700000000000_bootstrap-migration-tracking');
+const migration = require('../../migrations/1700000000000_bootstrap-migration-tracking');
 
 // A `pgm` stand-in that records every property access / method call. Anything
 // the migration does to the database has to reach through here.

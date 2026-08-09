@@ -32,7 +32,7 @@
   "jest": {
     "testEnvironment": "node",
     "testMatch": [
-      "<rootDir>/migrations/**/*.test.js"
+      "<rootDir>/test/migrations/**/*.test.js"
     ]
   }
 }

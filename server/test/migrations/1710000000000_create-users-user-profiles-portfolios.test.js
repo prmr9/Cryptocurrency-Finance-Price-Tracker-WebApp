@@ -14,7 +14,7 @@
 // test. The real-database behaviour (constraints actually rejecting) is proven
 // separately by server/test/schema-integration.test.js.
 
-const migration = require('./1710000000000_create-users-user-profiles-portfolios');
+const migration = require('../../migrations/1710000000000_create-users-user-profiles-portfolios');
 
 // A `pgm` stand-in that records every method call as { method, args }. Method
 // calls return a tagged literal wrapper so that results of pgm.func()/pgm.sql()
