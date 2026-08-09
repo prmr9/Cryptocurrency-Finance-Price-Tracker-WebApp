@@ -8,17 +8,17 @@
     "status": "",
     "summary": "",
     "capacity": 20.0,
-    "updated_at": 1786294648.4111419
+    "updated_at": 1786294697.098999
   },
   "devagent-prashant": {
     "agent": "devagent-prashant",
     "account": "712020:ad3d4e51-4ea0-4043-8f1f-0e390e87f10b",
-    "ticket": "",
+    "ticket": "KAN-60",
     "repo": null,
-    "phase": "",
-    "status": "",
-    "summary": "",
+    "phase": "phase1_ingestion",
+    "status": "new",
+    "summary": "[tech-debt] post-merge CI fragility in prmr9/Cryptocurrency-Finance-Price-Tracker-WebApp",
     "capacity": 20.0,
-    "updated_at": 1786294648.395896
+    "updated_at": 1786294657.3245718
   }
 }
