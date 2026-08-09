@@ -8,7 +8,7 @@
     "status": "",
     "summary": "",
     "capacity": 20.0,
-    "updated_at": 1786303064.875479
+    "updated_at": 1786303138.3765602
   },
   "devagent-prashant": {
     "agent": "devagent-prashant",
@@ -19,6 +19,6 @@
     "status": "approved",
     "summary": "[tech-debt] post-merge CI fragility in prmr9/Cryptocurrency-Finance-Price-Tracker-WebApp",
     "capacity": 20.0,
-    "updated_at": 1786303063.646838
+    "updated_at": 1786303123.660355
   }
 }
