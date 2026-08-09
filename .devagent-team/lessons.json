@@ -836,7 +836,7 @@
       "monorepo"
     ],
     "kind": "reflection",
-    "weight": 2.25,
+    "weight": 2.769230769230769,
     "times_applied": 16,
     "times_confirmed": 12,
     "safety_class": "guardrail",
@@ -2608,7 +2608,7 @@
       "ci"
     ],
     "kind": "reflection",
-    "weight": 2.0625,
+    "weight": 2.5384615384615383,
     "times_applied": 16,
     "times_confirmed": 11,
     "safety_class": "guardrail",
@@ -3782,7 +3782,7 @@
       "Triaging or estimating remediation work from a scanner's summary count without cross-referencing which findings' file/line locations fall inside the actual diff"
     ],
     "kind": "principle",
-    "weight": 2.0,
+    "weight": 3.0,
     "times_applied": 9,
     "times_confirmed": 6,
     "safety_class": "guardrail",
