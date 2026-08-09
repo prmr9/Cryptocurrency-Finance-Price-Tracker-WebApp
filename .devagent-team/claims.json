@@ -1,1 +1,13 @@
-[]
+[
+  {
+    "ticket": "KAN-60",
+    "agent": "devagent-prashant",
+    "repo": "prmr9/Cryptocurrency-Finance-Price-Tracker-WebApp",
+    "files": [
+      "DEPLOYMENT.md",
+      "server/test/kan60-ci-gate.test.js"
+    ],
+    "created": 1786298551.362257,
+    "expires": 1786305751.362257
+  }
+]
