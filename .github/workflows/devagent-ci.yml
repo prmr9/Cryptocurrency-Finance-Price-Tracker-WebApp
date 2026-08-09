@@ -31,11 +31,13 @@ jobs:
       # The production build is what actually ships, and it is stricter than
       # the tests. This CI build step sets CI=true explicitly, so every eslint
       # warning becomes a hard error here — exactly as DevAgent's build gate,
-      # which DOES build, treats it. The package.json build script stays lenient
-      # on purpose (deploys must not fail on a mere warning); only this pre-merge
-      # check is strict. Without this parity CI went green on a tree the merge
-      # gate then blocked for a fault CI had already passed.
-      - run: CI=true npx react-scripts build
+      # which DOES build, treats it. The package.json build script is left
+      # untouched and stays lenient on purpose (deploys must not fail on a mere
+      # warning); only this pre-merge check is strict, and it does NOT call that
+      # script — it invokes react-scripts directly with CI=true. Without this
+      # parity CI went green on a tree the merge gate then blocked.
+      - name: "Frontend production build (strict CI=true — eslint warnings fail, matching the merge gate)"
+        run: CI=true npx react-scripts build
   node-server:
     runs-on: ubuntu-latest
     defaults:
