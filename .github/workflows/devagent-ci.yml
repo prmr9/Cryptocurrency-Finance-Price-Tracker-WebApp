@@ -28,11 +28,11 @@ jobs:
           node-version: 22
           cache: npm
       - run: npm ci && npm test
-      # This CI build step sets CI=true explicitly so react-scripts promotes eslint/webpack
-      # warnings to hard errors — the same strict mode GitHub Actions exports. A
-      # new warning appearing pre-merge fails the build here rather than surfacing
-      # post-merge as "CI failed after merge" (KAN-57). Enforcing warnings pre-merge
-      # is the post-merge stability fix KAN-60 requires.
+      # This build step sets CI=true explicitly so react-scripts promotes eslint/webpack
+      # warnings to hard errors — the same strict mode GitHub Actions exports for the
+      # post-merge main build. Catching a new warning (an unused import,
+      # react-hooks/exhaustive-deps, etc.) here pre-merge is what stops a green PR turning
+      # main's build red post-merge ("CI failed after merge", KAN-57), the fix KAN-60 requires.
       - run: CI=true npx react-scripts build
   node-server:
     runs-on: ubuntu-latest
