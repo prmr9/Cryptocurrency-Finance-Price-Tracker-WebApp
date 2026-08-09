@@ -1,8 +1,23 @@
 # Bootstrapped by DevAgent: minimal test CI for the detected stacks.
+#
+# This pre-merge gate is kept at PARITY with DevAgent's build gate (the check
+# that actually blocks merges): a strict frontend build here plus the full
+# server suite. KAN-60 closed the gap that let faults pass pre-merge and only
+# surface post-merge as "CI failed after merge" (KAN-57).
 name: CI
 on:
-  push:
+  # PRs validate against the merge ref; main is re-validated post-merge.
+  # No unfiltered all-branches push trigger — that only doubled feature-branch
+  # runs the pull_request event already covers.
   pull_request:
+  push:
+    branches: [main]
+concurrency:
+  # Cancel superseded runs on the same PR branch, but never cancel a post-merge
+  # run on main mid-flight — a cancelled main run would leave the gate reporting
+  # a stale or absent result.
+  group: devagent-ci-${{ github.ref }}
+  cancel-in-progress: ${{ github.event_name == 'pull_request' }}
 jobs:
   node-root:
     runs-on: ubuntu-latest
@@ -11,10 +26,33 @@ jobs:
       - uses: actions/setup-node@v4
         with:
           node-version: 22
+          cache: npm
       - run: npm ci && npm test
       # The production build is what actually ships, and it is stricter than
-      # the tests: react-scripts runs with CI=true here, so every eslint
-      # warning is an error. Without this step CI went green on a tree that
-      # could not compile, while DevAgent's build gate — which DOES build —
-      # blocked branches for a fault CI had already passed.
-      - run: npm run build
+      # the tests. This CI build step sets CI=true explicitly, so every eslint
+      # warning becomes a hard error here — exactly as DevAgent's build gate,
+      # which DOES build, treats it. The package.json build script stays lenient
+      # on purpose (deploys must not fail on a mere warning); only this pre-merge
+      # check is strict. Without this parity CI went green on a tree the merge
+      # gate then blocked for a fault CI had already passed.
+      - run: CI=true npx react-scripts build
+  node-server:
+    runs-on: ubuntu-latest
+    defaults:
+      run:
+        working-directory: server
+    # LOG_SINK=none selects the no-op telemetry sink so logged lines do not bury
+    # the test reporter output (the server test script also sets this inline).
+    env:
+      LOG_SINK: none
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          cache: npm
+          cache-dependency-path: server/package-lock.json
+      # No services:/Docker container — the integration tests self-skip when
+      # testcontainers/PG_TEST_URL are absent (see schema-integration.test.js).
+      - run: npm ci
+      - run: npm test
