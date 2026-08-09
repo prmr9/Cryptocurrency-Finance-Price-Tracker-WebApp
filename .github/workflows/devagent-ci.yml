@@ -32,8 +32,7 @@ jobs:
       # build on any eslint warning -- the same strictness as DevAgent's build
       # gate, which DOES build. Without this parity CI passed a tree the merge
       # gate then blocked (KAN-57).
-      - name: Frontend production build (strict, CI=true)
-        run: CI=true npx react-scripts build
+      - run: CI=true npx react-scripts build
   node-server:
     runs-on: ubuntu-latest
     defaults:
