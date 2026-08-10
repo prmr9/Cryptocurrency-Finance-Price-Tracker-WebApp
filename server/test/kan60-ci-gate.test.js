@@ -95,14 +95,8 @@ test('node-server setup-node pins node 22 + server cache path and uses no Docker
     /cache-dependency-path:\s*['"]?server\/package-lock\.json/,
     'setup-node must set cache-dependency-path: server/package-lock.json'
   );
-  // Strip comments (full-line and trailing) so explanatory prose that mentions
-  // these YAML keys cannot be mistaken for a real map — only actual keys count.
-  const code = block
-    .split('\n')
-    .map((line) => line.replace(/#.*$/, ''))
-    .join('\n');
-  assert.ok(!/\bservices:/.test(code), 'node-server must not declare a services: map');
-  assert.ok(!/\bcontainer:/.test(code), 'node-server must not run inside a Docker container');
+  assert.ok(!/\bservices:/.test(block), 'node-server must not declare a services: map');
+  assert.ok(!/\bcontainer:/.test(block), 'node-server must not run inside a Docker container');
 });
 
 test('node-root frontend build runs with CI=true and never uses npm run build or CI=false', () => {
