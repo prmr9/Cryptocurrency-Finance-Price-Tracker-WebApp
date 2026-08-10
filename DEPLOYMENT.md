@@ -101,8 +101,10 @@ terraform destroy
 ## CI required checks
 
 The pre-merge CI workflow (`.github/workflows/devagent-ci.yml`) now matches the
-gate that actually blocks a merge, but two settings finish the job and live in
-repo admin rather than in code:
+gate that actually blocks a merge (KAN-60: a strict `CI=true` frontend build so
+eslint warnings fail here, plus a `node-server` job that runs the full server
+suite), but two settings finish the job and live in repo admin rather than in
+code:
 
 - Mark **both** `node-root` and `node-server` as required status checks in the
   branch-protection rule for `main`. Until they are required, a red run only

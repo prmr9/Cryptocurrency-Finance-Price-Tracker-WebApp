@@ -27,14 +27,16 @@ jobs:
         with:
           node-version: 22
           cache: npm
-      - run: npm ci && npm test
+      - name: Install deps and run the frontend test suite
+        run: npm ci && npm test
       # The production build is what actually ships and is stricter than the
       # tests. This CI build step sets CI=true explicitly, so react-scripts
       # treats every eslint warning as a hard error here — exactly as DevAgent's
       # build gate, which DOES build, does. The package.json build script is
       # left untouched (it stays lenient for deploys); this step does not call
       # it — it invokes react-scripts directly with CI=true.
-      - run: CI=true npx react-scripts build
+      - name: Frontend production build (strict — CI=true fails on eslint warnings)
+        run: CI=true npx react-scripts build
   node-server:
     runs-on: ubuntu-latest
     defaults:
@@ -53,5 +55,7 @@ jobs:
           cache-dependency-path: server/package-lock.json
       # No service containers or Docker — the integration tests self-skip when
       # testcontainers/PG_TEST_URL are absent (see schema-integration.test.js).
-      - run: npm ci
-      - run: npm test
+      - name: Install server deps
+        run: npm ci
+      - name: Run the server suite
+        run: npm test
