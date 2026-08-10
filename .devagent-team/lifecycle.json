@@ -69,5 +69,17 @@
     "reopen_reason": "",
     "updated_by": "devagent-aman",
     "updated_at": 1786129508.610898
+  },
+  "KAN-60": {
+    "branch": "bugfix/KAN-60",
+    "cycle": 1,
+    "merged_prs": [],
+    "pr_number": 31,
+    "released": false,
+    "reopen_reason": "",
+    "stage": "in_review",
+    "ticket": "KAN-60",
+    "updated_at": 1786348827.936316,
+    "updated_by": "devagent-prashant"
   }
 }
