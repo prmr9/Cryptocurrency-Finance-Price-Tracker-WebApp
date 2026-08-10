@@ -97,3 +97,20 @@ terraform destroy
   `COOKIE_SECURE=true`) is set, so it only ships over that HTTPS front.
 - Later: swap GitHub Actions for Jenkins — the Terraform and nginx setup stay
   identical; only the CI job that runs `npm run build` + rsync changes.
+
+## CI required checks
+
+The pre-merge CI workflow (`.github/workflows/devagent-ci.yml`) now matches the
+gate that actually blocks a merge, but two settings finish the job and live in
+repo admin rather than in code:
+
+- Mark **both** `node-root` and `node-server` as required status checks in the
+  branch-protection rule for `main`. Until they are required, a red run only
+  reports — it does not block.
+- Enable **Require branches to be up to date before merging**. Without it a PR
+  can be green against a stale base and still break `main` on merge, which is
+  the failure KAN-57 recorded.
+
+Both CI jobs run unconditionally — there is no path filter and no `if:` that
+skips one. That is deliberate: a required check that gets skipped is reported as
+neutral, and a neutral required check blocks the merge with nothing to re-run.
