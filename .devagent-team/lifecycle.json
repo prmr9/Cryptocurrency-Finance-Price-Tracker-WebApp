@@ -71,15 +71,15 @@
     "updated_at": 1786129508.610898
   },
   "KAN-60": {
-    "branch": "bugfix/KAN-60",
+    "ticket": "KAN-60",
     "cycle": 1,
-    "merged_prs": [],
+    "stage": "in_review",
+    "branch": "bugfix/KAN-60",
     "pr_number": 31,
+    "merged_prs": [],
     "released": false,
     "reopen_reason": "",
-    "stage": "in_review",
-    "ticket": "KAN-60",
-    "updated_at": 1786348827.936316,
-    "updated_by": "devagent-prashant"
+    "updated_by": "devagent-prashant",
+    "updated_at": 1786348827.936316
   }
 }
