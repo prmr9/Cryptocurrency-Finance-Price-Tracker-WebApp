@@ -1,8 +1,23 @@
 # Bootstrapped by DevAgent: minimal test CI for the detected stacks.
+#
+# Kept at PARITY with DevAgent's build gate (the check that actually blocks
+# merges): a strict frontend build here plus the full server suite. KAN-60
+# closed the gap that let faults pass pre-merge and only surface post-merge as
+# "CI failed after merge" (KAN-57).
 name: CI
 on:
-  push:
+  # PRs are validated against the merge ref; main is re-validated post-merge.
+  # No unfiltered all-branches push trigger — the pull_request event already
+  # covers feature branches, so that only doubled runs.
   pull_request:
+  push:
+    branches: [main]
+concurrency:
+  # Cancel superseded runs on the same PR branch, but never cancel a post-merge
+  # run on main mid-flight — a cancelled main run would leave the gate reporting
+  # a stale or absent result.
+  group: devagent-ci-${{ github.ref }}
+  cancel-in-progress: ${{ github.event_name == 'pull_request' }}
 jobs:
   node-root:
     runs-on: ubuntu-latest
@@ -11,10 +26,36 @@ jobs:
       - uses: actions/setup-node@v4
         with:
           node-version: 22
-      - run: npm ci && npm test
-      # The production build is what actually ships, and it is stricter than
-      # the tests: react-scripts runs with CI=true here, so every eslint
-      # warning is an error. Without this step CI went green on a tree that
-      # could not compile, while DevAgent's build gate — which DOES build —
-      # blocked branches for a fault CI had already passed.
-      - run: npm run build
+          cache: npm
+      - name: Install deps and run the frontend test suite
+        run: npm ci && npm test
+      # The production build is what actually ships and is stricter than the
+      # tests. This CI build step sets CI=true explicitly, so react-scripts
+      # treats every eslint warning as a hard error here — exactly as DevAgent's
+      # build gate, which DOES build, does. The package.json build script is
+      # left untouched (it stays lenient for deploys); this step does not call
+      # it — it invokes react-scripts directly with CI=true.
+      - name: Frontend production build (strict — CI=true fails on eslint warnings)
+        run: CI=true npx react-scripts build
+  node-server:
+    runs-on: ubuntu-latest
+    defaults:
+      run:
+        working-directory: server
+    # LOG_SINK=none selects the no-op telemetry sink so logged lines do not bury
+    # the test reporter output (the server test script also sets this inline).
+    env:
+      LOG_SINK: none
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          cache: npm
+          cache-dependency-path: server/package-lock.json
+      # No service containers or Docker — the integration tests self-skip when
+      # testcontainers/PG_TEST_URL are absent (see schema-integration.test.js).
+      - name: Install server deps
+        run: npm ci
+      - name: Run the server suite
+        run: npm test
