@@ -987,7 +987,7 @@
       "monorepo"
     ],
     "kind": "reflection",
-    "weight": 1.7249999999999999,
+    "weight": 2.1176470588235294,
     "times_applied": 24,
     "times_confirmed": 13,
     "safety_class": "guardrail",
@@ -3214,7 +3214,7 @@
       "ci"
     ],
     "kind": "reflection",
-    "weight": 1.7249999999999999,
+    "weight": 1.9411764705882353,
     "times_applied": 24,
     "times_confirmed": 12,
     "safety_class": "guardrail",
@@ -3667,7 +3667,7 @@
       "baseline-debt"
     ],
     "kind": "reflection",
-    "weight": 1.7249999999999999,
+    "weight": 1.5,
     "times_applied": 19,
     "times_confirmed": 5,
     "safety_class": "guardrail",
@@ -4058,7 +4058,7 @@
       "Tests that could pass vacuously \u2014 skipped/mocked assertions, asserting on the wrong element, or not actually exercising the changed code path \u2014 where 'green' is necessary but not sufficient"
     ],
     "kind": "principle",
-    "weight": 1.7249999999999999,
+    "weight": 1.5,
     "times_applied": 29,
     "times_confirmed": 8,
     "safety_class": "guardrail",
@@ -4693,7 +4693,7 @@
       "Triaging or estimating remediation work from a scanner's summary count without cross-referencing which findings' file/line locations fall inside the actual diff"
     ],
     "kind": "principle",
-    "weight": 1.7249999999999999,
+    "weight": 1.8,
     "times_applied": 17,
     "times_confirmed": 7,
     "safety_class": "guardrail",
