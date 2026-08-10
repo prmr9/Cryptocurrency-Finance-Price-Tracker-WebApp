@@ -1,14 +1,14 @@
 # Bootstrapped by DevAgent: minimal test CI for the detected stacks.
 #
-# This pre-merge gate is kept at PARITY with DevAgent's build gate (the check
-# that actually blocks merges): a strict frontend build here plus the full
-# server suite. KAN-60 closed the gap that let faults pass pre-merge and only
-# surface post-merge as "CI failed after merge" (KAN-57).
+# Kept at PARITY with DevAgent's build gate (the check that actually blocks
+# merges): a strict frontend build here plus the full server suite. KAN-60
+# closed the gap that let faults pass pre-merge and only surface post-merge as
+# "CI failed after merge" (KAN-57).
 name: CI
 on:
-  # PRs validate against the merge ref; main is re-validated post-merge.
-  # No unfiltered all-branches push trigger — that only doubled feature-branch
-  # runs the pull_request event already covers.
+  # PRs are validated against the merge ref; main is re-validated post-merge.
+  # No unfiltered all-branches push trigger — the pull_request event already
+  # covers feature branches, so that only doubled runs.
   pull_request:
   push:
     branches: [main]
@@ -28,12 +28,12 @@ jobs:
           node-version: 22
           cache: npm
       - run: npm ci && npm test
-      # GitHub Actions exports CI=true for every step, and under CI=true react-scripts
-      # promotes eslint/webpack warnings (an unused import, react-hooks/exhaustive-deps,
-      # etc.) to hard errors. KAN-60 keeps this pre-merge build CI-strict so a stray
-      # warning introduced by a merge fails here instead of surfacing post-merge as
-      # "CI failed after merge" (KAN-57) — so this step sets CI=true explicitly rather
-      # than relying on the runner default.
+      # The production build is what actually ships and is stricter than the
+      # tests. This CI build step sets CI=true explicitly, so react-scripts
+      # treats every eslint warning as a hard error here — exactly as DevAgent's
+      # build gate, which DOES build, does. The package.json build script is
+      # left untouched (it stays lenient for deploys); this step does not call
+      # it — it invokes react-scripts directly with CI=true.
       - run: CI=true npx react-scripts build
   node-server:
     runs-on: ubuntu-latest
