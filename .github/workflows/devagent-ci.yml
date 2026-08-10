@@ -51,7 +51,7 @@ jobs:
           node-version: 22
           cache: npm
           cache-dependency-path: server/package-lock.json
-      # No services:/Docker container — the integration tests self-skip when
+      # No service containers or Docker — the integration tests self-skip when
       # testcontainers/PG_TEST_URL are absent (see schema-integration.test.js).
       - run: npm ci
       - run: npm test
