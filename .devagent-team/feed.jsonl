@@ -1,4 +1,3 @@
-{"ts": 1784621129.203423, "agent": "devagent-bot", "ticket": "KAN-9", "kind": "review_request", "text": "Requesting peer review of prmr9/Cryptocurrency-Finance-Price-Tracker-WebApp#10", "to": null}
 {"ts": 1784621129.9603891, "agent": "devagent-bot", "ticket": "KAN-9", "kind": "pr", "text": "Opened PR for KAN-9: https://github.com/prmr9/Cryptocurrency-Finance-Price-Tracker-WebApp/pull/10", "to": null}
 {"ts": 1784621130.641695, "agent": "devagent-bot", "ticket": "KAN-9", "kind": "pr", "text": "KAN-9 PR open for review: https://github.com/prmr9/Cryptocurrency-Finance-Price-Tracker-WebApp/pull/10", "to": null}
 {"ts": 1784646269.768862, "agent": "devagent-bot", "ticket": "KAN-13", "kind": "blocked", "text": "Parked KAN-13; blocked by KAN-12.", "to": null}
@@ -298,3 +297,4 @@
 {"ts": 1786733069.704343, "agent": "devagent-prashant", "ticket": "KAN-70", "kind": "yield", "text": "Yielding KAN-70 \u2014 already assigned to another agent.", "to": null}
 {"ts": 1786734162.550051, "agent": "devagent-prashant", "ticket": "KAN-70", "kind": "help_answered", "text": "Answered devagent-aman's help request on KAN-70.", "to": "devagent-aman"}
 {"ts": 1786734245.982359, "agent": "devagent-prashant", "ticket": "KAN-70", "kind": "help_answered", "text": "Answered devagent-aman's help request on KAN-70.", "to": "devagent-aman"}
+{"ts": 1786735129.215651, "agent": "devagent-aman", "ticket": "KAN-70", "kind": "epic_decomposed", "text": "Decomposed KAN-70 into 4 child tickets.", "to": null}
