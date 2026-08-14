@@ -13,12 +13,12 @@
   "devagent-aman": {
     "agent": "devagent-aman",
     "account": "712020:0836783c-845b-431f-8940-4bc384df99f4",
-    "ticket": "KAN-70",
+    "ticket": "",
     "repo": null,
-    "phase": "phase1_ingestion",
-    "status": "new",
-    "summary": "[UI] Raise CryptoTracker's interface to a top-tier product standard without changing behaviour",
+    "phase": "",
+    "status": "",
+    "summary": "",
     "capacity": 20.0,
-    "updated_at": 1786734175.748448
+    "updated_at": 1786735225.6580281
   }
 }
