@@ -373,8 +373,6 @@ here only to prevent a later phase mistaking its presence for current behaviour.
 
 ## Data contract
 
-**Phase 0 contracts index:** this section is **C3** (data contract); its siblings are **C4** (state inventory), **C6** (design debt count) and **C7** (risk list). All four together form the KAN-72 audit.
-
 Per-screen catalogue of **every** API call the app makes today: HTTP method,
 full path, request shape, response shape, the file it lives in, and — critically
 — whether the call is made **inside a React component** (an in-component call)
