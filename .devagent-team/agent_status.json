@@ -2,13 +2,13 @@
   "devagent-prashant": {
     "agent": "devagent-prashant",
     "account": "712020:ad3d4e51-4ea0-4043-8f1f-0e390e87f10b",
-    "ticket": "KAN-62",
+    "ticket": "",
     "repo": null,
-    "phase": "phase1_ingestion",
-    "status": "new",
-    "summary": "[UI] Raise CryptoTracker to a top-tier product standard without changing behaviour",
+    "phase": "",
+    "status": "",
+    "summary": "",
     "capacity": 20.0,
-    "updated_at": 1786730086.8875022
+    "updated_at": 1786730127.185888
   },
   "devagent-aman": {
     "agent": "devagent-aman",
@@ -19,6 +19,6 @@
     "status": "",
     "summary": "",
     "capacity": 20.0,
-    "updated_at": 1786730077.666028
+    "updated_at": 1786730126.808789
   }
 }
