@@ -8,7 +8,7 @@
     "status": "implementing",
     "summary": "Define UISPEC.md#data-contract, UISPEC.md#state-inventory, UISPEC.md#design-debt-count, UISPEC.md#risk-list",
     "capacity": 20.0,
-    "updated_at": 1786738195.048887
+    "updated_at": 1786741082.649749
   },
   "devagent-aman": {
     "agent": "devagent-aman",
@@ -19,6 +19,6 @@
     "status": "",
     "summary": "",
     "capacity": 20.0,
-    "updated_at": 1786740878.70336
+    "updated_at": 1786741008.4994931
   }
 }
