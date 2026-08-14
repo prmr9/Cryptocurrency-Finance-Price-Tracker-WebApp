@@ -11,3 +11,7 @@
 
 # CI and deploy definitions gate everything else.
 /.github/workflows/     @prmr9
+
+# Frozen Phase 0 UI audit (KAN-71). Read-only by convention; owner review is the
+# immutability backstop that survives git. See UISPEC.md "Integrity & change control".
+/UISPEC.md              @prmr9
