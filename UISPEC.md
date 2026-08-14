@@ -385,7 +385,7 @@ order they are declared there (`/`, `/accounts`, `/about`, `/coin/:coinId`; note
 `/coin` is a parent route whose `:coinId` child renders the same `Coin` element,
 so the reachable detail URL is `/coin/:coinId`).
 
-### Route `/` — market list (Coins)
+### Data contract — screen `/` (Coins)
 
 | Field | Value |
 |-------|-------|
@@ -395,7 +395,7 @@ so the reachable detail URL is `/coin/:coinId`).
 | **Location** | `src/App.js#App` — inside the mount `useEffect` (`axios.get(url)`). |
 | **In-component?** | **YES — FLAGGED IN-COMPONENT.** Raw `axios.get` in the `App` component body; does **not** go through `apiClient`/`portfolioClient`. See [UISPEC-GLOBAL-01](#global-application-shell) and [Known aspirational-vs-live](#known-aspirational-vs-live). |
 
-### Route `/accounts` — watchlist (Accounts)
+### Data contract — screen `/accounts` (Accounts)
 
 | Field | Value |
 |-------|-------|
@@ -404,7 +404,7 @@ so the reachable detail URL is `/coin/:coinId`).
 | **Location** | `src/components/Accounts.js#Accounts` → `src/services/accountStore.js`. |
 | **In-component?** | n/a — no network call to flag. Analytics side effects (`src/services/analytics.js`) are an emitter, not a screen data fetch, and are contracted separately in [docs/analytics-events.md](docs/analytics-events.md). |
 
-### Route `/about` — about page (About)
+### Data contract — screen `/about` (About)
 
 | Field | Value |
 |-------|-------|
@@ -413,7 +413,7 @@ so the reachable detail URL is `/coin/:coinId`).
 | **Location** | `src/routes/About.js#About`. |
 | **In-component?** | n/a — no network call to flag. |
 
-### Route `/coin/:coinId` — coin detail (Coin)
+### Data contract — screen `/coin/:coinId` (Coin)
 
 | Field | Value |
 |-------|-------|
