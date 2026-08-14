@@ -1,1 +1,14 @@
-[]
+[
+  {
+    "ticket": "KAN-71",
+    "agent": "devagent-prashant",
+    "repo": "prmr9/Cryptocurrency-Finance-Price-Tracker-WebApp",
+    "files": [
+      "CODEOWNERS",
+      "UISPEC.md",
+      "src/__tests__/kan71-uispec-audit.test.js"
+    ],
+    "created": 1786735781.564236,
+    "expires": 1786742981.564236
+  }
+]
