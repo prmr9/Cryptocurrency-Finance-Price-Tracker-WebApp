@@ -1,13 +1,3 @@
-{"ts": 1784609181.290839, "agent": "devagent-bot", "ticket": "KAN-6", "kind": "approved", "text": "KAN-6 approved \u2014 implementing now.", "to": null}
-{"ts": 1784609198.502777, "agent": "devagent-bot", "ticket": "KAN-8", "kind": "started", "text": "Started KAN-8 on prmr9/Cryptocurrency-Finance-Price-Tracker-WebApp (branch feature/KAN-8).", "to": null}
-{"ts": 1784609198.861841, "agent": "devagent-bot", "ticket": "KAN-8", "kind": "approved", "text": "KAN-8 approved \u2014 implementing now.", "to": null}
-{"ts": 1784609301.653593, "agent": "devagent-bot", "ticket": "KAN-11", "kind": "plan", "text": "Reworking KAN-11 (sast): not shippable yet", "to": null}
-{"ts": 1784610434.483706, "agent": "devagent-bot", "ticket": "KAN-17", "kind": "blocked", "text": "Parked KAN-17; blocked by KAN-11, KAN-13, KAN-15, KAN-16.", "to": null}
-{"ts": 1784614710.38063, "agent": "devagent-bot", "ticket": "KAN-11", "kind": "review_request", "text": "Requesting peer review of prmr9/Cryptocurrency-Finance-Price-Tracker-WebApp#8", "to": null}
-{"ts": 1784614755.3495522, "agent": "devagent-bot", "ticket": "KAN-11", "kind": "pr", "text": "Opened PR for KAN-11: https://github.com/prmr9/Cryptocurrency-Finance-Price-Tracker-WebApp/pull/8", "to": null}
-{"ts": 1784614756.0295238, "agent": "devagent-bot", "ticket": "KAN-11", "kind": "pr", "text": "KAN-11 PR open for review: https://github.com/prmr9/Cryptocurrency-Finance-Price-Tracker-WebApp/pull/8", "to": null}
-{"ts": 1784614888.778185, "agent": "devagent-bot", "ticket": "KAN-6", "kind": "started", "text": "Started KAN-6 on prmr9/Cryptocurrency-Finance-Price-Tracker-WebApp (branch feature/KAN-6).", "to": null}
-{"ts": 1784614889.146389, "agent": "devagent-bot", "ticket": "KAN-6", "kind": "approved", "text": "KAN-6 approved \u2014 implementing now.", "to": null}
 {"ts": 1784620124.676759, "agent": "devagent-bot", "ticket": "KAN-6", "kind": "review_request", "text": "Requesting peer review of prmr9/Cryptocurrency-Finance-Price-Tracker-WebApp#9", "to": null}
 {"ts": 1784620124.6772978, "agent": "devagent-bot", "ticket": "KAN-6", "kind": "pr", "text": "Opened PR for KAN-6: https://github.com/prmr9/Cryptocurrency-Finance-Price-Tracker-WebApp/pull/9", "to": null}
 {"ts": 1784620125.2091992, "agent": "devagent-bot", "ticket": "KAN-6", "kind": "pr", "text": "KAN-6 PR open for review: https://github.com/prmr9/Cryptocurrency-Finance-Price-Tracker-WebApp/pull/9", "to": null}
@@ -298,3 +288,13 @@
 {"ts": 1786349037.785933, "agent": "devagent-aman", "ticket": "KAN-60", "kind": "yield", "text": "Yielding KAN-60 to devagent-prashant (already in progress).", "to": "devagent-prashant"}
 {"ts": 1786349294.241405, "agent": "devagent-prashant", "ticket": "KAN-60", "kind": "approved", "text": "KAN-60 PR peer-approved \u2014 awaiting a HUMAN approval to merge: https://github.com/prmr9/Cryptocurrency-Finance-Price-Tracker-WebApp/pull/31", "to": null}
 {"ts": 1786350268.78306, "agent": "devagent-prashant", "ticket": "KAN-60", "kind": "merged", "text": "Merged KAN-60: https://github.com/prmr9/Cryptocurrency-Finance-Price-Tracker-WebApp/pull/31", "to": null}
+{"ts": 1786730133.6510441, "agent": "devagent-aman", "ticket": "KAN-65", "kind": "blocked", "text": "Parked KAN-65; blocked by KAN-64.", "to": null}
+{"ts": 1786730134.253261, "agent": "devagent-prashant", "ticket": "KAN-65", "kind": "blocked", "text": "Parked KAN-65; blocked by KAN-64.", "to": null}
+{"ts": 1786730136.2374542, "agent": "devagent-aman", "ticket": "KAN-66", "kind": "blocked", "text": "Parked KAN-66; blocked by KAN-65.", "to": null}
+{"ts": 1786730136.365098, "agent": "devagent-prashant", "ticket": "KAN-66", "kind": "blocked", "text": "Parked KAN-66; blocked by KAN-65.", "to": null}
+{"ts": 1786730138.38545, "agent": "devagent-prashant", "ticket": "KAN-67", "kind": "blocked", "text": "Parked KAN-67; blocked by KAN-66.", "to": null}
+{"ts": 1786730138.467108, "agent": "devagent-aman", "ticket": "KAN-67", "kind": "blocked", "text": "Parked KAN-67; blocked by KAN-66.", "to": null}
+{"ts": 1786730140.4390411, "agent": "devagent-aman", "ticket": "KAN-68", "kind": "blocked", "text": "Parked KAN-68; blocked by KAN-67.", "to": null}
+{"ts": 1786730140.7888021, "agent": "devagent-prashant", "ticket": "KAN-68", "kind": "blocked", "text": "Parked KAN-68; blocked by KAN-67.", "to": null}
+{"ts": 1786730142.873282, "agent": "devagent-aman", "ticket": "KAN-69", "kind": "blocked", "text": "Parked KAN-69; blocked by KAN-68.", "to": null}
+{"ts": 1786730142.939334, "agent": "devagent-prashant", "ticket": "KAN-69", "kind": "blocked", "text": "Parked KAN-69; blocked by KAN-68.", "to": null}
