@@ -8,17 +8,17 @@
     "status": "",
     "summary": "",
     "capacity": 20.0,
-    "updated_at": 1786733901.634686
+    "updated_at": 1786733932.179754
   },
   "devagent-aman": {
     "agent": "devagent-aman",
     "account": "712020:0836783c-845b-431f-8940-4bc384df99f4",
-    "ticket": "",
+    "ticket": "KAN-70",
     "repo": null,
-    "phase": "",
-    "status": "",
-    "summary": "",
+    "phase": "phase1_ingestion",
+    "status": "new",
+    "summary": "[UI] Raise CryptoTracker's interface to a top-tier product standard without changing behaviour",
     "capacity": 20.0,
-    "updated_at": 1786733904.0483809
+    "updated_at": 1786733913.234142
   }
 }
