@@ -373,14 +373,6 @@ here only to prevent a later phase mistaking its presence for current behaviour.
 
 ## Data contract
 
-> **Phase-0 contracts defined in KAN-72 (all four).** This branch adds the four
-> contracts the epic requires, each its own section below:
-> **C3 — [Data contract](#data-contract)** (per-screen API-call catalogue),
-> **C4 — [State inventory](#state-inventory)** (every store, slice & `useState`),
-> **C6 — [Design debt count](#design-debt-count)** (distinct in-use design-token
-> values), and **C7 — [Risk list](#risk-list)** (the ten riskiest places to
-> touch the UI).
-
 Per-screen catalogue of **every** API call the app makes today: HTTP method,
 full path, request shape, response shape, the file it lives in, and — critically
 — whether the call is made **inside a React component** (an in-component call)
@@ -393,7 +385,7 @@ order they are declared there (`/`, `/accounts`, `/about`, `/coin/:coinId`; note
 `/coin` is a parent route whose `:coinId` child renders the same `Coin` element,
 so the reachable detail URL is `/coin/:coinId`).
 
-### Data contract — screen `/` (Coins)
+### Screen `/` — market list (Coins)
 
 | Field | Value |
 |-------|-------|
@@ -403,7 +395,7 @@ so the reachable detail URL is `/coin/:coinId`).
 | **Location** | `src/App.js#App` — inside the mount `useEffect` (`axios.get(url)`). |
 | **In-component?** | **YES — FLAGGED IN-COMPONENT.** Raw `axios.get` in the `App` component body; does **not** go through `apiClient`/`portfolioClient`. See [UISPEC-GLOBAL-01](#global-application-shell) and [Known aspirational-vs-live](#known-aspirational-vs-live). |
 
-### Data contract — screen `/accounts` (Accounts)
+### Screen `/accounts` — watchlist (Accounts)
 
 | Field | Value |
 |-------|-------|
@@ -412,7 +404,7 @@ so the reachable detail URL is `/coin/:coinId`).
 | **Location** | `src/components/Accounts.js#Accounts` → `src/services/accountStore.js`. |
 | **In-component?** | n/a — no network call to flag. Analytics side effects (`src/services/analytics.js`) are an emitter, not a screen data fetch, and are contracted separately in [docs/analytics-events.md](docs/analytics-events.md). |
 
-### Data contract — screen `/about` (About)
+### Screen `/about` — about page (About)
 
 | Field | Value |
 |-------|-------|
@@ -421,7 +413,7 @@ so the reachable detail URL is `/coin/:coinId`).
 | **Location** | `src/routes/About.js#About`. |
 | **In-component?** | n/a — no network call to flag. |
 
-### Data contract — screen `/coin/:coinId` (Coin)
+### Screen `/coin/:coinId` — coin detail (Coin)
 
 | Field | Value |
 |-------|-------|
