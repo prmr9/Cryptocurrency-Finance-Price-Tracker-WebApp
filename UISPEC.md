@@ -417,7 +417,7 @@ The two in-component calls above are the only two live CoinGecko reads —
 explicitly flagged **made inside a component** (raw `axios.get`, bypassing the
 `apiClient`/`portfolioClient` layer).
 
-### Screen `/` — market list (Coins)
+**Screen `/` — market list (Coins)**
 
 | Field | Value |
 |-------|-------|
@@ -428,7 +428,7 @@ explicitly flagged **made inside a component** (raw `axios.get`, bypassing the
 | **File location** | `src/App.js#App` — inside the mount `useEffect` (`axios.get(url)`). |
 | **Made inside a component?** | **YES — this call is made inside a component.** It is a raw `axios.get` in the `App` component body; it does **not** go through the `apiClient`/`portfolioClient` layer. See [UISPEC-GLOBAL-01](#global-application-shell) and [Known aspirational-vs-live](#known-aspirational-vs-live). |
 
-### Screen `/accounts` — watchlist (Accounts)
+**Screen `/accounts` — watchlist (Accounts)**
 
 | Field | Value |
 |-------|-------|
@@ -439,7 +439,7 @@ explicitly flagged **made inside a component** (raw `axios.get`, bypassing the
 | **File location** | `src/components/Accounts.js#Accounts` → `src/services/accountStore.js`. |
 | **Made inside a component?** | n/a — no network call to flag. Analytics side effects (`src/services/analytics.js`) are an emitter, not a screen data fetch, and are contracted separately in [docs/analytics-events.md](docs/analytics-events.md). |
 
-### Screen `/about` — about page (About)
+**Screen `/about` — about page (About)**
 
 | Field | Value |
 |-------|-------|
@@ -450,7 +450,7 @@ explicitly flagged **made inside a component** (raw `axios.get`, bypassing the
 | **File location** | `src/routes/About.js#About`. |
 | **Made inside a component?** | n/a — no network call to flag. |
 
-### Screen `/coin/:coinId` — coin detail (Coin)
+**Screen `/coin/:coinId` — coin detail (Coin)**
 
 | Field | Value |
 |-------|-------|
@@ -461,7 +461,7 @@ explicitly flagged **made inside a component** (raw `axios.get`, bypassing the
 | **File location** | `src/routes/Coin.js#Coin` — inside the `useEffect` keyed on `url` (`axios.get(url)`). |
 | **Made inside a component?** | **YES — this call is made inside a component.** It is a raw `axios.get` in the `Coin` component body; it does **not** go through the `apiClient`/`portfolioClient` layer. See [UISPEC-COIN-01](#route-coincoinid--coin-detail-detail). |
 
-### Present-but-unwired backend client layer (called by NO screen)
+**Present-but-unwired backend client layer (called by NO screen)**
 
 Recorded truthfully as **present but not called by any screen** — no route above
 invokes it. Documented so a later phase does not mistake its presence for live
@@ -485,14 +485,14 @@ store, so "stores" here are the two stateful **service modules**
 (`accountStore.js`, `db.js`). All React state is component-local `useState`
 (plus two `useRef` mutable cells in `Accounts.js`).
 
-### Stateful service modules ("stores")
+**Stateful service modules ("stores")**
 
 | Store (module) | Stateful surface | Readers | Writers |
 |----------------|------------------|---------|---------|
 | **`src/services/accountStore.js`** | The persisted account list in `localStorage` under key `coinsearch.accounts.v1` (`{ version:1, accounts[], activeAccountId }`), plus a module-level `let idCounter = 0` used by `nextId()`. | `Accounts.js` via `listAccounts()` / `getActiveAccountId()`; validation-aware reads through `readState()`. Also read in `src/components/__tests__/accounts-onboarding.test.js`. | `Accounts.js` via `addAccount()` / `removeAccount()` / `setActiveAccount()`, each committing through `writeState()` → `localStorage`; `idCounter` incremented by `nextId()`. |
 | **`src/services/db.js`** | **Holds NO module-level state itself** — it is a thin wrapper exporting `connect()`, which delegates to `getPool()`. Its actual stateful surface is the **memoized `pg` Pool module singleton** `let poolPromise = null` in **`server/src/db/pool.js#getPool`** (memoizes the in-flight `createPool()` Promise; resets to `null` on rejection so a failed first fetch is retryable). | **The backend / in-VPC API only** — `getPool()` is invoked server-side. **No React component reads it** (a static SPA cannot open a DB connection). | **The backend** — `getPool()` sets `poolPromise` on first call; the `.catch` resets it to `null`. **Not written by any component.** |
 
-### Component `useState` (and `useRef`)
+**Component `useState` (and `useRef`)**
 
 | State | Component | Initial | Readers | Writers |
 |-------|-----------|---------|---------|---------|
@@ -519,7 +519,7 @@ Count of **distinct in-use values** for each of the six token categories. The
 point of this section is design-token debt: how many one-off literal values are
 in play where a small, shared scale should be.
 
-### Methodology (stated, reproducible)
+**Methodology (stated, reproducible)**
 
 - **Source scope.** The complete set of stylesheets under `src/**` — exactly
   seven files: `src/index.css`, `src/components/Coins.css`,
@@ -544,7 +544,7 @@ in play where a small, shared scale should be.
   attributed to their gradient token (not double-counted). *Radius* =
   `border-radius`. *Shadow* = `box-shadow`.
 
-### Counts
+**Counts**
 
 | Category | Distinct in-use values | Count |
 |----------|------------------------|------:|
