@@ -373,6 +373,14 @@ here only to prevent a later phase mistaking its presence for current behaviour.
 
 ## Data contract
 
+> **Phase-0 contracts defined in KAN-72 (all four).** This branch adds the four
+> contracts the epic requires, each its own section below:
+> **C3 — [Data contract](#data-contract)** (per-screen API-call catalogue),
+> **C4 — [State inventory](#state-inventory)** (every store, slice & `useState`),
+> **C6 — [Design debt count](#design-debt-count)** (distinct in-use design-token
+> values), and **C7 — [Risk list](#risk-list)** (the ten riskiest places to
+> touch the UI).
+
 Per-screen catalogue of **every** API call the app makes today: HTTP method,
 full path, request shape, response shape, the file it lives in, and — critically
 — whether the call is made **inside a React component** (an in-component call)
