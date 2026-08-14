@@ -8,7 +8,7 @@
     "status": "approved",
     "summary": "Walking skeleton: UISPEC.md",
     "capacity": 20.0,
-    "updated_at": 1786735905.481678
+    "updated_at": 1786736025.4972742
   },
   "devagent-aman": {
     "agent": "devagent-aman",
@@ -19,6 +19,6 @@
     "status": "",
     "summary": "",
     "capacity": 20.0,
-    "updated_at": 1786735907.55155
+    "updated_at": 1786736006.524524
   }
 }
