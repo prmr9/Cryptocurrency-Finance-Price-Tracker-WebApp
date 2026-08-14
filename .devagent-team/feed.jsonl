@@ -1,6 +1,3 @@
-{"ts": 1784621130.641695, "agent": "devagent-bot", "ticket": "KAN-9", "kind": "pr", "text": "KAN-9 PR open for review: https://github.com/prmr9/Cryptocurrency-Finance-Price-Tracker-WebApp/pull/10", "to": null}
-{"ts": 1784646269.768862, "agent": "devagent-bot", "ticket": "KAN-13", "kind": "blocked", "text": "Parked KAN-13; blocked by KAN-12.", "to": null}
-{"ts": 1784646459.49249, "agent": "devagent-bot", "ticket": "KAN-11", "kind": "merged", "text": "Merged KAN-11: https://github.com/prmr9/Cryptocurrency-Finance-Price-Tracker-WebApp/pull/8", "to": null}
 {"ts": 1784646484.75349, "agent": "devagent-bot", "ticket": "KAN-17", "kind": "blocked", "text": "Parked KAN-17; blocked by KAN-13, KAN-15, KAN-16.", "to": null}
 {"ts": 1784648075.0807528, "agent": "devagent-bot", "ticket": "KAN-12", "kind": "started", "text": "Started KAN-12 on prmr9/Cryptocurrency-Finance-Price-Tracker-WebApp (branch feature/KAN-12).", "to": null}
 {"ts": 1784650991.615249, "agent": "devagent-bot", "ticket": "KAN-12", "kind": "plan", "text": "Posted implementation plan for KAN-12; awaiting approval.", "to": null}
@@ -298,3 +295,6 @@
 {"ts": 1786734245.982359, "agent": "devagent-prashant", "ticket": "KAN-70", "kind": "help_answered", "text": "Answered devagent-aman's help request on KAN-70.", "to": "devagent-aman"}
 {"ts": 1786735129.215651, "agent": "devagent-aman", "ticket": "KAN-70", "kind": "epic_decomposed", "text": "Decomposed KAN-70 into 4 child tickets.", "to": null}
 {"ts": 1786735142.3768032, "agent": "devagent-prashant", "ticket": "KAN-71", "kind": "started", "text": "Started KAN-71 on prmr9/Cryptocurrency-Finance-Price-Tracker-WebApp (branch feature/KAN-71).", "to": null}
+{"ts": 1786735184.081131, "agent": "devagent-aman", "ticket": "KAN-72", "kind": "blocked", "text": "Parked KAN-72; blocked by KAN-71.", "to": null}
+{"ts": 1786735187.06791, "agent": "devagent-aman", "ticket": "KAN-73", "kind": "blocked", "text": "Parked KAN-73; blocked by KAN-71, KAN-72.", "to": null}
+{"ts": 1786735189.480792, "agent": "devagent-aman", "ticket": "KAN-74", "kind": "blocked", "text": "Parked KAN-74; blocked by KAN-73.", "to": null}
