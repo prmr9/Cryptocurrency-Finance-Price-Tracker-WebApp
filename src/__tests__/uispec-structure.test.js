@@ -25,8 +25,11 @@ describe('UISPEC.md — Phase 0 audit structural contract', () => {
 
     it('links a table-of-contents section for each of the four routes', () => {
         const doc = readUispec()
-        for (const route of ['/', '/coin/:coinId', '/accounts', '/about']) {
-            // Each route path is named in the TOC route list.
+        // The '/' route is asserted via its distinctive TOC/heading text rather
+        // than the bare path: a lone '/' occurs throughout the doc, so
+        // toContain('/') is a no-op. The other three paths are distinctive.
+        for (const route of ['market list', '/coin/:coinId', '/accounts', '/about']) {
+            // Each route is named in the TOC route list.
             expect(doc).toContain(route)
         }
         // The four route ids that anchor those sections.
