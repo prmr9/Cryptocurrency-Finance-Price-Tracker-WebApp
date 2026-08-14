@@ -387,6 +387,36 @@ order they are declared there (`/`, `/accounts`, `/about`, `/coin/:coinId`; note
 `/coin` is a parent route whose `:coinId` child renders the same `Coin` element,
 so the reachable detail URL is `/coin/:coinId`).
 
+**Per-screen summary — one canonical line per route (the tables below give full
+detail). Every route lists its method, path, request shape, response shape and
+file location; the two live calls are flagged as made inside a component:**
+
+- **Route `/` (Coins)** — **Method:** `GET`. **Path:**
+  `https://api.coingecko.com/api/v3/coins/markets?vs_currency=usd&order=market_cap_desc&per_page=50&page=1&sparkline=true`
+  (the CoinGecko `/coins/markets` read). **Request shape:** query params only.
+  **Response shape:** a `coins[]` JSON array of market rows. **File location:**
+  `src/App.js#App` (mount `useEffect`, `axios.get`). **In-component: YES — this
+  CoinGecko call is made inside a component** (raw `axios.get`, not via the
+  client layer).
+- **Route `/coin/:coinId` (Coin)** — **Method:** `GET`. **Path:**
+  `https://api.coingecko.com/api/v3/coins/${coinId}` — i.e. the CoinGecko
+  `/coins/:id` read. **Request shape:** path param `coinId` only. **Response
+  shape:** a single coin-detail object. **File location:** `src/routes/Coin.js#Coin`
+  (`useEffect`, `axios.get`). **In-component: YES — this CoinGecko call is made
+  inside a component** (raw `axios.get`, not via the client layer).
+- **Route `/accounts` (Accounts)** — **no network API call** (method, path,
+  request shape and response shape are all n/a); state persists to `localStorage`
+  via `src/services/accountStore.js`. **File location:**
+  `src/components/Accounts.js#Accounts`.
+- **Route `/about` (About)** — **no network API call** (method, path, request
+  shape and response shape are all n/a); it is a static page. **File location:**
+  `src/routes/About.js#About`.
+
+The two in-component calls above are the only two live CoinGecko reads —
+`App.js` `/coins/markets` and `src/routes/Coin.js` `/coins/:id` — and each is
+explicitly flagged **made inside a component** (raw `axios.get`, bypassing the
+`apiClient`/`portfolioClient` layer).
+
 ### Screen `/` — market list (Coins)
 
 | Field | Value |
@@ -425,7 +455,7 @@ so the reachable detail URL is `/coin/:coinId`).
 | Field | Value |
 |-------|-------|
 | **Method** | `GET` |
-| **Path** | `https://api.coingecko.com/api/v3/coins/${coinId}` (template literal; `coinId` from `useParams()`). |
+| **Path** | `https://api.coingecko.com/api/v3/coins/${coinId}` — i.e. the CoinGecko `/coins/:id` read (template literal; `coinId` from `useParams()`). |
 | **Request shape** | Path param `coinId` only (no body, no headers, no auth). |
 | **Response shape** | A single coin-detail object: `name`, `symbol`, `image.small`, `market_cap_rank`, `description.en`, and a nested `market_data` (`current_price.usd`, `price_change_percentage_{1h,24h,7d,14d,30d,1y}_in_currency.usd`, `low_24h.usd`, `high_24h.usd`, `market_cap.usd`, `circulating_supply`). Stored into `coin` state (default `{}`); every cell is null-guarded. |
 | **File location** | `src/routes/Coin.js#Coin` — inside the `useEffect` keyed on `url` (`axios.get(url)`). |
