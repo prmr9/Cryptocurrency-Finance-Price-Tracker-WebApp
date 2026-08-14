@@ -391,39 +391,45 @@ so the reachable detail URL is `/coin/:coinId`).
 
 | Field | Value |
 |-------|-------|
-| **Method / path** | `GET https://api.coingecko.com/api/v3/coins/markets?vs_currency=usd&order=market_cap_desc&per_page=50&page=1&sparkline=true` |
+| **Method** | `GET` |
+| **Path** | `https://api.coingecko.com/api/v3/coins/markets?vs_currency=usd&order=market_cap_desc&per_page=50&page=1&sparkline=true` |
 | **Request shape** | Query params only (no body, no headers, no auth). Fixed literal string; nothing is user-supplied. |
 | **Response shape** | JSON array `coins[]` (top 50). Each element carries `id`, `symbol`, `name`, `image`, `current_price`, `market_cap`, `market_cap_rank`, `total_volume`, `price_change_percentage_24h`, `market_cap_change_percentage_24h`, and `sparkline_in_7d.price[]`. Stored verbatim into `coins` state; consumed by `Coins` → `CoinItem`/`SparkLine`. |
-| **Location** | `src/App.js#App` — inside the mount `useEffect` (`axios.get(url)`). |
-| **In-component?** | **YES — FLAGGED IN-COMPONENT.** Raw `axios.get` in the `App` component body; does **not** go through `apiClient`/`portfolioClient`. See [UISPEC-GLOBAL-01](#global-application-shell) and [Known aspirational-vs-live](#known-aspirational-vs-live). |
+| **File location** | `src/App.js#App` — inside the mount `useEffect` (`axios.get(url)`). |
+| **Made inside a component?** | **YES — this call is made inside a component.** It is a raw `axios.get` in the `App` component body; it does **not** go through the `apiClient`/`portfolioClient` layer. See [UISPEC-GLOBAL-01](#global-application-shell) and [Known aspirational-vs-live](#known-aspirational-vs-live). |
 
 ### Screen `/accounts` — watchlist (Accounts)
 
 | Field | Value |
 |-------|-------|
-| **Method / path** | **No network API call.** |
-| **Request / response** | n/a — persistence is browser `localStorage` under key `coinsearch.accounts.v1`, reached via `src/services/accountStore.js` (`listAccounts`, `getActiveAccountId`, `addAccount`, `removeAccount`, `setActiveAccount`). These return Promises but resolve synchronously off `localStorage`; **no `fetch`/`axios` is issued.** |
-| **Location** | `src/components/Accounts.js#Accounts` → `src/services/accountStore.js`. |
-| **In-component?** | n/a — no network call to flag. Analytics side effects (`src/services/analytics.js`) are an emitter, not a screen data fetch, and are contracted separately in [docs/analytics-events.md](docs/analytics-events.md). |
+| **Method** | n/a — **this screen makes no network API call.** |
+| **Path** | n/a — **this screen makes no network API call.** |
+| **Request shape** | n/a — no network call. Persistence is browser `localStorage` under key `coinsearch.accounts.v1`, reached via `src/services/accountStore.js` (`listAccounts`, `getActiveAccountId`, `addAccount`, `removeAccount`, `setActiveAccount`). These return Promises but resolve synchronously off `localStorage`; **no `fetch`/`axios` is issued.** |
+| **Response shape** | n/a — no network call (localStorage read/write only). |
+| **File location** | `src/components/Accounts.js#Accounts` → `src/services/accountStore.js`. |
+| **Made inside a component?** | n/a — no network call to flag. Analytics side effects (`src/services/analytics.js`) are an emitter, not a screen data fetch, and are contracted separately in [docs/analytics-events.md](docs/analytics-events.md). |
 
 ### Screen `/about` — about page (About)
 
 | Field | Value |
 |-------|-------|
-| **Method / path** | **No network API call.** |
-| **Request / response** | n/a — `src/routes/About.js#About` is a static page (hero + three cards + a `Link` to `/` and an outbound `TRADE_URL` link). No data fetch, no state. |
-| **Location** | `src/routes/About.js#About`. |
-| **In-component?** | n/a — no network call to flag. |
+| **Method** | n/a — **this screen makes no network API call.** |
+| **Path** | n/a — **this screen makes no network API call.** |
+| **Request shape** | n/a — no network call. `src/routes/About.js#About` is a static page (hero + three cards + a `Link` to `/` and an outbound `TRADE_URL` link). |
+| **Response shape** | n/a — no network call. No data fetch, no state. |
+| **File location** | `src/routes/About.js#About`. |
+| **Made inside a component?** | n/a — no network call to flag. |
 
 ### Screen `/coin/:coinId` — coin detail (Coin)
 
 | Field | Value |
 |-------|-------|
-| **Method / path** | `GET https://api.coingecko.com/api/v3/coins/${coinId}` (template literal; `coinId` from `useParams()`). |
+| **Method** | `GET` |
+| **Path** | `https://api.coingecko.com/api/v3/coins/${coinId}` (template literal; `coinId` from `useParams()`). |
 | **Request shape** | Path param `coinId` only (no body, no headers, no auth). |
 | **Response shape** | A single coin-detail object: `name`, `symbol`, `image.small`, `market_cap_rank`, `description.en`, and a nested `market_data` (`current_price.usd`, `price_change_percentage_{1h,24h,7d,14d,30d,1y}_in_currency.usd`, `low_24h.usd`, `high_24h.usd`, `market_cap.usd`, `circulating_supply`). Stored into `coin` state (default `{}`); every cell is null-guarded. |
-| **Location** | `src/routes/Coin.js#Coin` — inside the `useEffect` keyed on `url` (`axios.get(url)`). |
-| **In-component?** | **YES — FLAGGED IN-COMPONENT.** Raw `axios.get` in the `Coin` component body; does **not** go through `apiClient`/`portfolioClient`. See [UISPEC-COIN-01](#route-coincoinid--coin-detail-detail). |
+| **File location** | `src/routes/Coin.js#Coin` — inside the `useEffect` keyed on `url` (`axios.get(url)`). |
+| **Made inside a component?** | **YES — this call is made inside a component.** It is a raw `axios.get` in the `Coin` component body; it does **not** go through the `apiClient`/`portfolioClient` layer. See [UISPEC-COIN-01](#route-coincoinid--coin-detail-detail). |
 
 ### Present-but-unwired backend client layer (called by NO screen)
 
