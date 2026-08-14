@@ -373,6 +373,9 @@ here only to prevent a later phase mistaking its presence for current behaviour.
 
 ## Data contract
 
+**Phase 0 contracts index:** this section (C3) is the first of four —
+C3 Data contract, C4 State inventory, C6 Design debt count, C7 Risk list.
+
 Per-screen catalogue of **every** API call the app makes today: HTTP method,
 full path, request shape, response shape, the file it lives in, and — critically
 — whether the call is made **inside a React component** (an in-component call)
