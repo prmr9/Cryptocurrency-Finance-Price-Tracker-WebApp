@@ -470,8 +470,8 @@ store, so "stores" here are the two stateful **service modules**
 | `error` | `src/components/Accounts.js#Accounts` | `''` | The `.accounts-error` `role="alert"` node. | `setError(...)` in handlers; cleared at the start of each action. |
 | `loading` | `src/components/Accounts.js#Accounts` | `true` | Gates the "Loading accounts…" node. | `setLoading(false)` after the initial load settles. |
 | `submitting` | `src/components/Accounts.js#Accounts` | `false` | Disables the submit button; re-entrancy guard in `handleSubmit`. | `setSubmitting(true/false)` around the add flow. |
-| `attemptsRef` (`useRef`) | `src/components/Accounts.js#Accounts` | `0` | `attempts_before_success` in the `account_added` event. | `attemptsRef.current += 1` per submit; reset to `0` on success. |
-| `firstAttemptAtRef` (`useRef`) | `src/components/Accounts.js#Accounts` | `null` | `time_to_add_ms` in the `account_added` event. | Set to `Date.now()` on first attempt; reset to `null` on success. |
+| `attemptsRef` (`useRef`) | `src/components/Accounts.js#Accounts` | `0` | `attempts_before_success` in the add-success analytics event (see [docs/analytics-events.md](docs/analytics-events.md)). | `attemptsRef.current += 1` per submit; reset to `0` on success. |
+| `firstAttemptAtRef` (`useRef`) | `src/components/Accounts.js#Accounts` | `null` | `time_to_add_ms` in the add-success analytics event (see [docs/analytics-events.md](docs/analytics-events.md)). | Set to `Date.now()` on first attempt; reset to `null` on success. |
 
 ---
 
@@ -557,7 +557,7 @@ phase should treat these as the load-bearing spots to test around.
    with no error surfaced.
 5. **`src/components/Accounts.js#Accounts` analytics emissions coupled to control
    flow.** `track(...)` calls are interleaved with state writes and ordered
-   deliberately (`add_account_submitted` fires *before* validation to keep the
+   deliberately (the submit-intent event fires *before* validation to keep the
    funnel denominator honest). Reordering handlers or state updates changes the
    event stream contracted in [docs/analytics-events.md](docs/analytics-events.md).
 6. **`src/components/Accounts.js#Accounts` `classifyStoreError` regexes.** The
