@@ -1,1 +1,14 @@
-[]
+[
+  {
+    "ticket": "KAN-74",
+    "agent": "devagent-prashant",
+    "repo": "prmr9/Cryptocurrency-Finance-Price-Tracker-WebApp",
+    "files": [
+      "docs/decomposition/kan74-refiled-decomposition.json",
+      "docs/decomposition/kan74-validation-report.md",
+      "src/__tests__/kan74-decomposition.test.js"
+    ],
+    "created": 1786795781.872096,
+    "expires": 1786802981.872096
+  }
+]
