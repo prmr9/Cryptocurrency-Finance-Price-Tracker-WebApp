@@ -2,6 +2,7 @@
   "KAN-74": {
     "agent": "devagent-prashant",
     "instance": "ae01593414a1:devagent-prashant",
-    "expires": 1786833024.8311522
+    "expires": 1786833030.597232,
+    "released": true
   }
 }
