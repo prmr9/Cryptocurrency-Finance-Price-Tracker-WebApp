@@ -1,4 +1,3 @@
-{"ts": 1785938982.59465, "agent": "devagent-prashant", "ticket": "KAN-48", "kind": "plan", "text": "Reworking KAN-48 (build): not shippable yet", "to": null}
 {"ts": 1785941215.4560761, "agent": "devagent-prashant", "ticket": "KAN-48", "kind": "review_request", "text": "Requesting peer review of prmr9/Cryptocurrency-Finance-Price-Tracker-WebApp#18", "to": null}
 {"ts": 1785941216.244095, "agent": "devagent-prashant", "ticket": "KAN-48", "kind": "pr", "text": "Opened PR for KAN-48: https://github.com/prmr9/Cryptocurrency-Finance-Price-Tracker-WebApp/pull/18", "to": null}
 {"ts": 1785941216.7856221, "agent": "devagent-prashant", "ticket": "KAN-48", "kind": "pr", "text": "KAN-48 PR open for review: https://github.com/prmr9/Cryptocurrency-Finance-Price-Tracker-WebApp/pull/18", "to": null}
@@ -298,3 +297,4 @@
 {"ts": 1786795150.26233, "agent": "devagent-prashant", "ticket": "KAN-74", "kind": "blocked", "text": "Starved \u2014 every ticket held by devagent-prashant (KAN-74) is parked on KAN-73 (devagent-aman). No workable story; this agent is idle until they land.", "to": null}
 {"ts": 1786795215.8322299, "agent": "devagent-prashant", "ticket": "KAN-74", "kind": "blocked", "text": "Starved \u2014 every ticket held by devagent-prashant (KAN-74) is parked on KAN-73 (devagent-aman). No workable story; this agent is idle until they land.", "to": null}
 {"ts": 1786795256.272022, "agent": "devagent-prashant", "ticket": "KAN-74", "kind": "started", "text": "Resuming KAN-74; KAN-73 resolved.", "to": null}
+{"ts": 1786795564.406026, "agent": "devagent-aman", "ticket": "KAN-73", "kind": "approved", "text": "KAN-73 PR approved (1 approvals) \u2014 awaiting merge: https://github.com/prmr9/Cryptocurrency-Finance-Price-Tracker-WebApp/pull/33", "to": null}
