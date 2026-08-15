@@ -8,7 +8,7 @@
     "status": "",
     "summary": "",
     "capacity": 20.0,
-    "updated_at": 1786775143.858145
+    "updated_at": 1786775216.6051478
   },
   "devagent-prashant": {
     "agent": "devagent-prashant",
@@ -19,6 +19,6 @@
     "status": "approved",
     "summary": "Model polarity-decision (dark-first), /coins/markets, /coins/{coinId}, src/design/tokens.js, src/design/primitives",
     "capacity": 20.0,
-    "updated_at": 1786775128.6972318
+    "updated_at": 1786775188.7044349
   }
 }
