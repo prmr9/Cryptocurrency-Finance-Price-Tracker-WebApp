@@ -373,6 +373,8 @@ here only to prevent a later phase mistaking its presence for current behaviour.
 
 ## Data contract
 
+**Contract C3 — Data contract: defined here** (the per-screen API-call catalogue).
+
 **Phase 0 contracts index:** this section (C3) is the first of four —
 C3 Data contract, C4 State inventory, C6 Design debt count, C7 Risk list.
 
@@ -480,6 +482,8 @@ wiring.
 
 ## State inventory
 
+**Contract C4 — State inventory: defined here** (every store, slice & `useState`).
+
 Every piece of app state, with its **readers** and **writers**. There is **no
 global store and no store slice** — the app ships **no** Redux/Zustand/Context
 store, so "stores" here are the two stateful **service modules**
@@ -515,6 +519,8 @@ store, so "stores" here are the two stateful **service modules**
 ---
 
 ## Design debt count
+
+**Contract C6 — Design debt count: defined here** (distinct in-use design-token values).
 
 Count of **distinct in-use values** for each of the six token categories. The
 point of this section is design-token debt: how many one-off literal values are
@@ -571,6 +577,8 @@ reaches them.
 ---
 
 ## Risk list
+
+**Contract C7 — Risk list: defined here** (the ten riskiest places to touch the UI).
 
 The **ten** places where touching the UI is most likely to break behaviour, each
 with the reason it is risky. This is the risk-first spine of the epic: a later
