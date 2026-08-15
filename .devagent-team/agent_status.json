@@ -8,7 +8,7 @@
     "status": "",
     "summary": "",
     "capacity": 20.0,
-    "updated_at": 1786771391.875818
+    "updated_at": 1786771490.967529
   },
   "devagent-prashant": {
     "agent": "devagent-prashant",
@@ -19,6 +19,6 @@
     "status": "implementing",
     "summary": "Define UISPEC.md#data-contract, UISPEC.md#state-inventory, UISPEC.md#design-debt-count, UISPEC.md#risk-list",
     "capacity": 20.0,
-    "updated_at": 1786770891.986538
+    "updated_at": 1786771494.7134452
   }
 }
