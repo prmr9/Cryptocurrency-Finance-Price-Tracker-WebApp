@@ -6580,7 +6580,7 @@
       "Any green automated gate (tests pass, checklist complete, CI green) being treated as general proof of quality rather than proof of only the specific properties that gate was built to measure"
     ],
     "kind": "principle",
-    "weight": 1.5208749999999995,
+    "weight": 1.5,
     "times_applied": 4,
     "times_confirmed": 3,
     "safety_class": "guardrail",
@@ -8000,7 +8000,7 @@
       "team-knowledge"
     ],
     "kind": "onboarding",
-    "weight": 2.07,
+    "weight": 1.8,
     "times_applied": 71,
     "times_confirmed": 5,
     "safety_class": "neutral",
@@ -8695,7 +8695,7 @@
       "Triaging or estimating remediation work from a scanner's summary count without cross-referencing which findings' file/line locations fall inside the actual diff"
     ],
     "kind": "principle",
-    "weight": 1.7249999999999999,
+    "weight": 1.5,
     "times_applied": 85,
     "times_confirmed": 8,
     "safety_class": "guardrail",
@@ -10281,7 +10281,7 @@
       "Multi-part acceptance criteria lists where later items get skimmed or deprioritized after the first (usually code-centric) item is satisfied"
     ],
     "kind": "principle",
-    "weight": 1.5208749999999995,
+    "weight": 1.5,
     "times_applied": 19,
     "times_confirmed": 3,
     "safety_class": "guardrail",
