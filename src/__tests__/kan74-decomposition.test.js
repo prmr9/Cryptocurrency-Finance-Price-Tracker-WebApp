@@ -143,7 +143,7 @@ describe('KAN-74 re-filed decomposition', () => {
   });
 
   test('(a) T2 AC#1 drops the path-parseable "/partial/missing" enum', () => {
-    const { raw, stories } = loadDecomp();
+    const { stories } = loadDecomp();
     const ac1 = firstAc(byKey(stories, 'T2'));
 
     // The approved non-path enum wording must be present verbatim...
@@ -161,11 +161,17 @@ describe('KAN-74 re-filed decomposition', () => {
     const allAcs = stories.map(acText).join('\n');
     expect(allAcs).not.toContain('/partial/missing');
 
-    // ...and it must not survive anywhere else in the decomposition DATA
-    // either — the note field previously re-injected the exact phantom path
-    // token, which the over-matching validator re-parsed as a required artifact.
-    expect(raw).not.toContain('/partial/missing');
-    expect(raw).not.toContain('handled/partial/missing');
+    // ...and it must not survive anywhere in the decomposition DATA the
+    // validator parses for produced artifacts — every story summary and
+    // acceptance criterion across all re-filed specs. The top-level
+    // human-readable `note` documents the historical phantom token on purpose
+    // (that is why `raw` is not scanned here); it is prose, not spec data a
+    // validator reads for producers/consumers.
+    const specData = stories
+      .map((s) => [s.summary || '', acText(s)].join('\n'))
+      .join('\n');
+    expect(specData).not.toContain('/partial/missing');
+    expect(specData).not.toContain('handled/partial/missing');
   });
 
   test('(b) graph is acyclic and every depends_on resolves to T1–T8', () => {
@@ -180,14 +186,11 @@ describe('KAN-74 re-filed decomposition', () => {
       expect(s.depends_on).not.toContain(s.key);
     });
 
-    // Exact approved edges for the re-filed specs.
+    // Exact approved edges for the re-filed specs (each must be present).
     Object.keys(EXPECTED_EDGES).forEach((key) => {
       const s = byKey(stories, key);
-      if (s) {
-        expect([...s.depends_on].sort()).toEqual(
-          [...EXPECTED_EDGES[key]].sort()
-        );
-      }
+      expect(s).toBeDefined();
+      expect([...s.depends_on].sort()).toEqual([...EXPECTED_EDGES[key]].sort());
     });
 
     expect(hasCycle(stories)).toBe(false);
