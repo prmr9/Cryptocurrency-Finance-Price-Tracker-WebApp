@@ -8,5 +8,20 @@
     ],
     "created": 1786771738.817533,
     "expires": 1786778938.817533
+  },
+  {
+    "ticket": "KAN-73",
+    "agent": "devagent-prashant",
+    "repo": "prmr9/Cryptocurrency-Finance-Price-Tracker-WebApp",
+    "files": [
+      "docs/design/polarity-decision.md",
+      "src/design/__tests__/primitives.test.js",
+      "src/design/__tests__/tokens.test.js",
+      "src/design/primitives/*.js",
+      "src/design/primitives/index.js",
+      "src/design/tokens.js"
+    ],
+    "created": 1786774888.723876,
+    "expires": 1786782088.723876
   }
 ]
