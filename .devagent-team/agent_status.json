@@ -2,13 +2,13 @@
   "devagent-aman": {
     "agent": "devagent-aman",
     "account": "712020:0836783c-845b-431f-8940-4bc384df99f4",
-    "ticket": "",
-    "repo": null,
-    "phase": "",
-    "status": "",
-    "summary": "",
+    "ticket": "KAN-73",
+    "repo": "prmr9/Cryptocurrency-Finance-Price-Tracker-WebApp",
+    "phase": "phase2_proposal",
+    "status": "pending_approval",
+    "summary": "Model polarity-decision (dark-first), /coins/markets, /coins/{coinId}, src/design/tokens.js, src/design/primitives",
     "capacity": 20.0,
-    "updated_at": 1786777597.9208808
+    "updated_at": 1786777611.999653
   },
   "devagent-prashant": {
     "agent": "devagent-prashant",
@@ -19,6 +19,6 @@
     "status": "",
     "summary": "",
     "capacity": 20.0,
-    "updated_at": 1786777597.611091
+    "updated_at": 1786777616.400458
   }
 }
