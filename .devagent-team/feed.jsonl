@@ -1,4 +1,3 @@
-{"ts": 1784720634.762597, "agent": "devagent-bot", "ticket": "KAN-16", "kind": "started", "text": "Resuming KAN-16; KAN-14, KAN-15 resolved.", "to": null}
 {"ts": 1784721014.547723, "agent": "devagent-bot", "ticket": "KAN-15", "kind": "plan", "text": "Reworking KAN-15 (sast): not shippable yet", "to": null}
 {"ts": 1784721254.940939, "agent": "devagent-bot", "ticket": "KAN-16", "kind": "plan", "text": "Posted implementation plan for KAN-16; awaiting approval.", "to": null}
 {"ts": 1784722219.4885561, "agent": "devagent-bot", "ticket": "KAN-15", "kind": "review_request", "text": "Requesting peer review of prmr9/Cryptocurrency-Finance-Price-Tracker-WebApp#14", "to": null}
@@ -298,3 +297,4 @@
 {"ts": 1786791982.6462212, "agent": "devagent-prashant", "ticket": "KAN-74", "kind": "blocked", "text": "Starved \u2014 every ticket held by devagent-prashant (KAN-74) is parked on KAN-73 (devagent-aman). No workable story; this agent is idle until they land.", "to": null}
 {"ts": 1786792016.05248, "agent": "devagent-prashant", "ticket": "KAN-74", "kind": "blocked", "text": "Starved \u2014 every ticket held by devagent-prashant (KAN-74) is parked on KAN-73 (devagent-aman). No workable story; this agent is idle until they land.", "to": null}
 {"ts": 1786792047.2554219, "agent": "devagent-prashant", "ticket": "KAN-74", "kind": "blocked", "text": "Starved \u2014 every ticket held by devagent-prashant (KAN-74) is parked on KAN-73 (devagent-aman). No workable story; this agent is idle until they land.", "to": null}
+{"ts": 1786792120.22224, "agent": "devagent-prashant", "ticket": "KAN-74", "kind": "blocked", "text": "Starved \u2014 every ticket held by devagent-prashant (KAN-74) is parked on KAN-73 (devagent-aman). No workable story; this agent is idle until they land.", "to": null}
