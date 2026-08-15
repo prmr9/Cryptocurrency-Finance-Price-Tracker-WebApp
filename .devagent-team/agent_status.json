@@ -8,7 +8,7 @@
     "status": "",
     "summary": "",
     "capacity": 3.0,
-    "updated_at": 1786836718.656798
+    "updated_at": 1786837006.229579
   },
   "devagent-prashant": {
     "agent": "devagent-prashant",
@@ -19,6 +19,6 @@
     "status": "approved",
     "summary": "Resolve decomposition gaps for EPIC",
     "capacity": 20.0,
-    "updated_at": 1786836660.207149
+    "updated_at": 1786836988.122249
   }
 }
