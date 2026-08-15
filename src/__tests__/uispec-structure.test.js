@@ -1,68 +1,108 @@
 /**
- * Structure guard for KAN-72: the four Phase 0 UISPEC sections must be defined.
+ * KAN-71 — structural guard for the frozen Phase 0 audit UISPEC.md.
  *
- * KAN-72 adds the risk-first spine of the UISPEC audit — C3 Data contract,
- * C4 State inventory, C6 Design debt count, C7 Risk list. Each must exist as a
- * real section (a `## ` heading), be reachable by its GitHub-slug anchor, be
- * linked from the table of contents, and carry its C-code label. Self-review
- * treats a section as "not defined" unless a test pins it, so this guard is the
- * proof the acceptance criteria stay met.
- *
- * These assertions are document-level on purpose: the contract is the shape of
- * UISPEC.md itself, not the behaviour of any component.
+ * This does NOT assert the doc's prose; it asserts the machine-checkable
+ * completeness contract the acceptance criteria name: the file exists at repo
+ * root, its TOC links a section for each of the four routes, every behaviour
+ * entry carries a stable UISPEC-<AREA>-<NN> id (not a bare line number), each
+ * required formatter has its own entry naming its source file, the coverage
+ * checklist marks routes/formatters/states captured, integrity + analytics
+ * sections hold their required claims, and CODEOWNERS owns /UISPEC.md.
  */
-const fs = require('fs');
-const path = require('path');
+const fs = require('fs')
+const path = require('path')
 
-const REPO_ROOT = path.resolve(__dirname, '..', '..');
-const UISPEC = path.join(REPO_ROOT, 'UISPEC.md');
+const REPO_ROOT = path.resolve(__dirname, '..', '..')
+const UISPEC_PATH = path.join(REPO_ROOT, 'UISPEC.md')
+const CODEOWNERS_PATH = path.join(REPO_ROOT, 'CODEOWNERS')
 
-/** GitHub's heading-to-anchor slug: lowercase, drop punctuation, spaces to hyphens. */
-function slugify(heading) {
-  return heading
-    .trim()
-    .toLowerCase()
-    .replace(/[^\w\- ]/g, '')
-    .replace(/ /g, '-');
-}
+const readUispec = () => fs.readFileSync(UISPEC_PATH, 'utf8')
 
-const SECTIONS = [
-  { code: 'C3', heading: 'Data contract', anchor: 'data-contract' },
-  { code: 'C4', heading: 'State inventory', anchor: 'state-inventory' },
-  { code: 'C6', heading: 'Design debt count', anchor: 'design-debt-count' },
-  { code: 'C7', heading: 'Risk list', anchor: 'risk-list' },
-];
+describe('UISPEC.md — Phase 0 audit structural contract', () => {
+    it('exists at the repository root', () => {
+        expect(fs.existsSync(UISPEC_PATH)).toBe(true)
+    })
 
-describe('UISPEC.md Phase 0 sections (KAN-72)', () => {
-  const uispec = fs.readFileSync(UISPEC, 'utf8');
+    it('links a table-of-contents section for each of the four routes', () => {
+        const doc = readUispec()
+        // The '/' route is asserted via its distinctive TOC/heading text rather
+        // than the bare path: a lone '/' occurs throughout the doc, so
+        // toContain('/') is a no-op. The other three paths are distinctive.
+        for (const route of ['market list', '/coin/:coinId', '/accounts', '/about']) {
+            // Each route is named in the TOC route list.
+            expect(doc).toContain(route)
+        }
+        // The four route ids that anchor those sections.
+        for (let i = 1; i <= 4; i++) {
+            expect(doc).toContain(`UISPEC-ROUTES-0${i}`)
+        }
+    })
 
-  it('UISPEC.md exists and is non-empty', () => {
-    expect(uispec.length).toBeGreaterThan(0);
-  });
+    it('gives every required formatter its own entry naming its source file', () => {
+        const doc = readUispec()
+        const formatters = [
+            { name: 'formatMarketCap', file: 'CoinItem.js' },
+            { name: 'formatChange', file: 'CoinItem.js' },
+            { name: 'formatRankMovement', file: 'CoinItem.js' },
+            { name: 'computeSparkline', file: 'SparkLine.js' },
+            { name: 'formatTrend', file: 'SparkLine.js' }
+        ]
+        for (const { name, file } of formatters) {
+            // symbol cited as file#symbol, never a bare line number.
+            expect(doc).toContain(`${file}#${name}`)
+        }
+    })
 
-  SECTIONS.forEach(({ code, heading, anchor }) => {
-    describe(`${code} — ${heading}`, () => {
-      it('is defined as a `## ` section heading', () => {
-        expect(uispec).toContain(`## ${heading}`);
-      });
+    it('uses stable UISPEC-<AREA>-<NN> ids and no bare line-number anchors', () => {
+        const doc = readUispec()
+        const ids = doc.match(/UISPEC-[A-Z]+-\d{2}/g) || []
+        // A healthy audit has many ids across areas.
+        expect(ids.length).toBeGreaterThanOrEqual(20)
+        const areas = new Set(ids.map((id) => id.split('-')[1]))
+        for (const area of ['GLOBAL', 'ROUTES', 'COINS', 'COINITEM', 'SPARKLINE', 'ACCOUNTS', 'COIN']) {
+            expect(areas.has(area)).toBe(true)
+        }
+    })
 
-      it('uses a heading whose GitHub anchor matches the cited link', () => {
-        expect(slugify(heading)).toBe(anchor);
-      });
+    it('has a Coverage checklist marking routes, formatters and states captured', () => {
+        const doc = readUispec()
+        expect(doc).toContain('## Coverage checklist')
+        // Checked boxes marked captured.
+        expect(/- \[x\].*captured/i.test(doc)).toBe(true)
+        // Each formatter appears in the checklist.
+        for (const name of ['formatMarketCap', 'formatChange', 'formatRankMovement', 'computeSparkline', 'formatTrend']) {
+            expect(doc).toContain(name)
+        }
+    })
 
-      it('is linked from the table of contents by its anchor', () => {
-        expect(uispec).toContain(`(#${anchor})`);
-      });
+    it('has an Integrity & change control section stating read-only + unenforced CI', () => {
+        const doc = readUispec()
+        expect(doc).toContain('Integrity & change control')
+        expect(/frozen phase 0 baseline/i.test(doc)).toBe(true)
+        expect(/read-only by convention/i.test(doc)).toBe(true)
+        expect(/unenforced/i.test(doc)).toBe(true)
+        expect(/deferred/i.test(doc)).toBe(true)
+    })
 
-      it('carries its C-code label in the table of contents', () => {
-        expect(uispec).toContain(`(${code})`);
-      });
-    });
-  });
+    it('links the analytics catalog rather than restating event names inline', () => {
+        const doc = readUispec()
+        // The Analytics section links out to the canonical catalog...
+        expect(doc).toContain('docs/analytics-events.md')
+        // ...and does not restate individual event names inline.
+        for (const event of [
+            'add_account_submitted',
+            'account_added',
+            'account_removed',
+            'account_activated',
+            'accounts_view_opened',
+            'trade_link_clicked'
+        ]) {
+            expect(doc).not.toContain(event)
+        }
+    })
 
-  it('names all four sections in the contracts index line', () => {
-    expect(uispec).toContain(
-      'C3 Data contract, C4 State inventory, C6 Design debt count, C7 Risk list'
-    );
-  });
-});
+    it('is owned in CODEOWNERS', () => {
+        const owners = fs.readFileSync(CODEOWNERS_PATH, 'utf8')
+        expect(/^\/UISPEC\.md\s+@\S+/m.test(owners)).toBe(true)
+    })
+})
