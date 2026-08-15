@@ -1,0 +1,84 @@
+{
+  "epic": "EPIC",
+  "ticket": "KAN-74",
+  "note": "Re-filed decomposition for the 5 story specs dropped by the L4 ladder action. T2 AC#1 de-pathified (enum was mis-parsed as artifact path '/partial/missing'); NEW Phase-1 audit anchors (#state-coverage-matrix produced by T2, #route-map produced by T5) re-keyed from the frozen UISPEC.md to the non-frozen PHASE1-IA.md companion doc. Existing UISPEC.md references and depends_on edges preserved verbatim. This JSON is decomposition DATA describing future build work; PHASE1-IA.md itself is created by T2's own build, not by KAN-74.",
+  "stories": [
+    {
+      "key": "T2",
+      "summary": "Define PHASE1-IA.md#state-coverage-matrix, ia-proposal-/, ia-proposal-/coin/:coinId, ia-proposal-/accounts, ia-proposal-/about",
+      "issue_type": "Story",
+      "acceptance_criteria": [
+        "Given the read-only Phase 0 audit anchored at PHASE1-IA.md#state-coverage-matrix in the non-frozen PHASE1-IA.md companion doc When the matrix is compiled Then it contains one row per screen enumerated from the App.js router source (the row count is derived from the App.js <Route> elements and is never a fixed literal) and one column for each of {loading, error, empty, success, offline, permission-denied}, with every cell marked exactly one of: handled, partial, missing, or n/a (n/a marks a state that cannot apply to a given screen); the matrix is a point-in-time snapshot taken on 2026-08-15 that MUST be re-audited whenever App.js or any file under routes/ changes.",
+        "Given the approved information architecture ia-proposal-/ for the market table When it is reviewed Then it is text-first and classifies every existing element as stays, merges, cut, or moved-behind-disclosure, with each cut justified against the one job",
+        "Given the approved information architecture ia-proposal-/coin/:coinId for coin detail When it is reviewed Then it is text-first and lists what stays, merges, is cut (each cut justified), and what moves behind disclosure",
+        "Given the approved information architecture ia-proposal-/accounts for the Watchlist When it is reviewed Then it is text-first and lists what stays, merges, is cut (each cut justified), and what moves behind disclosure"
+      ],
+      "depends_on": [
+        "T1"
+      ]
+    },
+    {
+      "key": "T5",
+      "summary": "Model PHASE1-IA.md#route-map, src/api/coinClient.js, src/hooks/useCoinDetail.js, /kitchen-sink",
+      "issue_type": "Story",
+      "acceptance_criteria": [
+        "Given the route map in 'PHASE1-IA.md#route-map' listing every screen with its file path and auth gating When the coin-detail route entry is inspected Then it shows the same auth gating as before with no auth requirement introduced on any screen",
+        "Given the data-access module 'src/api/coinClient.js' wrapping the frozen '/coins/{coinId}' feed When coin detail data is requested through it Then it returns the identical response shape defined in 'UISPEC.md#data-contract' with no new endpoints, parameters, or data behaviour added",
+        "Given the hook 'src/hooks/useCoinDetail.js' extracted from the coin detail screen When it is consumed with the same props as before Then it returns an explicit {data, isLoading, error} object preserving the loading, error, empty, and success branches from 'PHASE1-IA.md#state-coverage-matrix' exactly with no signature or prop changes",
+        "Given the proof page '/kitchen-sink' When it is rendered Then it displays every one of the 15 primitives from 'src/design/primitives' in each state (default, hover, focus, active, disabled, loading, error, empty) using the longest realistic real strings from the codebase"
+      ],
+      "depends_on": [
+        "T1",
+        "T2",
+        "T3",
+        "T4"
+      ]
+    },
+    {
+      "key": "T6",
+      "summary": "Model /portfolios, src/api/marketClient.js, src/hooks/useWatchlist.js, src/hooks/useMarketTable.js",
+      "issue_type": "Story",
+      "acceptance_criteria": [
+        "Given the Watchlist persists via the existing GET/PUT '/portfolios' endpoint When watchlist state is read or written through 'src/api/marketClient.js' Then it returns the identical response shape defined in 'UISPEC.md#data-contract' with no new endpoints, parameters, or persistence behaviour introduced",
+        "Given the hook 'src/hooks/useWatchlist.js' extracted from the Watchlist screen When it is consumed with the same props as before Then it returns an explicit {data, isLoading, error} object preserving the loading, error, empty, and success branches from 'PHASE1-IA.md#state-coverage-matrix' exactly with no signature or prop changes",
+        "Given the hook 'src/hooks/useMarketTable.js' extracted from the market list screen When it is consumed with the same props as before Then it returns an explicit {data, isLoading, error} object preserving the loading, error, empty, and success branches from 'PHASE1-IA.md#state-coverage-matrix' exactly with no signature or prop changes",
+        "Given the frozen '/coins/markets' feed wrapped by 'src/api/marketClient.js' When the market table data is requested through it Then it returns the identical response shape defined in 'UISPEC.md#data-contract' with no new endpoints, parameters, or data behaviour added"
+      ],
+      "depends_on": [
+        "T2",
+        "T3",
+        "T4"
+      ]
+    },
+    {
+      "key": "T7",
+      "summary": "Compose redesigned market list and coin detail screens from src/design/primitives, wiring src/hooks/useMarketTable.js and src/hooks/useCoinDetail.js",
+      "issue_type": "Story",
+      "acceptance_criteria": [
+        "Given the redesigned market list screen composed from 'src/design/primitives' When it is rendered against every state in 'PHASE1-IA.md#state-coverage-matrix' Then each of {loading, error, empty, success, offline, permission-denied} renders the same observable branch recorded for that screen with no state regressed to a worse cell",
+        "Given the route map 'PHASE1-IA.md#route-map' When the composed screens are mounted Then every screen keeps the exact file path and auth gating listed with no route added, removed, or newly auth-gated",
+        "Given the redesigned coin detail screen wired to 'src/hooks/useCoinDetail.js' When it consumes the hook's {data, isLoading, error} object Then it preserves the loading, error, empty, and success branches from 'PHASE1-IA.md#state-coverage-matrix' exactly",
+        "Given the market table wired to 'src/hooks/useMarketTable.js' When it renders rows Then it uses only the 15 primitives from 'src/design/primitives' with no hand-rolled table, shell, or ad-hoc inline styles introduced"
+      ],
+      "depends_on": [
+        "T2",
+        "T4",
+        "T5",
+        "T6"
+      ]
+    },
+    {
+      "key": "T8",
+      "summary": "Add a visual-regression and accessibility gate over the redesigned screens delivered by the composition story, gating merge on zero unexplained diffs",
+      "issue_type": "Story",
+      "acceptance_criteria": [
+        "Given the redesigned screens delivered upstream When the visual-regression gate runs in CI Then every screen diff is either zero or carries a reviewer-approved baseline update, and an unexplained diff fails the build",
+        "Given the same screens When the accessibility gate runs Then each screen passes the existing axe ruleset with no new violations over the Phase 0 baseline",
+        "Given the proof surface When it is inspected Then it exercises every primitive state combination already enumerated upstream with no new primitive or state introduced here"
+      ],
+      "depends_on": [
+        "T7"
+      ]
+    }
+  ]
+}
