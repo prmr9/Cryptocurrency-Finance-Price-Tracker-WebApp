@@ -1,5 +1,3 @@
-{"ts": 1785954060.512228, "agent": "devagent-local", "ticket": "KAN-49", "kind": "pr", "text": "Opened PR for KAN-49: https://github.com/prmr9/Cryptocurrency-Finance-Price-Tracker-WebApp/pull/19", "to": null}
-{"ts": 1785954187.086431, "agent": "devagent-local", "ticket": "KAN-49", "kind": "pr", "text": "KAN-49 PR open for review: https://github.com/prmr9/Cryptocurrency-Finance-Price-Tracker-WebApp/pull/19", "to": null}
 {"ts": 1785954320.911432, "agent": "devagent-local", "ticket": "KAN-50", "kind": "started", "text": "Started KAN-50 on prmr9/Cryptocurrency-Finance-Price-Tracker-WebApp (branch feature/KAN-50).", "to": null}
 {"ts": 1785955220.591394, "agent": "devagent-local", "ticket": "KAN-50", "kind": "plan", "text": "Posted implementation plan for KAN-50; awaiting approval.", "to": null}
 {"ts": 1785955298.4821289, "agent": "devagent-local", "ticket": "KAN-51", "kind": "started", "text": "Started KAN-51 on prmr9/Cryptocurrency-Finance-Price-Tracker-WebApp (branch feature/KAN-51).", "to": null}
@@ -298,3 +296,5 @@
 {"ts": 1786795925.101278, "agent": "devagent-prashant", "ticket": "KAN-73", "kind": "merged", "text": "Merged KAN-73: https://github.com/prmr9/Cryptocurrency-Finance-Price-Tracker-WebApp/pull/33", "to": null}
 {"ts": 1786795944.308032, "agent": "devagent-aman", "ticket": "KAN-72", "kind": "blocked", "text": "Starved \u2014 every ticket held by devagent-aman (KAN-72) is parked on KAN-71 (unowned). No workable story; this agent is idle until they land.", "to": null}
 {"ts": 1786796001.977663, "agent": "devagent-aman", "ticket": "KAN-72", "kind": "blocked", "text": "Starved \u2014 every ticket held by devagent-aman (KAN-72) is parked on KAN-71 (unowned). No workable story; this agent is idle until they land.", "to": null}
+{"ts": 1786796047.624706, "agent": "devagent-aman", "ticket": "KAN-72", "kind": "blocked", "text": "Starved \u2014 every ticket held by devagent-aman (KAN-72) is parked on KAN-71 (unowned). No workable story; this agent is idle until they land.", "to": null}
+{"ts": 1786796097.86037, "agent": "devagent-aman", "ticket": "KAN-72", "kind": "blocked", "text": "Starved \u2014 every ticket held by devagent-aman (KAN-72) is parked on KAN-71 (unowned). No workable story; this agent is idle until they land.", "to": null}
