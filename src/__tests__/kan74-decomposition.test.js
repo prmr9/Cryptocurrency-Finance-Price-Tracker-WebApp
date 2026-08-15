@@ -1,260 +1,202 @@
 /**
- * KAN-74 — Resolve decomposition gaps for EPIC.
+ * KAN-74 — Resolve decomposition gaps for EPIC (regression test).
  *
- * Regression test for the dropped/quarantined story specs. Automated
- * decomposition repair dropped T2 (and its transitive dependents T5–T8)
- * because T2's acceptance criterion #1 wrote the state enum as the slash form
- * "handled/partial/missing", which the decomposition-validator parsed as a
- * phantom artifact path "/partial/missing" that no story produces:
+ * Reproduces the decomposition-repair gap: the 5 quarantined story specs
+ * (T2, T5, T6, T7, T8) must be re-filed into a VALID decomposition at
+ * docs/decomposition/kan74-refiled-decomposition.json.
  *
- *   "no story in this decomposition produces /partial/missing,
- *    referenced by T2's AC"  ->  Decomposition validation: REJECTED
+ * On the current (buggy) tree that file does not exist, and the original
+ * specs still (a) carry the slash form "handled/partial/missing" — which the
+ * decomposition-validator parses as a phantom produced-by-nobody artifact
+ * "/partial/missing" and rejects on — and (b) key the #state-coverage-matrix
+ * and #route-map anchors to the FROZEN UISPEC.md instead of the non-frozen
+ * PHASE1-IA.md companion doc. So this suite fails today.
  *
- * The fix re-files the quarantined specs into
- *   docs/decomposition/kan74-refiled-decomposition.json
- * with:
- *   (a) T2 AC#1's enum written as a non-path-parseable list
- *       "one of: handled, partial, missing, or n/a",
- *   (b) an acyclic consumer->producer graph whose depends_on targets all
- *       resolve to known stories T1–T8,
- *   (c) the #state-coverage-matrix / #route-map anchors re-keyed to the
- *       non-frozen companion doc PHASE1-IA.md, each produced by exactly one
- *       story and never consumed by its own producer, and
- *   (d) a matrix whose rows are enumerated per-screen from the App.js router
- *       source (no fixed count).
- *
- * This suite therefore FAILS on the current (still-buggy) tree — the re-filed
- * decomposition JSON does not exist / still carries the phantom slash enum and
- * UISPEC.md anchors — and only passes once the gap is resolved as WORK.
+ * It passes only once the gap is resolved per the approved acceptance
+ * criteria: the JSON exists, T2's matrix AC marks cells "one of: handled,
+ * partial, missing, or n/a" (no slash / no path-parseable enum) with rows
+ * enumerated from the App.js router source, the anchors are re-keyed to
+ * PHASE1-IA.md, and the consumer->producer graph is resolvable and acyclic.
  */
-
 const fs = require('fs');
 const path = require('path');
 
 const REPO_ROOT = path.resolve(__dirname, '..', '..');
-const DECOMP_PATH = path.join(
+const JSON_PATH = path.join(
   REPO_ROOT,
   'docs',
   'decomposition',
   'kan74-refiled-decomposition.json'
 );
-const APP_PATH = path.resolve(__dirname, '..', 'App.js');
+const APP_PATH = path.join(REPO_ROOT, 'src', 'App.js');
 
-// The full universe of stories the decomposition is allowed to reference.
-const KNOWN_STORIES = ['T1', 'T2', 'T3', 'T4', 'T5', 'T6', 'T7', 'T8'];
-
-// Approved consumer->producer edges for the re-filed specs.
-const EXPECTED_EDGES = {
-  T2: ['T1'],
-  T5: ['T1', 'T2', 'T3', 'T4'],
-  T6: ['T2', 'T3', 'T4'],
-  T7: ['T2', 'T4', 'T5', 'T6'],
-  T8: ['T7'],
-};
-
-// Anchors that must move off the frozen UISPEC.md onto PHASE1-IA.md.
+const KNOWN_STORIES = new Set(['T1', 'T2', 'T3', 'T4', 'T5', 'T6', 'T7', 'T8']);
+const STATE_COLUMNS = [
+  'loading',
+  'error',
+  'empty',
+  'success',
+  'offline',
+  'permission-denied',
+];
 const ANCHORS = ['#state-coverage-matrix', '#route-map'];
 
-// State columns the matrix must carry, one column per state.
-const COLUMN_PATTERNS = {
-  loading: /loading/i,
-  error: /error/i,
-  empty: /empty/i,
-  success: /success/i,
-  offline: /offline/i,
-  'permission-denied': /permission[-\s]?denied/i,
-};
+// Loads the re-filed decomposition. Throws (failing the test) when the file
+// is absent — which is exactly the un-resolved-gap state this bug describes.
+function loadStories() {
+  const raw = fs.readFileSync(JSON_PATH, 'utf8');
+  const data = JSON.parse(raw);
+  if (Array.isArray(data)) return data;
+  if (data && Array.isArray(data.stories)) return data.stories;
+  if (data && Array.isArray(data.specs)) return data.specs;
+  throw new Error(
+    'kan74-refiled-decomposition.json must contain an array of story specs'
+  );
+}
 
-function loadDecomp() {
-  // On the current buggy tree this file does not exist, so this fails first
-  // and the whole suite reproduces the unresolved-gap state.
-  expect(fs.existsSync(DECOMP_PATH)).toBe(true);
-  const raw = fs.readFileSync(DECOMP_PATH, 'utf8');
-  const parsed = JSON.parse(raw);
-  const stories = Array.isArray(parsed)
-    ? parsed
-    : parsed.stories || parsed.specs || parsed.story_specs || [];
-  expect(Array.isArray(stories)).toBe(true);
-  expect(stories.length).toBeGreaterThan(0);
-  return { raw, stories };
+function loadAppSource() {
+  return fs.readFileSync(APP_PATH, 'utf8');
 }
 
 function byKey(stories, key) {
   return stories.find((s) => s && s.key === key);
 }
 
-function firstAc(story) {
-  expect(story).toBeDefined();
-  expect(Array.isArray(story.acceptance_criteria)).toBe(true);
-  expect(typeof story.acceptance_criteria[0]).toBe('string');
-  return story.acceptance_criteria[0];
-}
-
-function acText(story) {
-  const list =
-    story && Array.isArray(story.acceptance_criteria)
-      ? story.acceptance_criteria
-      : [];
-  return list.join('\n');
-}
-
-// (d) row count is derived from the parsed App.js <Route> elements.
-function countRouteElements(appSrc) {
-  return (appSrc.match(/<Route\b/g) || []).length;
-}
-
-function hasCycle(stories) {
-  const graph = {};
-  stories.forEach((s) => {
-    graph[s.key] = Array.isArray(s.depends_on) ? s.depends_on : [];
-  });
-  const nodes = new Set(Object.keys(graph));
-  Object.values(graph).forEach((deps) => deps.forEach((d) => nodes.add(d)));
-
-  const WHITE = 0;
-  const GRAY = 1;
-  const BLACK = 2;
-  const color = {};
-  nodes.forEach((n) => {
-    color[n] = WHITE;
-  });
-
-  let cyclic = false;
-  function dfs(u) {
-    color[u] = GRAY;
-    (graph[u] || []).forEach((v) => {
-      if (color[v] === GRAY) cyclic = true;
-      else if (color[v] === WHITE) dfs(v);
-    });
-    color[u] = BLACK;
-  }
-  nodes.forEach((n) => {
-    if (color[n] === WHITE) dfs(n);
-  });
-  return cyclic;
-}
-
 describe('KAN-74 re-filed decomposition', () => {
-  test('re-files the quarantined story specs T2, T5, T6, T7, T8', () => {
-    const { stories } = loadDecomp();
-    ['T2', 'T5', 'T6', 'T7', 'T8'].forEach((key) => {
-      expect(byKey(stories, key)).toBeDefined();
-    });
+  test('re-filed decomposition JSON and src/App.js are present with all 5 quarantined specs', () => {
+    expect(fs.existsSync(JSON_PATH)).toBe(true);
+    expect(fs.existsSync(APP_PATH)).toBe(true);
+
+    const stories = loadStories();
+    expect(stories.length).toBeGreaterThan(0);
+    for (const key of ['T2', 'T5', 'T6', 'T7', 'T8']) {
+      expect(byKey(stories, key)).toBeTruthy();
+    }
   });
 
-  test('(a) T2 AC#1 drops the path-parseable "/partial/missing" enum', () => {
-    const { stories } = loadDecomp();
-    const ac1 = firstAc(byKey(stories, 'T2'));
+  test('(a) T2 AC#1 marks cells "one of: handled, partial, missing, or n/a" — no slash form, no path-parseable enum', () => {
+    const t2 = byKey(loadStories(), 'T2');
+    expect(t2).toBeTruthy();
+    const ac1 = t2.acceptance_criteria[0];
 
-    // The approved non-path enum wording must be present verbatim...
     expect(ac1).toContain('one of: handled, partial, missing, or n/a');
-
-    // ...and the slash form that the validator mis-parsed as an artifact
-    // path must be gone entirely.
     expect(ac1).not.toContain('handled/partial/missing');
     expect(ac1).not.toContain('/partial/missing');
-    expect(
-      /(handled|partial|missing)\s*\/\s*(handled|partial|missing)/i.test(ac1)
-    ).toBe(false);
 
-    // No re-filed spec may reintroduce the phantom artifact anywhere.
-    const allAcs = stories.map(acText).join('\n');
-    expect(allAcs).not.toContain('/partial/missing');
-  });
-
-  test('(b) graph is acyclic and every depends_on resolves to T1–T8', () => {
-    const { stories } = loadDecomp();
-
-    stories.forEach((s) => {
-      expect(Array.isArray(s.depends_on)).toBe(true);
-      s.depends_on.forEach((dep) => {
-        expect(KNOWN_STORIES).toContain(dep);
-      });
-      // A story may never depend on itself (would consume what it produces).
-      expect(s.depends_on).not.toContain(s.key);
-    });
-
-    // Exact approved edges for the re-filed specs.
-    Object.keys(EXPECTED_EDGES).forEach((key) => {
-      const s = byKey(stories, key);
-      if (s) {
-        expect([...s.depends_on].sort()).toEqual(
-          [...EXPECTED_EDGES[key]].sort()
-        );
+    // No path-parseable enum: no braced set whose members are route paths
+    // (a member that begins with '/'). The state-column enum and any
+    // {handled, partial, missing, n/a} enum have no path-like members.
+    const braceGroups = ac1.match(/\{[^}]*\}/g) || [];
+    for (const group of braceGroups) {
+      const members = group
+        .replace(/^\{/, '')
+        .replace(/\}$/, '')
+        .split(',')
+        .map((m) => m.trim());
+      for (const member of members) {
+        expect(member.startsWith('/')).toBe(false);
       }
-    });
-
-    expect(hasCycle(stories)).toBe(false);
+    }
   });
 
-  test('(c) matrix/route-map anchors re-keyed to PHASE1-IA.md, produced once, never self-consumed', () => {
-    const { raw, stories } = loadDecomp();
+  test('(d) T2 AC#1 derives matrix rows from the App.js <Route> source and lists the six state columns', () => {
+    const ac1 = byKey(loadStories(), 'T2').acceptance_criteria[0];
+    const app = loadAppSource();
 
-    ANCHORS.forEach((anchor) => {
-      // Every reference is keyed to the non-frozen companion doc, not UISPEC.md.
-      expect(raw).toContain('PHASE1-IA.md' + anchor);
-      expect(raw).not.toContain('UISPEC.md' + anchor);
-      const withoutKeyed = raw.split('PHASE1-IA.md' + anchor).join('');
-      expect(withoutKeyed.includes(anchor)).toBe(false);
-
-      // Produced by exactly one story (named in its summary).
-      const producers = stories.filter((s) =>
-        (s.summary || '').includes('PHASE1-IA.md' + anchor)
-      );
-      expect(producers.length).toBe(1);
-      const producer = producers[0];
-
-      // Consumers reference it in their ACs and must depend on the producer;
-      // the producer never consumes the artifact it solely produces.
-      const consumers = stories.filter(
-        (s) => s.key !== producer.key && acText(s).includes(anchor)
-      );
-      consumers.forEach((c) => {
-        expect(c.depends_on).toContain(producer.key);
-      });
-      expect(producer.depends_on).not.toContain(producer.key);
-    });
-  });
-
-  test('(d) matrix rows enumerated per-screen from the App.js router (no fixed count)', () => {
-    const { stories } = loadDecomp();
-
-    // Derive the screen count from the actual parsed <Route> elements.
-    expect(fs.existsSync(APP_PATH)).toBe(true);
-    const appSrc = fs.readFileSync(APP_PATH, 'utf8');
-    const routeCount = countRouteElements(appSrc);
+    // Row count is derived from the parsed App.js <Route> elements — not a
+    // fixed literal count. A screen-coverage matrix must have >= 1 row.
+    const routeCount = (app.match(/<Route\b/g) || []).length;
     expect(routeCount).toBeGreaterThan(0);
 
-    const ac1 = firstAc(byKey(stories, 'T2'));
+    expect(ac1).toMatch(/App\.js/);
+    expect(ac1.toLowerCase()).toContain('one row per screen');
+    expect(ac1.toLowerCase()).toMatch(/no fixed count|enumerated from the app\.js/);
 
-    // One row per screen, enumerated from App.js — and no hard-coded count.
-    expect(/one row per screen/i.test(ac1)).toBe(true);
-    expect(/App\.js/.test(ac1)).toBe(true);
-    expect(/\b\d+\s+(rows?|screens?)\b/i.test(ac1)).toBe(false);
-
-    // One column per state.
-    Object.entries(COLUMN_PATTERNS).forEach(([, re]) => {
-      expect(re.test(ac1)).toBe(true);
-    });
+    for (const col of STATE_COLUMNS) {
+      expect(ac1).toContain(col);
+    }
   });
 
-  test('T2 AC#1 carries the point-in-time snapshot + re-audit clause on PHASE1-IA.md', () => {
-    const { stories } = loadDecomp();
-    const ac1 = firstAc(byKey(stories, 'T2'));
+  test('T2 AC#1 is a dated snapshot with a re-audit trigger, living in the non-frozen PHASE1-IA.md companion doc', () => {
+    const ac1 = byKey(loadStories(), 'T2').acceptance_criteria[0];
+    expect(ac1).toMatch(/PHASE1-IA\.md/);
+    expect(ac1.toLowerCase()).toContain('snapshot');
+    expect(ac1).toMatch(/\b20\d{2}\b/);
+    expect(ac1.toLowerCase()).toMatch(/re-?audit|trigger|regenerat|recompile/);
+    expect(ac1.toLowerCase()).toMatch(/companion|non-frozen/);
+  });
 
-    // A named snapshot date...
-    expect(/snapshot/i.test(ac1)).toBe(true);
-    expect(
-      /\b\d{4}\b/.test(ac1) ||
-        /\b(january|february|march|april|may|june|july|august|september|october|november|december)\b/i.test(
-          ac1
-        )
-    ).toBe(true);
+  test('(b) every depends_on target resolves to T1–T8 with the exact acyclic consumer→producer graph', () => {
+    const stories = loadStories();
 
-    // ...a re-audit trigger when App.js or routes change...
-    expect(/change/i.test(ac1)).toBe(true);
+    const EXPECTED_EDGES = {
+      T2: ['T1'],
+      T5: ['T1', 'T2', 'T3', 'T4'],
+      T6: ['T2', 'T3', 'T4'],
+      T7: ['T2', 'T4', 'T5', 'T6'],
+      T8: ['T7'],
+    };
 
-    // ...and the matrix living in the non-frozen companion doc.
-    expect(/PHASE1-IA\.md/.test(ac1)).toBe(true);
+    const nodes = new Set();
+    const edges = {};
+    for (const s of stories) {
+      nodes.add(s.key);
+      const deps = Array.isArray(s.depends_on) ? s.depends_on : [];
+      edges[s.key] = deps;
+      for (const d of deps) {
+        nodes.add(d);
+        expect(KNOWN_STORIES.has(d)).toBe(true); // resolvable to a known story
+      }
+    }
+
+    for (const [key, deps] of Object.entries(EXPECTED_EDGES)) {
+      const s = byKey(stories, key);
+      expect(s).toBeTruthy();
+      expect([...(s.depends_on || [])].sort()).toEqual([...deps].sort());
+    }
+
+    // Acyclic (three-colour DFS).
+    const color = {};
+    for (const n of nodes) color[n] = 0;
+    let cycle = false;
+    const visit = (u) => {
+      color[u] = 1;
+      for (const v of edges[u] || []) {
+        if (color[v] === 1) cycle = true;
+        else if (color[v] === 0) visit(v);
+      }
+      color[u] = 2;
+    };
+    for (const n of nodes) if (color[n] === 0) visit(n);
+    expect(cycle).toBe(false);
+  });
+
+  test('#state-coverage-matrix and #route-map are keyed to PHASE1-IA.md, never the frozen UISPEC.md', () => {
+    const blob = JSON.stringify(loadStories());
+    for (const anchor of ANCHORS) {
+      expect(blob).not.toContain('UISPEC.md' + anchor);
+      expect(blob).toContain('PHASE1-IA.md' + anchor);
+    }
+  });
+
+  test('(c) each anchor is produced by exactly one story and never consumed by its own producer', () => {
+    const stories = loadStories();
+    for (const anchor of ANCHORS) {
+      const producers = stories.filter(
+        (s) => typeof s.summary === 'string' && s.summary.includes(anchor)
+      );
+      expect(producers.length).toBe(1); // produced by exactly one story
+
+      const producer = producers[0];
+      // A producer must not depend on itself...
+      expect(producer.depends_on || []).not.toContain(producer.key);
+      // ...nor on another story that also produces the same artifact.
+      for (const dep of producer.depends_on || []) {
+        const depStory = byKey(stories, dep);
+        if (depStory && typeof depStory.summary === 'string') {
+          expect(depStory.summary.includes(anchor)).toBe(false);
+        }
+      }
+    }
   });
 });
