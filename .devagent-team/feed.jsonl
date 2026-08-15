@@ -1,5 +1,3 @@
-{"ts": 1786735189.480792, "agent": "devagent-aman", "ticket": "KAN-74", "kind": "blocked", "text": "Parked KAN-74; blocked by KAN-73.", "to": null}
-{"ts": 1786735519.680563, "agent": "devagent-prashant", "ticket": "KAN-71", "kind": "plan", "text": "Posted implementation plan for KAN-71; awaiting approval.", "to": null}
 {"ts": 1786735586.031316, "agent": "devagent-prashant", "ticket": "KAN-72", "kind": "blocked", "text": "Parked KAN-72; blocked by KAN-71.", "to": null}
 {"ts": 1786735588.6118028, "agent": "devagent-prashant", "ticket": "KAN-73", "kind": "blocked", "text": "Parked KAN-73; blocked by KAN-71, KAN-72.", "to": null}
 {"ts": 1786735590.566467, "agent": "devagent-prashant", "ticket": "KAN-74", "kind": "blocked", "text": "Parked KAN-74; blocked by KAN-73.", "to": null}
@@ -298,3 +296,5 @@
 {"ts": 1786799779.0154722, "agent": "devagent-aman", "ticket": "KAN-72", "kind": "blocked", "text": "Starved \u2014 every ticket held by devagent-aman (KAN-72, KAN-74) is parked on KAN-71 (unowned), KAN-73 (unowned). No workable story; this agent is idle until they land.", "to": null}
 {"ts": 1786799833.228535, "agent": "devagent-aman", "ticket": "KAN-72", "kind": "blocked", "text": "Starved \u2014 every ticket held by devagent-aman (KAN-72, KAN-74) is parked on KAN-71 (unowned), KAN-73 (unowned). No workable story; this agent is idle until they land.", "to": null}
 {"ts": 1786799880.2924569, "agent": "devagent-aman", "ticket": "KAN-72", "kind": "blocked", "text": "Starved \u2014 every ticket held by devagent-aman (KAN-72, KAN-74) is parked on KAN-71 (unowned), KAN-73 (unowned). No workable story; this agent is idle until they land.", "to": null}
+{"ts": 1786799933.9404402, "agent": "devagent-aman", "ticket": "KAN-72", "kind": "blocked", "text": "Starved \u2014 every ticket held by devagent-aman (KAN-72, KAN-74) is parked on KAN-71 (unowned), KAN-73 (unowned). No workable story; this agent is idle until they land.", "to": null}
+{"ts": 1786799982.7066948, "agent": "devagent-aman", "ticket": "KAN-72", "kind": "blocked", "text": "Starved \u2014 every ticket held by devagent-aman (KAN-72, KAN-74) is parked on KAN-71 (unowned), KAN-73 (unowned). No workable story; this agent is idle until they land.", "to": null}
