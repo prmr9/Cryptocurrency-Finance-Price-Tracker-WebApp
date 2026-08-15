@@ -12,7 +12,7 @@
 // Mock every child module with a distinct sentinel so we can prove each named
 // export is wired to the correct source module (guards against copy/paste typos
 // like re-exporting ./EmptyState under the ErrorState name).
-const mockPrimitive = (name) => {
+function mockPrimitive(name) {
   const Comp = () => null
   Comp.displayName = name
   return { __esModule: true, default: Comp }
