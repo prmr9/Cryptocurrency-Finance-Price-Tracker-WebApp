@@ -8,7 +8,7 @@
     "status": "",
     "summary": "",
     "capacity": 20.0,
-    "updated_at": 1786791372.5894349
+    "updated_at": 1786791410.79526
   },
   "devagent-prashant": {
     "agent": "devagent-prashant",
@@ -16,9 +16,9 @@
     "ticket": "KAN-74",
     "repo": "prmr9/Cryptocurrency-Finance-Price-Tracker-WebApp",
     "phase": "phase1_ingestion",
-    "status": "new",
+    "status": "pending_approval",
     "summary": "Resolve decomposition gaps for EPIC",
     "capacity": 20.0,
-    "updated_at": 1786790750.300996
+    "updated_at": 1786791410.16265
   }
 }
