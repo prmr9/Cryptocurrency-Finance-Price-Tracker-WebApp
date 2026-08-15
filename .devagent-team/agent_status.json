@@ -8,17 +8,17 @@
     "status": "",
     "summary": "",
     "capacity": 20.0,
-    "updated_at": 1786767512.766439
+    "updated_at": 1786767562.0881448
   },
   "devagent-prashant": {
     "agent": "devagent-prashant",
     "account": "712020:ad3d4e51-4ea0-4043-8f1f-0e390e87f10b",
-    "ticket": "KAN-72",
-    "repo": "prmr9/Cryptocurrency-Finance-Price-Tracker-WebApp",
-    "phase": "phase3_implementation",
-    "status": "approved",
-    "summary": "Define UISPEC.md#data-contract, UISPEC.md#state-inventory, UISPEC.md#design-debt-count, UISPEC.md#risk-list",
+    "ticket": "",
+    "repo": null,
+    "phase": "",
+    "status": "",
+    "summary": "",
     "capacity": 20.0,
-    "updated_at": 1786767462.68901
+    "updated_at": 1786767562.1734679
   }
 }
