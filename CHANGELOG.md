@@ -1,6 +1,7 @@
 # Changelog
 
 ## Unreleased
+- KAN-73: Model polarity-decision (dark-first), /coins/markets, /coins/{coinId}, src/design/tokens.js, src/design/primitives (DevAgent)
 - KAN-71: Walking skeleton: UISPEC.md (DevAgent)
 - KAN-60: [tech-debt] post-merge CI fragility in prmr9/Cryptocurrency-Finance-Price-Tracker-WebApp (DevAgent)
 - KAN-59: [UI] Show each coin's rank movement arrow in the market table (DevAgent)
