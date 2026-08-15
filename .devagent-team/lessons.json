@@ -791,7 +791,7 @@
       "Any process where the same agent (or a lightly-modified prompt of it) both performs the work and certifies its own success, rather than a separate, differently-scoped process doing the certification"
     ],
     "kind": "principle",
-    "weight": 1.5,
+    "weight": 1.5208749999999995,
     "times_applied": 33,
     "times_confirmed": 4,
     "safety_class": "guardrail",
@@ -5839,7 +5839,7 @@
       "team-knowledge"
     ],
     "kind": "onboarding",
-    "weight": 1.5,
+    "weight": 1.8,
     "times_applied": 32,
     "times_confirmed": 4,
     "safety_class": "neutral",
