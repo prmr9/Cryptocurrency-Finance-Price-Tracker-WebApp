@@ -1,7 +1,7 @@
 {
   "epic": "EPIC",
   "ticket": "KAN-74",
-  "note": "Re-filed decomposition for the 5 story specs dropped by the L4 ladder action. T2 AC#1 de-pathified (enum was mis-parsed as artifact path '/partial/missing'); NEW Phase-1 audit anchors (PHASE1-IA.md#state-coverage-matrix produced by T2, PHASE1-IA.md#route-map produced by T5) re-keyed from the frozen UISPEC.md to the non-frozen PHASE1-IA.md companion doc. Existing UISPEC.md references and depends_on edges preserved verbatim. This JSON is decomposition DATA describing future build work; PHASE1-IA.md itself is created by T2's own build, not by KAN-74.",
+  "note": "Re-filed decomposition for the 5 story specs dropped by the L4 ladder action. T2 AC#1 de-pathified (the slash-delimited cell-value enum was mis-parsed as a phantom artifact path); NEW Phase-1 audit anchors (PHASE1-IA.md#state-coverage-matrix produced by T2, PHASE1-IA.md#route-map produced by T5) re-keyed from the frozen UISPEC.md to the non-frozen PHASE1-IA.md companion doc. Existing UISPEC.md references and depends_on edges preserved verbatim. This JSON is decomposition DATA describing future build work; PHASE1-IA.md itself is created by T2's own build, not by KAN-74.",
   "stories": [
     {
       "key": "T2",

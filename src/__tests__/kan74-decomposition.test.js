@@ -164,9 +164,8 @@ describe('KAN-74 re-filed decomposition', () => {
     // ...and it must not survive anywhere in the decomposition DATA the
     // validator parses for produced artifacts — every story summary and
     // acceptance criterion across all re-filed specs. The top-level
-    // human-readable `note` documents the historical phantom token on purpose
-    // (that is why `raw` is not scanned here); it is prose, not spec data a
-    // validator reads for producers/consumers.
+    // human-readable `note` is prose, not spec data a validator reads for
+    // producers/consumers, so producer/consumer scans target summaries + ACs.
     const specData = stories
       .map((s) => [s.summary || '', acText(s)].join('\n'))
       .join('\n');
