@@ -4,16 +4,20 @@ import '@testing-library/jest-dom'
 import axios from 'axios'
 import useCoin from '../useCoin'
 
-// @testing-library/react 12 predates renderHook and react-hooks isn't a dep,
-// so we exercise the hook through a tiny probe component + render/waitFor.
+// The axios module is mocked so no real network call happens and we control
+// resolve/reject. @testing-library/react 12 predates renderHook and
+// react-hooks isn't a dep, so we drive the hook through a tiny probe
+// component with render/waitFor (NOT renderHook).
 jest.mock('axios')
 
+// Probe surfaces the whole hook return so tests can assert the raw values:
+// `data` is exposed as JSON so "data stays {}" is checked literally.
 function Probe({ coinId }) {
     const { data, isLoading, error } = useCoin(coinId)
     return (
         <div>
+            <span data-testid='data'>{JSON.stringify(data)}</span>
             <span data-testid='name'>{data.name || 'none'}</span>
-            <span data-testid='keys'>{Object.keys(data).length}</span>
             <span data-testid='loading'>{String(isLoading)}</span>
             <span data-testid='error'>{error ? 'err' : 'none'}</span>
         </div>
@@ -25,37 +29,45 @@ beforeEach(() => {
 })
 
 describe('useCoin', () => {
-    test('starts loading with an empty object and no error', () => {
-        // Never resolves during this synchronous assertion window.
+    test('initial render: data is {} and no error while loading', () => {
+        // A never-settling promise keeps the hook in its initial state.
         axios.get.mockReturnValue(new Promise(() => {}))
         render(<Probe coinId='bitcoin' />)
 
-        expect(screen.getByTestId('keys')).toHaveTextContent('0')
+        expect(screen.getByTestId('data').textContent).toBe('{}')
         expect(screen.getByTestId('name')).toHaveTextContent('none')
         expect(screen.getByTestId('loading')).toHaveTextContent('true')
         expect(screen.getByTestId('error')).toHaveTextContent('none')
     })
 
-    test('success: sets data, hitting the verbatim per-coin URL', async () => {
-        axios.get.mockResolvedValue({ data: { name: 'Bitcoin', symbol: 'btc' } })
+    test('success case: sets data from res.data, hitting the verbatim per-coin URL', async () => {
+        const coin = { name: 'Bitcoin', symbol: 'btc' }
+        axios.get.mockResolvedValue({ data: coin })
         render(<Probe coinId='bitcoin' />)
 
-        await waitFor(() => expect(screen.getByTestId('name')).toHaveTextContent('Bitcoin'))
+        await waitFor(() =>
+            expect(screen.getByTestId('data').textContent).toBe(JSON.stringify(coin))
+        )
+        expect(screen.getByTestId('name')).toHaveTextContent('Bitcoin')
         expect(axios.get).toHaveBeenCalledWith('https://api.coingecko.com/api/v3/coins/bitcoin')
         expect(screen.getByTestId('loading')).toHaveTextContent('false')
         expect(screen.getByTestId('error')).toHaveTextContent('none')
     })
 
-    test('failure: logs the error, data stays {} , nothing thrown', async () => {
+    test('failure case: console.log is called, data stays {}, and nothing is thrown', async () => {
         const err = new Error('network down')
         axios.get.mockRejectedValue(err)
         const logSpy = jest.spyOn(console, 'log').mockImplementation(() => {})
 
-        // render must not throw when the fetch rejects.
+        // no thrown error: rendering while the fetch rejects must not throw.
         expect(() => render(<Probe coinId='bitcoin' />)).not.toThrow()
 
+        // console.log called (verbatim, with the rejected error).
         await waitFor(() => expect(logSpy).toHaveBeenCalledWith(err))
-        expect(screen.getByTestId('keys')).toHaveTextContent('0')
+
+        // data stays {}; the component is still mounted, i.e. the rejection did
+        // not crash it.
+        expect(screen.getByTestId('data').textContent).toBe('{}')
         expect(screen.getByTestId('name')).toHaveTextContent('none')
         expect(screen.getByTestId('loading')).toHaveTextContent('false')
 
