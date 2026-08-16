@@ -115,13 +115,15 @@
   "KAN-75": {
     "ticket": "KAN-75",
     "cycle": 1,
-    "stage": "in_review",
+    "stage": "merged",
     "branch": "feature/KAN-75",
     "pr_number": 34,
-    "merged_prs": [],
+    "merged_prs": [
+      34
+    ],
     "released": false,
     "reopen_reason": "",
     "updated_by": "devagent-aman",
-    "updated_at": 1786877459.185822
+    "updated_at": 1786895092.650267
   }
 }
