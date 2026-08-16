@@ -1,6 +1,7 @@
 # Changelog
 
 ## Unreleased
+- KAN-75: [deploy] Publish a release marker from the frontend deploy so a nonprod release can be verified (DevAgent)
 - KAN-73: Model polarity-decision (dark-first), /coins/markets, /coins/{coinId}, src/design/tokens.js, src/design/primitives (DevAgent)
 - KAN-71: Walking skeleton: UISPEC.md (DevAgent)
 - KAN-60: [tech-debt] post-merge CI fragility in prmr9/Cryptocurrency-Finance-Price-Tracker-WebApp (DevAgent)
