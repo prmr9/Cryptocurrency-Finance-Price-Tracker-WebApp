@@ -8,7 +8,7 @@
     "status": "implementing",
     "summary": "[UI] Extract CoinGecko data access into src/hooks/ with zero visual change",
     "capacity": 3.0,
-    "updated_at": 1786895729.2876449
+    "updated_at": 1786896606.234547
   },
   "devagent-prashant": {
     "agent": "devagent-prashant",
@@ -19,6 +19,6 @@
     "status": "",
     "summary": "",
     "capacity": 20.0,
-    "updated_at": 1786896553.520912
+    "updated_at": 1786896629.801891
   }
 }
