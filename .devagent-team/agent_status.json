@@ -2,23 +2,23 @@
   "devagent-aman": {
     "agent": "devagent-aman",
     "account": "712020:0836783c-845b-431f-8940-4bc384df99f4",
-    "ticket": "KAN-75",
+    "ticket": "KAN-76",
     "repo": "prmr9/Cryptocurrency-Finance-Price-Tracker-WebApp",
-    "phase": "phase4_review",
-    "status": "in_review",
-    "summary": "[deploy] Publish a release marker from the frontend deploy so a nonprod release can be verified",
+    "phase": "phase3_implementation",
+    "status": "approved",
+    "summary": "[UI] Extract CoinGecko data access into src/hooks/ with zero visual change",
     "capacity": 3.0,
-    "updated_at": 1786894078.8647249
+    "updated_at": 1786894507.9922628
   },
   "devagent-prashant": {
     "agent": "devagent-prashant",
-    "account": "",
+    "account": "712020:ad3d4e51-4ea0-4043-8f1f-0e390e87f10b",
     "ticket": "",
     "repo": null,
     "phase": "",
     "status": "",
     "summary": "",
     "capacity": 20.0,
-    "updated_at": 1786894084.164201
+    "updated_at": 1786894836.389317
   }
 }
