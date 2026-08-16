@@ -10,6 +10,15 @@ on:
         description: "GitHub Environment to deploy to (nonprod | prod)"
         required: true
         type: string
+      deploy_id:
+        # Correlation id from the caller, written into the served deploy.json
+        # marker so the site can state which release it is serving. Optional:
+        # push / input-less runs pass "" and the file is still written with an
+        # empty deploy_id (never omitted, never invented).
+        description: "Correlation id written into the served deploy.json marker. Empty on push/input-less runs."
+        required: false
+        type: string
+        default: ""
 
 jobs:
   build-and-deploy:
@@ -32,6 +41,30 @@ jobs:
           CI: "false"
         run: npm run build
 
+      - name: Write frontend release marker
+        # Give the served site an identity it can state. Written AFTER the build
+        # (into the build root) and BEFORE the rsync, so it is part of the rsync
+        # source and --delete keeps it. Fields mirror the backend release.json
+        # contract (deploy-backend-ec2.sh) so both components answer the same
+        # question the same way; release_id is backend-only and omitted here.
+        # All dynamic values arrive via env: and jq --arg, so the JSON is always
+        # valid (empty deploy_id serialises as "") and the input cannot inject
+        # into the shell body.
+        env:
+          DEPLOY_ID: ${{ inputs.deploy_id }}
+          GIT_SHA: ${{ github.sha }}
+          ENVIRONMENT: ${{ inputs.environment }}
+        run: |
+          DEPLOYED_AT="$(date -u '+%Y-%m-%dT%H:%M:%SZ')"
+          jq -n \
+            --arg deploy_id "$DEPLOY_ID" \
+            --arg git_sha "$GIT_SHA" \
+            --arg deployed_at "$DEPLOYED_AT" \
+            --arg environment "$ENVIRONMENT" \
+            '{deploy_id: $deploy_id, git_sha: $git_sha, deployed_at: $deployed_at, environment: $environment}' \
+            > build/deploy.json
+          cat build/deploy.json
+
       - name: Deploy build to EC2 via rsync
         env:
           EC2_HOST: ${{ secrets.EC2_HOST }}
@@ -44,3 +77,45 @@ jobs:
           rsync -avz --delete \
             -e "ssh -i ~/.ssh/deploy_key -o StrictHostKeyChecking=yes" \
             build/ "ubuntu@${EC2_HOST}:/var/www/app/"
+
+      - name: Verify served release marker
+        # Fail-closed proof that the marker is actually served as JSON at the
+        # docroot root (proving build/ -> /var/www/app/deploy.json and nginx
+        # try_files precedence over the SPA catch-all). Skipped when deploy_id
+        # is empty: an id-less deploy is unverifiable, so treat it as unproven
+        # rather than falsely verified.
+        if: inputs.deploy_id != ''
+        env:
+          DEPLOY_ID: ${{ inputs.deploy_id }}
+          GIT_SHA: ${{ github.sha }}
+          EC2_HOST: ${{ secrets.EC2_HOST }}
+        run: |
+          url="http://${EC2_HOST}/deploy.json"
+          ok=false
+          for attempt in 1 2 3 4 5 6; do
+            meta="$(curl -sS -o body.json -w '%{http_code} %{content_type}' \
+              -H 'Cache-Control: no-cache' "$url" 2>/dev/null || echo '000 -')"
+            http_code="${meta%% *}"
+            content_type="${meta#* }"
+            if [ "$http_code" = "200" ]; then
+              got_deploy_id="$(jq -r '.deploy_id // empty' body.json 2>/dev/null || echo '')"
+              got_git_sha="$(jq -r '.git_sha // empty' body.json 2>/dev/null || echo '')"
+              case "$content_type" in
+                application/json*)
+                  if [ "$got_deploy_id" = "$DEPLOY_ID" ] && [ "$got_git_sha" = "$GIT_SHA" ]; then
+                    echo "Verified: $url serves deploy_id=$got_deploy_id git_sha=$got_git_sha as $content_type"
+                    ok=true
+                    break
+                  fi
+                  ;;
+              esac
+              echo "Attempt $attempt: served deploy_id='$got_deploy_id' git_sha='$got_git_sha' content_type='$content_type' (want deploy_id='$DEPLOY_ID' git_sha='$GIT_SHA' application/json)"
+            else
+              echo "Attempt $attempt: HTTP $http_code from $url"
+            fi
+            sleep 5
+          done
+          if [ "$ok" != true ]; then
+            echo "::error::deploy.json was not served with the expected release identity"
+            exit 1
+          fi

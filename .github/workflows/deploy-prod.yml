@@ -30,4 +30,6 @@ jobs:
     uses: ./.github/workflows/deploy.yml
     with:
       environment: prod
+      # Forward the correlation id so the served deploy.json names this release.
+      deploy_id: ${{ inputs.deploy_id }}
     secrets: inherit
