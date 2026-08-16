@@ -5,9 +5,9 @@ import axios from 'axios'
 import useMarketCoins from '../useMarketCoins'
 
 // The axios module is mocked so no real network call happens and we control
-// resolve/reject. @testing-library/react 12 predates renderHook and
-// react-hooks isn't a dep, so we drive the hook through a tiny probe
-// component with render/waitFor (NOT renderHook).
+// resolve/reject. The hook is exercised through a small probe component with
+// render + waitFor and assertions on what the probe renders (the project runs
+// @testing-library/react 12 and has no react-hooks helper dependency).
 jest.mock('axios')
 
 const MARKETS_URL =
