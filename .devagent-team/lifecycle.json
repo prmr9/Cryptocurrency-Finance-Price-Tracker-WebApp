@@ -111,5 +111,17 @@
     "reopen_reason": "",
     "updated_by": "devagent-prashant",
     "updated_at": 1786795758.217823
+  },
+  "KAN-75": {
+    "branch": "feature/KAN-75",
+    "cycle": 1,
+    "merged_prs": [],
+    "pr_number": 34,
+    "released": false,
+    "reopen_reason": "",
+    "stage": "in_review",
+    "ticket": "KAN-75",
+    "updated_at": 1786877459.185822,
+    "updated_by": "devagent-aman"
   }
 }
