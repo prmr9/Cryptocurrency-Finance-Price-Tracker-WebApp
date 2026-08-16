@@ -1,5 +1,4 @@
-import React, { useState, useEffect } from 'react'
-import axios from 'axios'
+import React from 'react'
 import { Routes, Route } from 'react-router-dom'
 import Coins from './components/Coins'
 import Coin from './routes/Coin'
@@ -7,24 +6,12 @@ import Navbar from './components/Navbar'
 import Footer from './components/Footer'
 import Accounts from './components/Accounts'
 import About from './routes/About'
+import useMarketCoins from './hooks/useMarketCoins'
 
 
 function App() {
 
-  const [coins, setCoins] = useState([])
-  const [lastUpdated, setLastUpdated] = useState(null)
-
-  const url = 'https://api.coingecko.com/api/v3/coins/markets?vs_currency=usd&order=market_cap_desc&per_page=50&page=1&sparkline=true'
-
-  useEffect(() => {
-    axios.get(url).then((response) => {
-      setCoins(response.data)
-      setLastUpdated(new Date())
-      // console.log(response.data[0])
-    }).catch((error) => {
-      console.log(error)
-    })
-  }, [])
+  const { data: coins, lastUpdated } = useMarketCoins();
 
   return (
     <>
