@@ -1,1 +1,19 @@
-[]
+[
+  {
+    "ticket": "KAN-76",
+    "agent": "devagent-aman",
+    "repo": "prmr9/Cryptocurrency-Finance-Price-Tracker-WebApp",
+    "files": [
+      "src/App.js",
+      "src/api/__tests__/coingeckoClient.test.js",
+      "src/api/coingeckoClient.js",
+      "src/hooks/__tests__/useCoin.test.js",
+      "src/hooks/__tests__/useMarketCoins.test.js",
+      "src/hooks/useCoin.js",
+      "src/hooks/useMarketCoins.js",
+      "src/routes/Coin.js"
+    ],
+    "created": 1786894118.35283,
+    "expires": 1786901318.35283
+  }
+]
