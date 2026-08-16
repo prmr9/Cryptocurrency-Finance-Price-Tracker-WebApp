@@ -2,13 +2,13 @@
   "devagent-aman": {
     "agent": "devagent-aman",
     "account": "712020:0836783c-845b-431f-8940-4bc384df99f4",
-    "ticket": "KAN-76",
-    "repo": "prmr9/Cryptocurrency-Finance-Price-Tracker-WebApp",
-    "phase": "phase1_ingestion",
-    "status": "pending_approval",
-    "summary": "[UI] Extract CoinGecko data access into src/hooks/ with zero visual change",
+    "ticket": "",
+    "repo": null,
+    "phase": "",
+    "status": "",
+    "summary": "",
     "capacity": 3.0,
-    "updated_at": 1786880152.923867
+    "updated_at": 1786880175.0251431
   },
   "devagent-prashant": {
     "agent": "devagent-prashant",
@@ -19,6 +19,6 @@
     "status": "",
     "summary": "",
     "capacity": 20.0,
-    "updated_at": 1786880158.010572
+    "updated_at": 1786880184.7049558
   }
 }
