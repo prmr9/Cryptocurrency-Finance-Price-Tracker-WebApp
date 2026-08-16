@@ -1923,7 +1923,7 @@
       "monorepo"
     ],
     "kind": "reflection",
-    "weight": 1.625,
+    "weight": 1.86875,
     "times_applied": 25,
     "times_confirmed": 14,
     "safety_class": "guardrail",
@@ -3879,7 +3879,7 @@
       "branch-freshness"
     ],
     "kind": "reflection",
-    "weight": 2.3076923076923075,
+    "weight": 2.6538461538461533,
     "times_applied": 14,
     "times_confirmed": 11,
     "safety_class": "guardrail",
@@ -6696,7 +6696,7 @@
       "Any green automated gate (tests pass, checklist complete, CI green) being treated as general proof of quality rather than proof of only the specific properties that gate was built to measure"
     ],
     "kind": "principle",
-    "weight": 1.5,
+    "weight": 1.7249999999999999,
     "times_applied": 5,
     "times_confirmed": 4,
     "safety_class": "guardrail",
@@ -8116,7 +8116,7 @@
       "team-knowledge"
     ],
     "kind": "onboarding",
-    "weight": 1.5,
+    "weight": 1.7249999999999999,
     "times_applied": 72,
     "times_confirmed": 6,
     "safety_class": "neutral",
