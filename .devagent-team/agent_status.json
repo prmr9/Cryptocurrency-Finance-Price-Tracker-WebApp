@@ -2,13 +2,13 @@
   "devagent-aman": {
     "agent": "devagent-aman",
     "account": "712020:0836783c-845b-431f-8940-4bc384df99f4",
-    "ticket": "",
-    "repo": null,
-    "phase": "",
-    "status": "",
-    "summary": "",
+    "ticket": "KAN-75",
+    "repo": "prmr9/Cryptocurrency-Finance-Price-Tracker-WebApp",
+    "phase": "phase1_ingestion",
+    "status": "pending_approval",
+    "summary": "[deploy] Publish a release marker from the frontend deploy so a nonprod release can be verified",
     "capacity": 3.0,
-    "updated_at": 1786869111.3024168
+    "updated_at": 1786870290.583871
   },
   "devagent-prashant": {
     "agent": "devagent-prashant",
@@ -19,6 +19,6 @@
     "status": "",
     "summary": "",
     "capacity": 20.0,
-    "updated_at": 1786869118.819125
+    "updated_at": 1786870290.954726
   }
 }
