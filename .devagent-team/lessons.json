@@ -3879,7 +3879,7 @@
       "branch-freshness"
     ],
     "kind": "reflection",
-    "weight": 2.3076923076923075,
+    "weight": 2.357142857142857,
     "times_applied": 14,
     "times_confirmed": 11,
     "safety_class": "guardrail",
