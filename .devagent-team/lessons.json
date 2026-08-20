@@ -449,14 +449,14 @@
   {
     "id": "08cc87127d72c92a",
     "pattern": "[jira:history] Team's recent shipped work (Jira)",
-    "detail": "I'll synthesize the domain context from these shipped tickets into a concise onboarding guide.\n\n**DOMAIN CONTEXT: Cryptocurrency Finance Price Tracker WebApp**\n\n---\n\n### **Product**\nA full-stack crypto portfolio tracker where users sign up, manage holdings, and view real-time portfolio values from live price feeds (CoinGecko). Recent shipped work: Uniswap-inspired UI redesign with market-table enhancements (7-day sparklines, rank movement arrows, color-coded gains/losses, formatted market caps).\n\n### **Tech Stack & Architecture**\n- **Backend:** Node.js on AWS EC2 + nginx reverse-proxy\n- **Database:** PostgreSQL 16 on AWS RDS (user accounts, portfolios with holdings as jsonb)\n- **Frontend:** JavaScript UI focused on price/market tables\n- **Infrastructure:** AWS (RDS, Secrets Manager, IAM roles), SSH+rsync deployment with approval gates + health-check validation\n- **Authentication:** Secure HTTP-only cookies/JWT via Secrets Manager\n\n### **Core Recurring Domains**\n\n1. **Frontend/Table UI** \u2014 Market/price tables showing coin data (tickers, symbols, 24h change, sparklines, rank movement, last-updated timestamps, formatted market caps)\n2. **Backend API** \u2014 Auth endpoints (`POST /auth/signup|login|logout`, `GET /auth/me`), Portfolio endpoints (`GET|PUT /portfolios`, `POST /me/import`)\n3. **Infrastructure** \u2014 AWS provisioning (RDS, EC2, Secrets Manager), health checks (`GET /health` blocks deploys on failure), gated release lanes, SSH-tunnel migrations\n4. **Data Models** \u2014 users (email, password_hash), user_profiles (display_name, avatar_url), portfolios (name, holdings jsonb)\n5. **Deployment & Incident Response** \u2014 Health-check gating, approval lanes, incident triage (e.g., backend status=00 prevents startup)\n\n### **Product Vocabulary**\n\n- **Portfolio** \u2014 per-user crypto holdings (stored as jsonb)\n- **Holdings** \u2014 the crypto assets inside a portfolio\n- **24h change** \u2014 price movement indicator (color-coded: red=loss, green=gain)\n- **Market cap** \u2014 formatted with thousands separators\n- **Rank movement** \u2014 relative position change (arrow up/down)\n- **Sparkline** \u2014 7-day price trend mini-chart\n- **Last updated** \u2014 timestamp of most recent price refresh\n- **Health check** \u2014 GET /health status=200 gate; status=00 blocks deploy (backend not starting)\n\n### **How the Team Frames Work**\n\n- **Story-driven releases** \u2014 Parent tickets map to numbered stories (e.g., KAN-17 \"Story 0\") with feature rollout from non-prod \u2192 prod\n- **Infrastructure planning is methodical** \u2014 Large incident/infra tickets spawn multiple \"Infra plan\" child tickets (one per change), each gated\n- **Security is blocking** \u2014 Security findings stop merges until fixed in-place (KAN-38 pattern)\n- **Metrics-per-feature** \u2014 New instrumentation added alongside feature work (e.g., KAN-45 metrics for KAN-44 timestamp feature)\n- **Tech debt tracked separately** \u2014 CI fragility, flaky tests logged as tech-debt tickets (KAN-60)\n- **Incidents drive urgency** \u2014 Deployment failures (KAN-36: health-check blocks) and missing infrastructure (KAN-31) logged as incidents, tied to multiple infra-plan children\n\n---\n\n**Key Insight:** This team ships UI incrementally (granular table improvements over many tickets), provisions infrastructure methodically in parallel (infrastructure subtasks), and gates everything on health checks + approval lanes. New features get observability wired in the same PR.",
+    "detail": "Recent shipped work (Jira):\n- KAN-76: [UI] Extract CoinGecko data access into src/hooks/ with zero visual change\n- KAN-75: [deploy] Publish a release marker from the frontend deploy so a nonprod release can be verified\n- KAN-74: Resolve decomposition gaps for EPIC\n- KAN-73: Model polarity-decision (dark-first), /coins/markets, /coins/{coinId}, src/design/tokens.js, src/design/primitives\n- KAN-72: Define UISPEC.md#data-contract, UISPEC.md#state-inventory, UISPEC.md#design-debt-count, UISPEC.md#risk-list\n- KAN-71: Walking skeleton: UISPEC.md\n- KAN-70: [UI] Raise CryptoTracker's interface to a top-tier product standard without changing behaviour\n- KAN-60: [tech-debt] post-merge CI fragility in prmr9/Cryptocurrency-Finance-Price-Tracker-WebApp\n- KAN-59: [UI] Show each coin's rank movement arrow in the market table\n- KAN-58: [UI] Show a coin's 7-day sparkline trend in the market table\n- KAN-57: [UI] Show the coin symbol's full name beside the ticker in the market table\n- KAN-56: [UI] Colour-code the 24h change so a gain and a loss are distinguishable\n- KAN-54: [UI] Show when prices were last updated on the market table\n- KAN-47: Format the market-cap figure with thousands separators\n- KAN-46: [On-call] KAN-44: PR #17 needs a closer look\n- KAN-45: [Metrics] Instrument the change from KAN-44\n- KAN-44: Show a \"Last updated\" timestamp above the prices table\n- KAN-43: Make the prices table readable at a glance\n- KAN-42: Colour-code the 24h change column on the prices table\n- KAN-38: [tech-debt] blocking security finding(s) in the PR diff \u2014 fix in place (never suppress without justifi\n- KAN-36: [Incident] Backend deploy FAILS on nonprod \u2014 health check status=00 (backend not starting); repair so /auth/* + /portfolios go live\n- KAN-35: [Infra plan] KAN-31: 1 change(s)\n- KAN-34: [Infra plan] KAN-31: 1 change(s)\n- KAN-33: [Infra plan] KAN-31: 1 change(s)\n- KAN-32: [Infra plan] KAN-31: 1 change(s)\n- KAN-31: [Incident] Backend (server/) not deployed to AWS \u2014 provision Node runtime + nginx reverse-proxy + gated backend release lane so /auth/* and /portfolios go live\n- KAN-30: [Infra plan] KAN-15: 1 change(s)\n- KAN-29: [Infra plan] KAN-15: 1 change(s)\n- KAN-28: [Infra plan] KAN-14: 1 change(s)\n- KAN-27: [Infra plan] KAN-14: 1 change(s)\n- KAN-26: [Infra plan] KAN-15: 1 change(s)\n- KAN-25: [Infra plan] KAN-15: 1 change(s)\n- KAN-24: [Infra plan] KAN-14: 1 change(s)\n- KAN-23: [Infra plan] KAN-14: 1 change(s)\n- KAN-22: [Infra plan] KAN-13: 1 change(s)\n- KAN-21: [Infra plan] KAN-13: 1 change(s)\n- KAN-20: [Infra plan] KAN-12: 1 change(s)\n- KAN-19: [Infra plan] KAN-12: 1 change(s)\n- KAN-17: Define Story 0 non-prod parity sync, Feature rollout (non-prod \u2192 prod)\n- KAN-16: Build Signup page, Login page, Logout control, Portfolio page",
     "source_ticket": "",
     "source_pr": "",
     "source_repo": "",
     "author": "devagent-onboarding",
     "author_tier": "",
     "path_globs": [],
-    "created": "2026-08-13T20:35:02.758624Z",
+    "created": "2026-08-20T20:32:01.760762Z",
     "tags": [
       "onboarding",
       "team-knowledge"
@@ -3879,7 +3879,7 @@
       "branch-freshness"
     ],
     "kind": "reflection",
-    "weight": 2.3076923076923075,
+    "weight": 2.357142857142857,
     "times_applied": 14,
     "times_confirmed": 11,
     "safety_class": "guardrail",
@@ -8110,13 +8110,13 @@
     "author": "devagent-onboarding",
     "author_tier": "",
     "path_globs": [],
-    "created": "2026-08-13T20:32:07.610952Z",
+    "created": "2026-08-20T20:31:57.960317Z",
     "tags": [
       "onboarding",
       "team-knowledge"
     ],
     "kind": "onboarding",
-    "weight": 1.5,
+    "weight": 1.8,
     "times_applied": 72,
     "times_confirmed": 6,
     "safety_class": "neutral",
