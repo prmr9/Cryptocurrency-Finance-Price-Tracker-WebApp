@@ -382,7 +382,7 @@
   "KAN-83": {
     "ticket": "KAN-83",
     "agent": "devagent-prashant",
-    "updated": 1788168118.340689,
+    "updated": 1788168151.773259,
     "branch": "feature/KAN-83",
     "base_branch": "main",
     "repo": "prmr9/Cryptocurrency-Finance-Price-Tracker-WebApp",
@@ -392,7 +392,7 @@
   "KAN-85": {
     "ticket": "KAN-85",
     "agent": "devagent-prashant",
-    "updated": 1788168127.263964,
+    "updated": 1788168155.0092318,
     "branch": "feature/KAN-85",
     "base_branch": "main",
     "repo": "prmr9/Cryptocurrency-Finance-Price-Tracker-WebApp",
