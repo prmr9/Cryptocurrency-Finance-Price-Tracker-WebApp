@@ -125,6 +125,37 @@
     "last_confirmed_ts": 0.0
   },
   {
+    "id": "04c548a9e7fc670e",
+    "pattern": "Treat merge completion as the source of truth for task closure",
+    "detail": "Only mark work as done after the PR is actually merged. This prevents premature closure and ensures task status remains synchronized with actual code state.",
+    "source_ticket": "KAN-84",
+    "source_pr": "",
+    "source_repo": "",
+    "author": "Anubhav Khandelwal",
+    "author_tier": "jira",
+    "path_globs": [],
+    "created": "2026-08-31T09:05:41.943883Z",
+    "tags": [
+      "workflow",
+      "clarity",
+      "process"
+    ],
+    "kind": "review",
+    "weight": 1.0,
+    "times_applied": 0,
+    "times_confirmed": 0,
+    "safety_class": "neutral",
+    "safety_reason": "no risk trigger (offline)",
+    "enforced": false,
+    "enforce_confirm_tickets": [],
+    "guardrail_fp_count": 0,
+    "dismissals": 0,
+    "confidence": null,
+    "confidence_confirms": 0,
+    "confidence_contradictions": 0,
+    "last_confirmed_ts": 0.0
+  },
+  {
     "id": "04e1bf50c340ea42",
     "pattern": "When modifying package.json dependencies, regenerate package-lock.json in the same commit; npm ci verifies consistency.",
     "detail": "Lockfile sync regenerated server/package-lock.json to match manifest changes. The lockfile records exact versions; if package.json changes but lockfile is not regenerated, npm ci will fail or behave inconsistently in CI. Always regenerate after editing package.json.",
