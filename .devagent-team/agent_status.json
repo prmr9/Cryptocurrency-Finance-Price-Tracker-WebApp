@@ -8,7 +8,7 @@
     "status": "pending_approval",
     "summary": "[API] Add a ?range filter to GET /dashboard/revenue",
     "capacity": 20.0,
-    "updated_at": 1788164693.122028
+    "updated_at": 1788164947.7036889
   },
   "devagent-aman": {
     "agent": "devagent-aman",
@@ -19,6 +19,6 @@
     "status": "",
     "summary": "",
     "capacity": 20.0,
-    "updated_at": 1788164867.2569149
+    "updated_at": 1788164915.855082
   }
 }
