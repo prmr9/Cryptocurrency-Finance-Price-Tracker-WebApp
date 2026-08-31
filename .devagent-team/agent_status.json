@@ -2,13 +2,13 @@
   "devagent-prashant": {
     "agent": "devagent-prashant",
     "account": "712020:ad3d4e51-4ea0-4043-8f1f-0e390e87f10b",
-    "ticket": "KAN-85",
-    "repo": "prmr9/Cryptocurrency-Finance-Price-Tracker-WebApp",
-    "phase": "phase2_proposal",
-    "status": "pending_approval",
-    "summary": "[API] Publish an OpenAPI spec and serve Swagger UI at GET /docs",
+    "ticket": "",
+    "repo": null,
+    "phase": "",
+    "status": "",
+    "summary": "",
     "capacity": 20.0,
-    "updated_at": 1788168943.961008
+    "updated_at": 1788168953.365945
   },
   "devagent-aman": {
     "agent": "devagent-aman",
