@@ -2,13 +2,13 @@
   "devagent-prashant": {
     "agent": "devagent-prashant",
     "account": "712020:ad3d4e51-4ea0-4043-8f1f-0e390e87f10b",
-    "ticket": "KAN-83",
-    "repo": "prmr9/Cryptocurrency-Finance-Price-Tracker-WebApp",
-    "phase": "phase2_proposal",
-    "status": "pending_approval",
-    "summary": "[API] Add a ?range filter to GET /dashboard/revenue",
+    "ticket": "",
+    "repo": null,
+    "phase": "",
+    "status": "",
+    "summary": "",
     "capacity": 20.0,
-    "updated_at": 1788165761.612175
+    "updated_at": 1788165795.5037708
   },
   "devagent-aman": {
     "agent": "devagent-aman",
@@ -19,6 +19,6 @@
     "status": "",
     "summary": "",
     "capacity": 20.0,
-    "updated_at": 1788165747.3545642
+    "updated_at": 1788165795.388017
   }
 }
