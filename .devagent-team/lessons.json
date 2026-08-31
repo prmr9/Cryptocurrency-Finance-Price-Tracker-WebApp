@@ -12400,6 +12400,38 @@
     "last_confirmed_ts": 0.0
   },
   {
+    "id": "f23e82c34f06da5b",
+    "pattern": "Not a code-review comment \u2014 this is workflow/status tracking, not an engineering principle",
+    "detail": "Status updates like 'PR merged: moving to done' are administrative changes, not code insights. No durable lesson to extract for an autonomous agent.",
+    "source_ticket": "KAN-83",
+    "source_pr": "",
+    "source_repo": "prmr9/Cryptocurrency-Finance-Price-Tracker-WebApp",
+    "author": "Anubhav Khandelwal",
+    "author_tier": "jira",
+    "path_globs": [],
+    "created": "2026-08-31T09:04:38.804257Z",
+    "tags": [
+      "workflow-only",
+      "not-reviewable"
+    ],
+    "kind": "review",
+    "weight": 1.0,
+    "times_applied": 0,
+    "times_confirmed": 0,
+    "safety_class": "neutral",
+    "safety_reason": "no risk trigger (offline)",
+    "enforced": false,
+    "enforce_confirm_tickets": [
+      "KAN-84"
+    ],
+    "guardrail_fp_count": 0,
+    "dismissals": 0,
+    "confidence": null,
+    "confidence_confirms": 0,
+    "confidence_contradictions": 0,
+    "last_confirmed_ts": 0.0
+  },
+  {
     "id": "f2acdc7b8108b59c",
     "pattern": "Prevent at implementation time: [completion] fix ticket resolved with a TEST-ONLY diff \u2014 every changed file is a test (server/test/kan60-ci-gate.test.js); a bug cannot be fixed without changing a non-",
     "detail": "Ticket KAN-60 was held back by this gate and needed 1 rework pass(es) before it was shippable. Handle this in the FIRST implementation: [acceptance_criteria] Acceptance criteria could not be completed automatically: Given .github/workflows/devagent-ci.yml When the node-root frontend build step i; [completion] fix ticket resolved with a TEST-ONLY diff \u2014 every changed file is a test (server/test/kan60-ci-gate.test.js); a bug cannot be fixed without changing a non-test source file (edited the test, not the code)",
